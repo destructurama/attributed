@@ -9,7 +9,7 @@
     <projectUrl>https://github.com/destructurama</projectUrl>
     <licenseUrl>http://www.apache.org/licenses/LICENSE-2.0</licenseUrl>
     <iconUrl>http://destructurama.github.io/pages/images/destructurama.png</iconUrl>
-    <tags>serilog xml</tags>
+    <tags>serilog attributed</tags>
     <dependencies>
       <dependency id="Serilog" version="1.4" />
     </dependencies>
