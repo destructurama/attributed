@@ -1,17 +1,17 @@
 ﻿<?xml version="1.0" encoding="utf-8" ?>
 <package xmlns="http://schemas.microsoft.com/packaging/2010/07/nuspec.xsd">
   <metadata>
-    <id>Serilog.Extras.Attributed</id>
+    <id>Destructurama.Attributed</id>
     <version>$version$</version>
     <authors>Serilog Contributors</authors>
-    <description>Adds support for specifying how complex types are destructured for logging using attributes.</description>
+    <description>Use attributes to control how complex types are logged to Serilog.</description>
     <language>en-US</language>
-    <projectUrl>http://serilog.net</projectUrl>
+    <projectUrl>https://github.com/destructurama</projectUrl>
     <licenseUrl>http://www.apache.org/licenses/LICENSE-2.0</licenseUrl>
-    <iconUrl>http://serilog.net/images/serilog-nuget.png</iconUrl>
+    <iconUrl>http://destructurama.github.io/pages/images/destructurama.png</iconUrl>
     <tags>serilog xml</tags>
     <dependencies>
-      <dependency id="Serilog" version="$version$" />
+      <dependency id="Serilog" version="1.4" />
     </dependencies>
   </metadata>
 </package>

@@ -1,4 +1,4 @@
-﻿// Copyright 2014 Serilog Contributors
+﻿// Copyright 2015 Destructurama Contributors, Serilog Contributors
 // 
 // Licensed under the Apache License, Version 2.0 (the "License");
 // you may not use this file except in compliance with the License.
@@ -14,7 +14,7 @@
 
 using System;
 
-namespace Serilog.Extras.Attributed
+namespace Destructurama.Attributed
 {
     /// <summary>
     /// Specified that a property should not be included when destructuring an object for logging.

@@ -12,10 +12,11 @@
 // See the License for the specific language governing permissions and
 // limitations under the License.
 
+using Destructurama.Attributed;
+using Serilog;
 using Serilog.Configuration;
-using Serilog.Extras.Attributed;
 
-namespace Serilog
+namespace Destructurama
 {
     /// <summary>
     /// Adds the Destructure.UsingAttributes() extension to <see cref="LoggerConfiguration"/>.
