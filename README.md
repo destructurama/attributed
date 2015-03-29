@@ -1,5 +1,7 @@
 ### Destructurama.Attributed
 
+[![Build status](https://ci.appveyor.com/api/projects/status/r5wjcdoip2nsmeps/branch/master?svg=true)](https://ci.appveyor.com/project/Destructurama/attributed/branch/master)
+
 Previously shipped as _Serilog.Extras.Attributed_, this package makes it possible to manipulate how objects are logged to [Serilog](http://serilog.net) using attributes.
 
 #### Enabling the module:
