@@ -11,7 +11,7 @@
     <iconUrl>http://destructurama.github.io/pages/images/destructurama.png</iconUrl>
     <tags>serilog attributed</tags>
     <dependencies>
-      <dependency id="Serilog" version="1.4" />
+      <dependency id="Serilog" version="1.4.204" />
     </dependencies>
   </metadata>
 </package>
