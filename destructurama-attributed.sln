@@ -1,11 +1,26 @@
 ﻿
 Microsoft Visual Studio Solution File, Format Version 12.00
-# Visual Studio 2013
-VisualStudioVersion = 12.0.31101.0
+# Visual Studio 15
+VisualStudioVersion = 15.0.26430.6
 MinimumVisualStudioVersion = 10.0.40219.1
-Project("{FAE04EC0-301F-11D3-BF4B-00C04F79EFBC}") = "Destructurama.Attributed", "src\Destructurama.Attributed\Destructurama.Attributed.csproj", "{A79F906E-0298-49DC-93EC-CE4F1F5D13E2}"
+Project("{9A19103F-16F7-4668-BE54-9A1E7A4F7556}") = "Destructurama.Attributed", "src\Destructurama.Attributed\Destructurama.Attributed.csproj", "{A79F906E-0298-49DC-93EC-CE4F1F5D13E2}"
 EndProject
-Project("{FAE04EC0-301F-11D3-BF4B-00C04F79EFBC}") = "Destructurama.Attributed.Tests", "test\Destructurama.Attributed.Tests\Destructurama.Attributed.Tests.csproj", "{182ECDA3-A97D-4BB6-BC6F-60A137478B92}"
+Project("{9A19103F-16F7-4668-BE54-9A1E7A4F7556}") = "Destructurama.Attributed.Tests", "test\Destructurama.Attributed.Tests\Destructurama.Attributed.Tests.csproj", "{182ECDA3-A97D-4BB6-BC6F-60A137478B92}"
+EndProject
+Project("{2150E333-8FDC-42A3-9474-1A3956D46DE8}") = "global", "global", "{A195B0EF-8A8C-4B5C-8A9D-743B95C8356A}"
+	ProjectSection(SolutionItems) = preProject
+		.gitattributes = .gitattributes
+		.gitignore = .gitignore
+		appveyor.yml = appveyor.yml
+		Build.ps1 = Build.ps1
+		CHANGES.md = CHANGES.md
+		LICENSE = LICENSE
+		README.md = README.md
+	EndProjectSection
+EndProject
+Project("{2150E333-8FDC-42A3-9474-1A3956D46DE8}") = "src", "src", "{677924A1-EB38-4E04-9D13-3DD4C3C9C514}"
+EndProject
+Project("{2150E333-8FDC-42A3-9474-1A3956D46DE8}") = "test", "test", "{F56115EE-0998-40B3-9FA7-734D83DCF884}"
 EndProject
 Global
 	GlobalSection(SolutionConfigurationPlatforms) = preSolution
@@ -24,5 +39,9 @@ Global
 	EndGlobalSection
 	GlobalSection(SolutionProperties) = preSolution
 		HideSolutionNode = FALSE
+	EndGlobalSection
+	GlobalSection(NestedProjects) = preSolution
+		{A79F906E-0298-49DC-93EC-CE4F1F5D13E2} = {677924A1-EB38-4E04-9D13-3DD4C3C9C514}
+		{182ECDA3-A97D-4BB6-BC6F-60A137478B92} = {F56115EE-0998-40B3-9FA7-734D83DCF884}
 	EndGlobalSection
 EndGlobal

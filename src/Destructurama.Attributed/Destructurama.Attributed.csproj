@@ -3,10 +3,20 @@
   <PropertyGroup>
     <TargetFramework>netstandard1.1</TargetFramework>
     <AssemblyName>Destructurama.Attributed</AssemblyName>
+    <VersionPrefix>1.1.0</VersionPrefix>
     <PackageId>Destructurama.Attributed</PackageId>
     <PackageTargetFallback>$(PackageTargetFallback);dnxcore50</PackageTargetFallback>
     <RootNamespace>Destructurama</RootNamespace>
     <GeneratePackageOnBuild>True</GeneratePackageOnBuild>
+    <Authors>Serilog Contributors</Authors>
+    <Description>Use attributes to control how complex types are logged to Serilog.</Description>
+    <PackageProjectUrl>https://github.com/destructurama</PackageProjectUrl>
+    <PackageLicenseUrl>http://www.apache.org/licenses/LICENSE-2.0</PackageLicenseUrl>
+    <PackageIconUrl>http://destructurama.github.io/pages/images/destructurama.png</PackageIconUrl>
+    <PackageTags>serilog;attributed</PackageTags>
+    <GenerateAssemblyVersionAttribute>true</GenerateAssemblyVersionAttribute>
+    <!-- Don't reference the full NETStandard.Library -->
+    <DisableImplicitFrameworkReferences>true</DisableImplicitFrameworkReferences>
   </PropertyGroup>
 
   <ItemGroup>
