@@ -62,8 +62,9 @@ namespace Destructurama.Attributed
                 var properties = t.GetPropertiesRecursive()
                     .ToList();
                 if (properties.Any(pi =>
-                    pi.GetCustomAttribute<LogAsScalarAttribute>() != null ||
-                    pi.GetCustomAttribute<NotLoggedAttribute>() != null))
+                    pi.GetCustomAttribute<LogAsScalarAttribute>() != null 
+                    || pi.GetCustomAttribute<NotLoggedAttribute>() != null
+                    || pi.GetCustomAttribute<LogMaskedAttribute>() != null))
                 {
                     var loggedProperties = properties
                         .Where(pi => pi.GetCustomAttribute<NotLoggedAttribute>() == null)
@@ -102,6 +103,16 @@ namespace Destructurama.Attributed
                     propValue = "The property accessor threw an exception: " + ex.InnerException.GetType().Name;
                 }
 
+                var maskedAttribute = pi.GetCustomAttribute<LogMaskedAttribute>();
+                if (maskedAttribute != null)
+                {
+                    // Only for string values
+                    if (propValue is string)
+                    {
+                        FormatMaskedValue(ref propValue, maskedAttribute);
+                    }
+                }
+
                 LogEventPropertyValue pv;
                 bool stringify;
 
@@ -128,5 +139,36 @@ namespace Destructurama.Attributed
             return new ScalarValue(stringify ? value.ToString() : value);
         }
 
+        private static void FormatMaskedValue(ref object propValue, LogMaskedAttribute attribute)
+        {
+            var val = propValue as string;
+
+            if (attribute.ShowFirst == 0 && attribute.ShowLast == 0)
+            {
+                propValue = new String(attribute.Mask, val.Length);
+            }
+            else if (attribute.ShowFirst > 0 && attribute.ShowLast == 0)
+            {
+                var first = val.Substring(0, attribute.ShowFirst);
+                var mask = new String(attribute.Mask, val.Length - attribute.ShowFirst);
+
+                propValue = first + mask;
+            }
+            else if (attribute.ShowFirst == 0 && attribute.ShowLast > 0)
+            {
+                var last = val.Substring(val.Length - attribute.ShowLast);
+                var mask = new String(attribute.Mask, val.Length - attribute.ShowLast);
+
+                propValue = mask + last;
+            }
+            else if (attribute.ShowFirst > 0 && attribute.ShowLast > 0)
+            {
+                var first = val.Substring(0, attribute.ShowFirst);
+                var last = val.Substring(val.Length - attribute.ShowLast);
+                var mask = new String(attribute.Mask, val.Length - attribute.ShowFirst - attribute.ShowLast);
+
+                propValue = first + mask + last;
+            }
+        }
     }
 }

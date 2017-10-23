@@ -43,3 +43,62 @@ log.Information("Logging in {@Command}", command);
 
 To prevent destructuring of a type or property at all, apply the `[LogAsScalar]` attribute.
 
+#### Masking a string property
+
+Apply the `LogMasked` attribute with various settings:
+
+```csharp
+public class Creditcard
+{
+  /// <summary>
+  /// 123456789 results in "*********"
+  /// </summary>
+  [LogMasked]
+  public string DefaultMasked { get; set; }
+  
+  /// <summary>
+  ///  123456789 results in "#########"
+  /// </summary>
+  [LogMasked(Mask: '#')]
+  public string CustomMasked { get; set; }
+  
+  /// <summary>
+  ///  123456789 results in "123******"
+  /// </summary>
+  [LogMasked(ShowFirst: 3)]
+  public string ShowFirstThreeThenDefaultMasked { get; set; }
+
+  /// <summary>
+  /// 123456789 results in "******789"
+  /// </summary>
+  [LogMasked(ShowLast: 3)]
+  public string ShowLastThreeThenDefaultMasked { get; set; }
+  
+  /// <summary>
+  ///  123456789 results in "123######"
+  /// </summary>
+  [LogMasked(Mask: '#', ShowFirst: 3)]
+  public string ShowFirstThreeThenCustomMask { get; set; }
+
+  /// <summary>
+  ///  123456789 results in "######789"
+  /// </summary>
+  [LogMasked(Mask: '#', ShowLast: 3)]
+  public string ShowLastThreeThenCustomMask { get; set; }
+  
+  /// <summary>
+  /// 123456789 results in "123***789"
+  /// </summary>
+  [LogMasked(ShowFirst: 3, ShowLast: 3)]
+  public string ShowFirstAndLastThreeAndDefaultMaskeInTheMiddle { get; set; }
+
+  /// <summary>
+  ///  123456789 results in "123###789"
+  /// </summary>
+  [LogMasked(Mask: '#', ShowFirst: 3, ShowLast: 3)]
+  public string ShowFirstAndLastThreeAndCustomMaskInTheMiddle { get; set; }
+}
+```
+
+
+
