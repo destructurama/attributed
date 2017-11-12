@@ -47,6 +47,13 @@ To prevent destructuring of a type or property at all, apply the `[LogAsScalar]`
 
 Apply the `LogMasked` attribute with various settings:
 
+ - **Text**: If set the properties value will be set to this text.
+ - **ShowFirst**: Shows the first x characters in the property value 
+ - **ShowLast**: Shows the last x characters in the property value 
+ - **PreserveLength**: If set it will swap out each character with the default value. Note that this property will be ignored if Text has been set to custom value.
+
+ **Examples**
+
 ```csharp
 public class Creditcard
 {
@@ -57,35 +64,59 @@ public class Creditcard
   public string DefaultMasked { get; set; }
   
   /// <summary>
-  ///  123456789 results in "#########"
+  ///  123456789 results in "REMOVED"
   /// </summary>
-  [LogMasked(Mask: '#')]
+  [LogMasked(Text: "REMOVED")]
   public string CustomMasked { get; set; }
   
   /// <summary>
-  ///  123456789 results in "123******"
+  ///  123456789 results in "123***"
   /// </summary>
   [LogMasked(ShowFirst: 3)]
   public string ShowFirstThreeThenDefaultMasked { get; set; }
 
   /// <summary>
-  /// 123456789 results in "******789"
+  ///  123456789 results in "123******"
+  /// </summary>
+  [LogMasked(ShowFirst: 3, PreserveLength = true)]
+  public string ShowFirstThreeThenDefaultMaskedPreserveLength { get; set; }
+
+  /// <summary>
+  /// 123456789 results in "***789"
   /// </summary>
   [LogMasked(ShowLast: 3)]
   public string ShowLastThreeThenDefaultMasked { get; set; }
   
   /// <summary>
-  ///  123456789 results in "123######"
+  /// 123456789 results in "******789"
   /// </summary>
-  [LogMasked(Mask: '#', ShowFirst: 3)]
+  [LogMasked(ShowLast: 3, PreserveLength = true)]
+  public string ShowLastThreeThenDefaultMaskedPreserveLength  { get; set; }
+
+  /// <summary>
+  ///  123456789 results in "123REMOVED"
+  /// </summary>
+  [LogMasked(Text: "REMOVED", ShowFirst: 3)]
   public string ShowFirstThreeThenCustomMask { get; set; }
 
   /// <summary>
-  ///  123456789 results in "######789"
+  ///  123456789 results in "REMOVED789"
   /// </summary>
-  [LogMasked(Mask: '#', ShowLast: 3)]
+  [LogMasked(Text: "REMOVED", ShowLast: 3)]
   public string ShowLastThreeThenCustomMask { get; set; }
   
+  /// <summary>
+  ///  123456789 results in "******789"
+  /// </summary>
+  [LogMasked(ShowLast: 3, PreserveLength = true)]
+  public string ShowLastThreeThenCustomMaskPreserveLength { get; set; }
+
+  /// <summary>
+  ///  123456789 results in "123******"
+  /// </summary>
+  [LogMasked(ShowFirst: 3, PreserveLength = true)]
+  public string ShowFirstThreeThenCustomMaskPreserveLength { get; set; }
+
   /// <summary>
   /// 123456789 results in "123***789"
   /// </summary>
@@ -93,9 +124,16 @@ public class Creditcard
   public string ShowFirstAndLastThreeAndDefaultMaskeInTheMiddle { get; set; }
 
   /// <summary>
-  ///  123456789 results in "123###789"
+  ///  123456789 results in "123REMOVED789"
   /// </summary>
-  [LogMasked(Mask: '#', ShowFirst: 3, ShowLast: 3)]
+  [LogMasked(Text: "REMOVED", ShowFirst: 3, ShowLast: 3)]
+  public string ShowFirstAndLastThreeAndCustomMaskInTheMiddle { get; set; }
+
+  /// <summary>
+  ///  NOTE PreserveLength = true is ignored in this case
+  ///  123456789 results in "123REMOVED789"
+  /// </summary>
+  [LogMasked(Text: "REMOVED", ShowFirst: 3, ShowLast: 3, PreserveLength = true)]
   public string ShowFirstAndLastThreeAndCustomMaskInTheMiddle { get; set; }
 }
 ```

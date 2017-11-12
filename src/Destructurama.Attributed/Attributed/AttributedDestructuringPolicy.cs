@@ -27,7 +27,7 @@ namespace Destructurama.Attributed
     {
         readonly object _cacheLock = new object();
         readonly HashSet<Type> _ignored = new HashSet<Type>();
-        readonly Dictionary<Type, Func<object, ILogEventPropertyValueFactory, LogEventPropertyValue>> _cache = new Dictionary<Type, Func<object, ILogEventPropertyValueFactory, LogEventPropertyValue>>(); 
+        readonly Dictionary<Type, Func<object, ILogEventPropertyValueFactory, LogEventPropertyValue>> _cache = new Dictionary<Type, Func<object, ILogEventPropertyValueFactory, LogEventPropertyValue>>();
 
         public bool TryDestructure(object value, ILogEventPropertyValueFactory propertyValueFactory, out LogEventPropertyValue result)
         {
@@ -62,7 +62,7 @@ namespace Destructurama.Attributed
                 var properties = t.GetPropertiesRecursive()
                     .ToList();
                 if (properties.Any(pi =>
-                    pi.GetCustomAttribute<LogAsScalarAttribute>() != null 
+                    pi.GetCustomAttribute<LogAsScalarAttribute>() != null
                     || pi.GetCustomAttribute<NotLoggedAttribute>() != null
                     || pi.GetCustomAttribute<LogMaskedAttribute>() != null))
                 {
@@ -79,7 +79,7 @@ namespace Destructurama.Attributed
                 }
                 else
                 {
-                    lock(_cacheLock)
+                    lock (_cacheLock)
                         _ignored.Add(t);
                 }
             }
@@ -145,29 +145,48 @@ namespace Destructurama.Attributed
 
             if (attribute.ShowFirst == 0 && attribute.ShowLast == 0)
             {
-                propValue = new String(attribute.Mask, val.Length);
+                if (attribute.PreserveLength)
+                {
+                    propValue = new String(attribute.Text[0], val.Length);
+                }
+                else
+                {
+                    propValue = attribute.Text;
+                }
             }
             else if (attribute.ShowFirst > 0 && attribute.ShowLast == 0)
             {
                 var first = val.Substring(0, attribute.ShowFirst);
-                var mask = new String(attribute.Mask, val.Length - attribute.ShowFirst);
 
-                propValue = first + mask;
+                if (attribute.PreserveLength && attribute.IsDefaultMask())
+                {
+                    var mask = new String(attribute.Text[0], val.Length - attribute.ShowFirst);
+                    propValue = first + mask;
+                }
+                else
+                {
+                    propValue = first + attribute.Text;
+                }
             }
             else if (attribute.ShowFirst == 0 && attribute.ShowLast > 0)
             {
                 var last = val.Substring(val.Length - attribute.ShowLast);
-                var mask = new String(attribute.Mask, val.Length - attribute.ShowLast);
-
-                propValue = mask + last;
+                if (attribute.PreserveLength && attribute.IsDefaultMask())
+                {
+                    var mask = new String(attribute.Text[0], val.Length - attribute.ShowLast);
+                    propValue = mask + last;
+                }
+                else
+                {
+                    propValue = attribute.Text + last;
+                }
             }
             else if (attribute.ShowFirst > 0 && attribute.ShowLast > 0)
             {
                 var first = val.Substring(0, attribute.ShowFirst);
                 var last = val.Substring(val.Length - attribute.ShowLast);
-                var mask = new String(attribute.Mask, val.Length - attribute.ShowFirst - attribute.ShowLast);
 
-                propValue = first + mask + last;
+                propValue = first + attribute.Text + last;
             }
         }
     }
