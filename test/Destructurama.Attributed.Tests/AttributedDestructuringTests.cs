@@ -26,9 +26,19 @@ namespace Destructurama.Attributed.Tests
 
         [LogAsScalar]
         public NotAScalar ScalarAnyway { get; set; }
+
+        public UserAuthData AuthData { get; set; }
     }
 
-    [TestFixture]
+    public class UserAuthData
+    {
+        public string Username { get; set; }
+
+        [NotLogged]
+        public string Password { get; set; }
+    }
+
+[TestFixture]
     public class AttributedDestructuringTests
     {
         [Test]
@@ -47,7 +57,12 @@ namespace Destructurama.Attributed.Tests
                 MutableScalar = new MutableScalar(),
                 NotAScalar = new NotAScalar(),
                 Ignored = "Hello, there",
-                ScalarAnyway = new NotAScalar()
+                ScalarAnyway = new NotAScalar(),
+                AuthData = new UserAuthData
+                {
+                    Username = "This is a username",
+                    Password = "This is a password"
+                }
             };
 
             log.Information("Here is {@Customized}", customized);
@@ -60,6 +75,10 @@ namespace Destructurama.Attributed.Tests
             Assert.IsInstanceOf<StructureValue>(props["NotAScalar"]);
             Assert.IsFalse(props.ContainsKey("Ignored"));
             Assert.IsInstanceOf<NotAScalar>(props["ScalarAnyway"].LiteralValue());
+
+            var str = sv.ToString();
+            Assert.That(str.Contains("This is a username"));
+            Assert.False(str.Contains("This is a password"));
         }
     }
 }

@@ -41,7 +41,7 @@ log.Information("Logging in {@Command}", command);
 
 #### Treating types and properties as scalars
 
-To prevent destructuring of a type or property at all, apply the `[LogAsScalar]` attribute.
+To prevent destructuring of a type or property at all, apply the `[LoggedAsScalar]` attribute.
 
 #### Masking a string property
 
@@ -137,6 +137,3 @@ public class Creditcard
   public string ShowFirstAndLastThreeAndCustomMaskInTheMiddle { get; set; }
 }
 ```
-
-
-
