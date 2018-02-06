@@ -482,6 +482,90 @@ namespace Destructurama.Attributed.Tests
         }
 
         [Test]
+        public void LogMaskedAttribute_Shows_First_NChars_Then_Replaces_All_Other_Chars_With_Default_StarMask_And_PreservedLength_Even_For_An_Empty_Input()
+        {
+            //  [LogMasked(ShowFirst = 3,PreserveLength: true))]
+            // -> ""
+
+            LogEvent evt = null;
+
+            var log = new LoggerConfiguration()
+                .Destructure.UsingAttributes()
+                .WriteTo.Sink(new DelegatingSink(e => evt = e))
+                .CreateLogger();
+
+            var customized = new CustomizedMaskedLogs
+            {
+                ShowFirstThreeThenDefaultMaskedPreservedLength = ""
+            };
+
+            log.Information("Here is {@Customized}", customized);
+
+            var sv = (StructureValue)evt.Properties["Customized"];
+
+            var props = sv.Properties.ToDictionary(p => p.Name, p => p.Value);
+
+            Assert.IsTrue(props.ContainsKey("ShowFirstThreeThenDefaultMaskedPreservedLength"));
+            Assert.AreEqual("", props["ShowFirstThreeThenDefaultMaskedPreservedLength"].LiteralValue());
+        }
+
+        [Test]
+        public void LogMaskedAttribute_Shows_First_NChars_Then_Replaces_All_Other_Chars_With_Default_StarMask_And_PreservedLength_Even_For_An_Input_With_Same_Length_As_ShowFirst()
+        {
+            //  [LogMasked(ShowFirst = 3,PreserveLength: true))]
+            // -> "123"
+
+            LogEvent evt = null;
+
+            var log = new LoggerConfiguration()
+                .Destructure.UsingAttributes()
+                .WriteTo.Sink(new DelegatingSink(e => evt = e))
+                .CreateLogger();
+
+            var customized = new CustomizedMaskedLogs
+            {
+                ShowFirstThreeThenDefaultMaskedPreservedLength = "123"
+            };
+
+            log.Information("Here is {@Customized}", customized);
+
+            var sv = (StructureValue)evt.Properties["Customized"];
+
+            var props = sv.Properties.ToDictionary(p => p.Name, p => p.Value);
+
+            Assert.IsTrue(props.ContainsKey("ShowFirstThreeThenDefaultMaskedPreservedLength"));
+            Assert.AreEqual("123", props["ShowFirstThreeThenDefaultMaskedPreservedLength"].LiteralValue());
+        }
+
+        [Test]
+        public void LogMaskedAttribute_Shows_First_NChars_Then_Replaces_All_Other_Chars_With_Default_StarMask_And_PreservedLength_Even_For_An_Input_Shorter_Than_ShowFirst()
+        {
+            //  [LogMasked(ShowFirst = 3,PreserveLength: true))]
+            // -> "12"
+
+            LogEvent evt = null;
+
+            var log = new LoggerConfiguration()
+                .Destructure.UsingAttributes()
+                .WriteTo.Sink(new DelegatingSink(e => evt = e))
+                .CreateLogger();
+
+            var customized = new CustomizedMaskedLogs
+            {
+                ShowFirstThreeThenDefaultMaskedPreservedLength = "12"
+            };
+
+            log.Information("Here is {@Customized}", customized);
+
+            var sv = (StructureValue)evt.Properties["Customized"];
+
+            var props = sv.Properties.ToDictionary(p => p.Name, p => p.Value);
+
+            Assert.IsTrue(props.ContainsKey("ShowFirstThreeThenDefaultMaskedPreservedLength"));
+            Assert.AreEqual("12", props["ShowFirstThreeThenDefaultMaskedPreservedLength"].LiteralValue());
+        }
+
+        [Test]
         public void LogMaskedAttribute_Shows_Last_NChars_Then_Replaces_All_Other_Chars_With_Default_StarMask_And_PreservedLength()
         {
             //  [LogMasked(ShowLast = 3,PreserveLength: true))]
@@ -506,6 +590,60 @@ namespace Destructurama.Attributed.Tests
 
             Assert.IsTrue(props.ContainsKey("ShowLastThreeThenDefaultMaskedPreservedLength"));
             Assert.AreEqual("******789", props["ShowLastThreeThenDefaultMaskedPreservedLength"].LiteralValue());
+        }
+
+        [Test]
+        public void LogMaskedAttribute_Shows_Last_NChars_Then_Replaces_All_Other_Chars_With_Default_StarMask_And_PreservedLength_Even_For_An_Input_With_Same_Length_As_ShowLast()
+        {
+            //  [LogMasked(ShowLast = 3,PreserveLength: true))]
+            // -> "123"
+
+            LogEvent evt = null;
+
+            var log = new LoggerConfiguration()
+                .Destructure.UsingAttributes()
+                .WriteTo.Sink(new DelegatingSink(e => evt = e))
+                .CreateLogger();
+
+            var customized = new CustomizedMaskedLogs
+            {
+                ShowLastThreeThenDefaultMaskedPreservedLength = "123"
+            };
+
+            log.Information("Here is {@Customized}", customized);
+
+            var sv = (StructureValue)evt.Properties["Customized"];
+            var props = sv.Properties.ToDictionary(p => p.Name, p => p.Value);
+
+            Assert.IsTrue(props.ContainsKey("ShowLastThreeThenDefaultMaskedPreservedLength"));
+            Assert.AreEqual("123", props["ShowLastThreeThenDefaultMaskedPreservedLength"].LiteralValue());
+        }
+
+        [Test]
+        public void LogMaskedAttribute_Shows_Last_NChars_Then_Replaces_All_Other_Chars_With_Default_StarMask_And_PreservedLength_Even_For_An_Input_Shorter_Than_ShowLast()
+        {
+            //  [LogMasked(ShowLast = 3,PreserveLength: true))]
+            // -> "12"
+
+            LogEvent evt = null;
+
+            var log = new LoggerConfiguration()
+                .Destructure.UsingAttributes()
+                .WriteTo.Sink(new DelegatingSink(e => evt = e))
+                .CreateLogger();
+
+            var customized = new CustomizedMaskedLogs
+            {
+                ShowLastThreeThenDefaultMaskedPreservedLength = "12"
+            };
+
+            log.Information("Here is {@Customized}", customized);
+
+            var sv = (StructureValue)evt.Properties["Customized"];
+            var props = sv.Properties.ToDictionary(p => p.Name, p => p.Value);
+
+            Assert.IsTrue(props.ContainsKey("ShowLastThreeThenDefaultMaskedPreservedLength"));
+            Assert.AreEqual("12", props["ShowLastThreeThenDefaultMaskedPreservedLength"].LiteralValue());
         }
 
         [Test]
