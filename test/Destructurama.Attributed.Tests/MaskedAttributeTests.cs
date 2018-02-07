@@ -347,6 +347,60 @@ namespace Destructurama.Attributed.Tests
         }
 
         [Test]
+        public void LogMaskedAttribute_Shows_First_NChars_And_Last_NChars_Then_Replaces_All_Other_Chars_With_Custom_Mask_And_PreservedLength_Even_When_Input_Length_Is_Less_Than_ShowFirst()
+        {
+            // [LogMasked(Text: "#", ShowFirst = 3, ShowLast = 3)]
+            // 12 -> "12"
+
+            LogEvent evt = null;
+
+            var log = new LoggerConfiguration()
+                .Destructure.UsingAttributes()
+                .WriteTo.Sink(new DelegatingSink(e => evt = e))
+                .CreateLogger();
+
+            var customized = new CustomizedMaskedLogs
+            {
+                ShowFirstAndLastThreeAndCustomMaskInTheMiddle = "12"
+            };
+
+            log.Information("Here is {@Customized}", customized);
+
+            var sv = (StructureValue)evt.Properties["Customized"];
+            var props = sv.Properties.ToDictionary(p => p.Name, p => p.Value);
+
+            Assert.IsTrue(props.ContainsKey("ShowFirstAndLastThreeAndCustomMaskInTheMiddle"));
+            Assert.AreEqual("12", props["ShowFirstAndLastThreeAndCustomMaskInTheMiddle"].LiteralValue());
+        }
+
+        [Test]
+        public void LogMaskedAttribute_Shows_First_NChars_And_Last_NChars_Then_Replaces_All_Other_Chars_With_Custom_Mask_And_PreservedLength_Even_When_Input_Length_Is_Less_Than_ShowFirst_Plus_ShowLast()
+        {
+            // [LogMasked(Text: "#", ShowFirst = 3, ShowLast = 3)]
+            // 1234 -> "1234"
+
+            LogEvent evt = null;
+
+            var log = new LoggerConfiguration()
+                .Destructure.UsingAttributes()
+                .WriteTo.Sink(new DelegatingSink(e => evt = e))
+                .CreateLogger();
+
+            var customized = new CustomizedMaskedLogs
+            {
+                ShowFirstAndLastThreeAndCustomMaskInTheMiddle = "1234"
+            };
+
+            log.Information("Here is {@Customized}", customized);
+
+            var sv = (StructureValue)evt.Properties["Customized"];
+            var props = sv.Properties.ToDictionary(p => p.Name, p => p.Value);
+
+            Assert.IsTrue(props.ContainsKey("ShowFirstAndLastThreeAndCustomMaskInTheMiddle"));
+            Assert.AreEqual("1234", props["ShowFirstAndLastThreeAndCustomMaskInTheMiddle"].LiteralValue());
+        }
+
+        [Test]
         public void LogMaskedAttribute_Shows_First_NChars_Then_Replaces_All_Other_Chars_With_Default_StarMask()
         {
             //  [LogMasked(ShowLast = 3)]

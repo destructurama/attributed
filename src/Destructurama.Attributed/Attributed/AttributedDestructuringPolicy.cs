@@ -200,10 +200,15 @@ namespace Destructurama.Attributed
             }
             else if (attribute.ShowFirst > 0 && attribute.ShowLast > 0)
             {
-                var first = val.Substring(0, attribute.ShowFirst);
-                var last = val.Substring(val.Length - attribute.ShowLast);
+                if (attribute.ShowFirst + attribute.ShowLast >= val.Length)
+                    propValue = val;
+                else
+                {
+                    var first = val.Substring(0, attribute.ShowFirst);
+                    var last = val.Substring(val.Length - attribute.ShowLast);
 
-                propValue = first + attribute.Text + last;
+                    propValue = first + attribute.Text + last;
+                }
             }
         }
     }
