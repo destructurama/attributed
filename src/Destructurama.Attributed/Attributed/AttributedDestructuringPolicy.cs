@@ -143,6 +143,11 @@ namespace Destructurama.Attributed
         {
             var val = propValue as string;
 
+            if (string.IsNullOrEmpty(val))
+            {
+                propValue = val;
+            }
+            else
             if (attribute.ShowFirst == 0 && attribute.ShowLast == 0)
             {
                 if (attribute.PreserveLength)
@@ -156,11 +161,15 @@ namespace Destructurama.Attributed
             }
             else if (attribute.ShowFirst > 0 && attribute.ShowLast == 0)
             {
-                var first = val.Substring(0, attribute.ShowFirst);
+                var first = val.Substring(0, Math.Min(attribute.ShowFirst, val.Length));
 
                 if (attribute.PreserveLength && attribute.IsDefaultMask())
                 {
-                    var mask = new String(attribute.Text[0], val.Length - attribute.ShowFirst);
+                    string mask;
+                    if (attribute.ShowFirst > val.Length)
+                        mask = "";
+                    else
+                        mask = new String(attribute.Text[0], val.Length - attribute.ShowFirst);
                     propValue = first + mask;
                 }
                 else
@@ -170,10 +179,18 @@ namespace Destructurama.Attributed
             }
             else if (attribute.ShowFirst == 0 && attribute.ShowLast > 0)
             {
-                var last = val.Substring(val.Length - attribute.ShowLast);
+                string last;
+                if (attribute.ShowLast > val.Length)
+                    last = val;
+                else
+                    last = val.Substring(val.Length - attribute.ShowLast);
+
                 if (attribute.PreserveLength && attribute.IsDefaultMask())
                 {
-                    var mask = new String(attribute.Text[0], val.Length - attribute.ShowLast);
+                    string mask = "";
+                    if (attribute.ShowLast <= val.Length)
+                        mask = new String(attribute.Text[0], val.Length - attribute.ShowLast);
+
                     propValue = mask + last;
                 }
                 else
