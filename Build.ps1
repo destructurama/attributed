@@ -19,15 +19,25 @@ echo "build: Package version suffix is $suffix"
 echo "build: Build version suffix is $buildSuffix" 
 
 foreach ($src in ls src/*) {
-    Push-Location $src
+	Push-Location $src
 
 	echo "build: Packaging project in $src"
 
-    & dotnet build -c Release --version-suffix=$buildSuffix
-    & dotnet pack -c Release --include-symbols -o ..\..\artifacts --version-suffix=$suffix --no-build
-    if($LASTEXITCODE -ne 0) { exit 1 }    
+	if ($buildSuffix) {
+		& dotnet build -c Release --version-suffix=$buildSuffix
+	} else {
+		& dotnet build -c Release
+	}
+	if($LASTEXITCODE -ne 0) { exit 1 }    
 
-    Pop-Location
+	if ($suffix) {
+		& dotnet pack -c Release --include-symbols -o ..\..\artifacts --version-suffix=$suffix --no-build
+	} else {
+		& dotnet pack -c Release --include-symbols -o ..\..\artifacts --no-build
+	}
+	if($LASTEXITCODE -ne 0) { exit 1 }    
+
+	Pop-Location
 }
 
 foreach ($test in ls test/*.Tests) {

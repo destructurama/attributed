@@ -27,7 +27,7 @@ namespace Destructurama.Attributed
     {
         readonly object _cacheLock = new object();
         readonly HashSet<Type> _ignored = new HashSet<Type>();
-        readonly Dictionary<Type, Func<object, ILogEventPropertyValueFactory, LogEventPropertyValue>> _cache = new Dictionary<Type, Func<object, ILogEventPropertyValueFactory, LogEventPropertyValue>>(); 
+        readonly Dictionary<Type, Func<object, ILogEventPropertyValueFactory, LogEventPropertyValue>> _cache = new Dictionary<Type, Func<object, ILogEventPropertyValueFactory, LogEventPropertyValue>>();
 
         public bool TryDestructure(object value, ILogEventPropertyValueFactory propertyValueFactory, out LogEventPropertyValue result)
         {
@@ -62,8 +62,9 @@ namespace Destructurama.Attributed
                 var properties = t.GetPropertiesRecursive()
                     .ToList();
                 if (properties.Any(pi =>
-                    pi.GetCustomAttribute<LogAsScalarAttribute>() != null ||
-                    pi.GetCustomAttribute<NotLoggedAttribute>() != null))
+                    pi.GetCustomAttribute<LogAsScalarAttribute>() != null
+                    || pi.GetCustomAttribute<NotLoggedAttribute>() != null
+                    || pi.GetCustomAttribute<LogMaskedAttribute>() != null))
                 {
                     var loggedProperties = properties
                         .Where(pi => pi.GetCustomAttribute<NotLoggedAttribute>() == null)
@@ -78,7 +79,7 @@ namespace Destructurama.Attributed
                 }
                 else
                 {
-                    lock(_cacheLock)
+                    lock (_cacheLock)
                         _ignored.Add(t);
                 }
             }
@@ -100,6 +101,16 @@ namespace Destructurama.Attributed
                 {
                     SelfLog.WriteLine("The property accessor {0} threw exception {1}", pi, ex);
                     propValue = "The property accessor threw an exception: " + ex.InnerException.GetType().Name;
+                }
+
+                var maskedAttribute = pi.GetCustomAttribute<LogMaskedAttribute>();
+                if (maskedAttribute != null)
+                {
+                    // Only for string values
+                    if (propValue is string)
+                    {
+                        FormatMaskedValue(ref propValue, maskedAttribute);
+                    }
                 }
 
                 LogEventPropertyValue pv;
@@ -128,5 +139,77 @@ namespace Destructurama.Attributed
             return new ScalarValue(stringify ? value.ToString() : value);
         }
 
+        private static void FormatMaskedValue(ref object propValue, LogMaskedAttribute attribute)
+        {
+            var val = propValue as string;
+
+            if (string.IsNullOrEmpty(val))
+            {
+                propValue = val;
+            }
+            else
+            if (attribute.ShowFirst == 0 && attribute.ShowLast == 0)
+            {
+                if (attribute.PreserveLength)
+                {
+                    propValue = new String(attribute.Text[0], val.Length);
+                }
+                else
+                {
+                    propValue = attribute.Text;
+                }
+            }
+            else if (attribute.ShowFirst > 0 && attribute.ShowLast == 0)
+            {
+                var first = val.Substring(0, Math.Min(attribute.ShowFirst, val.Length));
+
+                if (attribute.PreserveLength && attribute.IsDefaultMask())
+                {
+                    string mask;
+                    if (attribute.ShowFirst > val.Length)
+                        mask = "";
+                    else
+                        mask = new String(attribute.Text[0], val.Length - attribute.ShowFirst);
+                    propValue = first + mask;
+                }
+                else
+                {
+                    propValue = first + attribute.Text;
+                }
+            }
+            else if (attribute.ShowFirst == 0 && attribute.ShowLast > 0)
+            {
+                string last;
+                if (attribute.ShowLast > val.Length)
+                    last = val;
+                else
+                    last = val.Substring(val.Length - attribute.ShowLast);
+
+                if (attribute.PreserveLength && attribute.IsDefaultMask())
+                {
+                    string mask = "";
+                    if (attribute.ShowLast <= val.Length)
+                        mask = new String(attribute.Text[0], val.Length - attribute.ShowLast);
+
+                    propValue = mask + last;
+                }
+                else
+                {
+                    propValue = attribute.Text + last;
+                }
+            }
+            else if (attribute.ShowFirst > 0 && attribute.ShowLast > 0)
+            {
+                if (attribute.ShowFirst + attribute.ShowLast >= val.Length)
+                    propValue = val;
+                else
+                {
+                    var first = val.Substring(0, attribute.ShowFirst);
+                    var last = val.Substring(val.Length - attribute.ShowLast);
+
+                    propValue = first + attribute.Text + last;
+                }
+            }
+        }
     }
 }
