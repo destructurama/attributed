@@ -13,6 +13,7 @@
 // limitations under the License.
 
 using System;
+using Serilog.Events;
 
 namespace Destructurama.Attributed
 {
@@ -36,12 +37,9 @@ namespace Destructurama.Attributed
             _isMutable = isMutable;
         }
 
-        /// <summary>
-        /// Whether the scalar value should be converted into a string before being passed to the pipeline.
-        /// </summary>
-        public bool IsMutable
+        internal ScalarValue MakeScalar(object value)
         {
-            get { return _isMutable; }
+            return new ScalarValue(_isMutable ? value.ToString() : value);
         }
     }
 }

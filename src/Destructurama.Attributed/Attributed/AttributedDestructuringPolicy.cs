@@ -54,7 +54,7 @@ namespace Destructurama.Attributed
             if (logAsScalar != null)
             {
                 lock (_cacheLock)
-                    _cache[t] = (o, f) => MakeScalar(o, logAsScalar.IsMutable);
+                    _cache[t] = (o, f) => logAsScalar.MakeScalar(o);
 
             }
             else
@@ -72,7 +72,7 @@ namespace Destructurama.Attributed
 
                     var scalars = loggedProperties
                         .Where(pi => pi.GetCustomAttribute<LogAsScalarAttribute>() != null)
-                        .ToDictionary(pi => pi, pi => pi.GetCustomAttribute<LogAsScalarAttribute>().IsMutable);
+                        .ToDictionary(pi => pi, pi => pi.GetCustomAttribute<LogAsScalarAttribute>());
 
                     lock (_cacheLock)
                         _cache[t] = (o, f) => MakeStructure(o, loggedProperties, scalars, f, t);
@@ -87,7 +87,7 @@ namespace Destructurama.Attributed
             return TryDestructure(value, propertyValueFactory, out result);
         }
 
-        static LogEventPropertyValue MakeStructure(object value, IEnumerable<PropertyInfo> loggedProperties, Dictionary<PropertyInfo, bool> scalars, ILogEventPropertyValueFactory propertyValueFactory, Type type)
+        static LogEventPropertyValue MakeStructure(object value, IEnumerable<PropertyInfo> loggedProperties, Dictionary<PropertyInfo, LogAsScalarAttribute> scalars, ILogEventPropertyValueFactory propertyValueFactory, Type type)
         {
             var structureProperties = new List<LogEventProperty>();
             foreach (var pi in loggedProperties)
@@ -109,20 +109,19 @@ namespace Destructurama.Attributed
                     // Only for string values
                     if (propValue is string)
                     {
-                        FormatMaskedValue(ref propValue, maskedAttribute);
+                        propValue = maskedAttribute.FormatMaskedValue(propValue);
                     }
                 }
 
                 LogEventPropertyValue pv;
-                bool stringify;
 
                 if (propValue == null)
                 {
                     pv = new ScalarValue(null);
                 }
-                else if (scalars.TryGetValue(pi, out stringify))
+                else if (scalars.TryGetValue(pi, out var logAsScalarAttribute))
                 {
-                    pv = MakeScalar(propValue, stringify);
+                    pv = logAsScalarAttribute.MakeScalar(propValue);
                 }
                 else
                 {
@@ -132,84 +131,6 @@ namespace Destructurama.Attributed
                 structureProperties.Add(new LogEventProperty(pi.Name, pv));
             }
             return new StructureValue(structureProperties, type.Name);
-        }
-
-        static ScalarValue MakeScalar(object value, bool stringify)
-        {
-            return new ScalarValue(stringify ? value.ToString() : value);
-        }
-
-        private static void FormatMaskedValue(ref object propValue, LogMaskedAttribute attribute)
-        {
-            var val = propValue as string;
-
-            if (string.IsNullOrEmpty(val))
-            {
-                propValue = val;
-            }
-            else
-            if (attribute.ShowFirst == 0 && attribute.ShowLast == 0)
-            {
-                if (attribute.PreserveLength)
-                {
-                    propValue = new String(attribute.Text[0], val.Length);
-                }
-                else
-                {
-                    propValue = attribute.Text;
-                }
-            }
-            else if (attribute.ShowFirst > 0 && attribute.ShowLast == 0)
-            {
-                var first = val.Substring(0, Math.Min(attribute.ShowFirst, val.Length));
-
-                if (attribute.PreserveLength && attribute.IsDefaultMask())
-                {
-                    string mask;
-                    if (attribute.ShowFirst > val.Length)
-                        mask = "";
-                    else
-                        mask = new String(attribute.Text[0], val.Length - attribute.ShowFirst);
-                    propValue = first + mask;
-                }
-                else
-                {
-                    propValue = first + attribute.Text;
-                }
-            }
-            else if (attribute.ShowFirst == 0 && attribute.ShowLast > 0)
-            {
-                string last;
-                if (attribute.ShowLast > val.Length)
-                    last = val;
-                else
-                    last = val.Substring(val.Length - attribute.ShowLast);
-
-                if (attribute.PreserveLength && attribute.IsDefaultMask())
-                {
-                    string mask = "";
-                    if (attribute.ShowLast <= val.Length)
-                        mask = new String(attribute.Text[0], val.Length - attribute.ShowLast);
-
-                    propValue = mask + last;
-                }
-                else
-                {
-                    propValue = attribute.Text + last;
-                }
-            }
-            else if (attribute.ShowFirst > 0 && attribute.ShowLast > 0)
-            {
-                if (attribute.ShowFirst + attribute.ShowLast >= val.Length)
-                    propValue = val;
-                else
-                {
-                    var first = val.Substring(0, attribute.ShowFirst);
-                    var last = val.Substring(val.Length - attribute.ShowLast);
-
-                    propValue = first + attribute.Text + last;
-                }
-            }
         }
     }
 }

@@ -25,10 +25,75 @@ namespace Destructurama.Attributed
             return Text == DefaultMask;
         }
 
-        public string Text { get; }
-        public int ShowFirst { get; }
-        public int ShowLast { get; }
-        public bool PreserveLength { get; }
-        public bool PreserveWhitespace { get; }
+        private string Text { get; }
+        private int ShowFirst { get; }
+        private int ShowLast { get; }
+        private bool PreserveLength { get; }
+
+        internal object FormatMaskedValue(object propValue)
+        {
+            var val = propValue as string;
+
+            if (string.IsNullOrEmpty(val))
+                return val;
+
+            if (ShowFirst == 0 && ShowLast == 0)
+            {
+                if (PreserveLength)
+                    return new String(Text[0], val.Length);
+
+                return Text;
+            }
+
+            if (ShowFirst > 0 && ShowLast == 0)
+            {
+                var first = val.Substring(0, Math.Min(ShowFirst, val.Length));
+
+                if (PreserveLength && IsDefaultMask())
+                {
+                    string mask;
+                    if (ShowFirst > val.Length)
+                        mask = "";
+                    else
+                        mask = new String(Text[0], val.Length - ShowFirst);
+                    return first + mask;
+                }
+
+                return first + Text;
+            }
+
+            if (ShowFirst == 0 && ShowLast > 0)
+            {
+                string last;
+                if (ShowLast > val.Length)
+                    last = val;
+                else
+                    last = val.Substring(val.Length - ShowLast);
+
+                if (PreserveLength && IsDefaultMask())
+                {
+                    var mask = "";
+                    if (ShowLast <= val.Length)
+                        mask = new String(Text[0], val.Length - ShowLast);
+
+                    return mask + last;
+                }
+
+                return Text + last;
+            }
+
+            if (ShowFirst > 0 && ShowLast > 0)
+            {
+                if (ShowFirst + ShowLast >= val.Length)
+                    return val;
+
+                var first = val.Substring(0, ShowFirst);
+                var last = val.Substring(val.Length - ShowLast);
+
+                return first + Text + last;
+            }
+
+            return propValue;
+        }
     }
 }
