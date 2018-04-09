@@ -13,6 +13,7 @@
 // limitations under the License.
 
 using System;
+using Serilog.Events;
 
 namespace Destructurama.Attributed
 {
@@ -20,7 +21,11 @@ namespace Destructurama.Attributed
     /// Specified that a property should not be included when destructuring an object for logging.
     /// </summary>
     [AttributeUsage(AttributeTargets.Property)]
-    public class NotLoggedAttribute : Attribute
+    public class NotLoggedAttribute : BaseDestructuringAttribute
     {
+        internal override LogEventPropertyValue CreateLogEventPropertyValue(object value)
+        {
+            return null;
+        }
     }
 }
