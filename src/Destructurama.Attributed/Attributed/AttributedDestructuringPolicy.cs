@@ -40,17 +40,14 @@ namespace Destructurama.Attributed
                     return false;
                 }
 
-                Func<object, ILogEventPropertyValueFactory, LogEventPropertyValue> cached;
-                if (_cache.TryGetValue(t, out cached))
+                if (_cache.TryGetValue(t, out var cached))
                 {
                     result = cached(value, propertyValueFactory);
                     return true;
                 }
             }
 
-            var ti = t.GetTypeInfo();
-
-            var logAsScalar = ti.GetCustomAttribute<LogAsScalarAttribute>();
+            var logAsScalar = t.GetTypeInfo().GetCustomAttribute<LogAsScalarAttribute>();
             if (logAsScalar != null)
             {
                 lock (_cacheLock)
@@ -60,7 +57,7 @@ namespace Destructurama.Attributed
             else
             {
                 var properties = t.GetPropertiesRecursive().ToList();
-                if (properties.Any(pi =>pi.GetCustomAttribute<DestructuringAttribute>() != null))
+                if (properties.Any(pi => pi.GetCustomAttribute<DestructuringAttribute>() != null))
                 {
                     var destructuringAttributes = properties
                         .Select(pi => new {pi, Attribute = pi.GetCustomAttribute<DestructuringAttribute>()})
@@ -98,7 +95,7 @@ namespace Destructurama.Attributed
 
                 if (destructuringAttributes.TryGetValue(pi, out var destructuringAttribute))
                 {
-                    if(destructuringAttribute.TryCreateLogEventProperty(pi.Name, propValue, out var property))
+                    if (destructuringAttribute.TryCreateLogEventProperty(pi.Name, propValue, out var property))
                         structureProperties.Add(property);
                 }
                 else
