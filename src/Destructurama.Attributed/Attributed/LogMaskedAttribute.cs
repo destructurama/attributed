@@ -4,7 +4,7 @@ using Serilog.Events;
 namespace Destructurama.Attributed
 {
     [AttributeUsage(AttributeTargets.Property)]
-    public class LogMaskedAttribute : BaseDestructuringAttribute
+    public class LogMaskedAttribute : DestructuringAttribute
     {
         private const string DefaultMask = "***";
 
@@ -97,9 +97,10 @@ namespace Destructurama.Attributed
             return propValue;
         }
 
-        internal override LogEventPropertyValue CreateLogEventPropertyValue(object value)
+        protected internal override bool TryCreateLogEventProperty(string name, object value, out LogEventProperty property)
         {
-            return new ScalarValue(FormatMaskedValue(value));
+            property = new LogEventProperty(name, new ScalarValue(FormatMaskedValue(value)));
+            return true;
         }
     }
 }

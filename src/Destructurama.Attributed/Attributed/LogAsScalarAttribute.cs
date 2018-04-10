@@ -22,7 +22,7 @@ namespace Destructurama.Attributed
     /// destructured; instead it should be logged as an atomic value.
     /// </summary>
     [AttributeUsage(AttributeTargets.Class | AttributeTargets.Property)]
-    public class LogAsScalarAttribute : BaseDestructuringAttribute
+    public class LogAsScalarAttribute : DestructuringAttribute
     {
         readonly bool _isMutable;
 
@@ -37,9 +37,15 @@ namespace Destructurama.Attributed
             _isMutable = isMutable;
         }
 
-        internal override LogEventPropertyValue CreateLogEventPropertyValue(object value)
+        internal LogEventPropertyValue CreateLogEventPropertyValue(object value)
         {
             return new ScalarValue(_isMutable ? value?.ToString() : value);
+        }
+
+        protected internal override bool TryCreateLogEventProperty(string name, object value, out LogEventProperty property)
+        {
+            property = new LogEventProperty(name, CreateLogEventPropertyValue(value));
+            return true;
         }
     }
 }

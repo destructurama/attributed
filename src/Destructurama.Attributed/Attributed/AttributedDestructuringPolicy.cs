@@ -60,10 +60,10 @@ namespace Destructurama.Attributed
             else
             {
                 var properties = t.GetPropertiesRecursive().ToList();
-                if (properties.Any(pi =>pi.GetCustomAttribute<BaseDestructuringAttribute>() != null))
+                if (properties.Any(pi =>pi.GetCustomAttribute<DestructuringAttribute>() != null))
                 {
                     var destructuringAttributes = properties
-                        .Select(pi => new {pi, Attribute = pi.GetCustomAttribute<BaseDestructuringAttribute>()})
+                        .Select(pi => new {pi, Attribute = pi.GetCustomAttribute<DestructuringAttribute>()})
                         .Where(o => o.Attribute != null)
                         .ToDictionary(o => o.pi, o => o.Attribute);
 
@@ -80,7 +80,7 @@ namespace Destructurama.Attributed
             return TryDestructure(value, propertyValueFactory, out result);
         }
 
-        static LogEventPropertyValue MakeStructure(object value, IEnumerable<PropertyInfo> loggedProperties, Dictionary<PropertyInfo, BaseDestructuringAttribute> destructuringAttributes, ILogEventPropertyValueFactory propertyValueFactory, Type type)
+        static LogEventPropertyValue MakeStructure(object value, IEnumerable<PropertyInfo> loggedProperties, IDictionary<PropertyInfo, DestructuringAttribute> destructuringAttributes, ILogEventPropertyValueFactory propertyValueFactory, Type type)
         {
             var structureProperties = new List<LogEventProperty>();
             foreach (var pi in loggedProperties)
@@ -95,20 +95,16 @@ namespace Destructurama.Attributed
                     SelfLog.WriteLine("The property accessor {0} threw exception {1}", pi, ex);
                     propValue = "The property accessor threw an exception: " + ex.InnerException.GetType().Name;
                 }
-                
-                LogEventPropertyValue pv;
 
                 if (destructuringAttributes.TryGetValue(pi, out var destructuringAttribute))
                 {
-                    pv = destructuringAttribute.CreateLogEventPropertyValue(propValue);
+                    if(destructuringAttribute.TryCreateLogEventProperty(pi.Name, propValue, out var property))
+                        structureProperties.Add(property);
                 }
                 else
                 {
-                    pv = propertyValueFactory.CreatePropertyValue(propValue, true);
+                    structureProperties.Add(new LogEventProperty(pi.Name, propertyValueFactory.CreatePropertyValue(propValue, true)));
                 }
-
-                if(pv != null)
-                    structureProperties.Add(new LogEventProperty(pi.Name, pv));
             }
 
             return new StructureValue(structureProperties, type.Name);

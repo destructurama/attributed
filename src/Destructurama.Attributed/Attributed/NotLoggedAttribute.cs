@@ -21,11 +21,12 @@ namespace Destructurama.Attributed
     /// Specified that a property should not be included when destructuring an object for logging.
     /// </summary>
     [AttributeUsage(AttributeTargets.Property)]
-    public class NotLoggedAttribute : BaseDestructuringAttribute
+    public class NotLoggedAttribute : DestructuringAttribute
     {
-        internal override LogEventPropertyValue CreateLogEventPropertyValue(object value)
+        protected internal override bool TryCreateLogEventProperty(string name, object value, out LogEventProperty property)
         {
-            return null;
+            property = null;
+            return false;
         }
     }
 }
