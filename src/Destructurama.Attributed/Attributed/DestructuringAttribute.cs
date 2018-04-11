@@ -19,15 +19,11 @@ using Serilog.Events;
 namespace Destructurama.Attributed
 {
     /// <summary>
-    /// Specified that a property should not be included when destructuring an object for logging.
+    /// The base class for all destructuring attributes.
+    /// Inherit from this class to extend this library.
     /// </summary>
-    [AttributeUsage(AttributeTargets.Property)]
-    public class NotLoggedAttribute : DestructuringAttribute
+    public abstract class DestructuringAttribute : Attribute
     {
-        protected internal override bool TryCreateLogEventProperty(string name, object value, ILogEventPropertyValueFactory propertyValueFactory, out LogEventProperty property)
-        {
-            property = null;
-            return false;
-        }
+        protected internal abstract bool TryCreateLogEventProperty(string name, object value, ILogEventPropertyValueFactory propertyValueFactory, out LogEventProperty property);
     }
 }
