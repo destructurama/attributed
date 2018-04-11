@@ -19,7 +19,7 @@ using System.Reflection;
 
 namespace Destructurama.Util
 {
-    static class GetablePropertyFinder
+    internal static class GetablePropertyFinder
     {
         internal static IEnumerable<PropertyInfo> GetPropertiesRecursive(this Type type)
         {

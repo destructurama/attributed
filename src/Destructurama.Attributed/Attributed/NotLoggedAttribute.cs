@@ -13,6 +13,7 @@
 // limitations under the License.
 
 using System;
+using Serilog.Core;
 using Serilog.Events;
 
 namespace Destructurama.Attributed
@@ -23,7 +24,7 @@ namespace Destructurama.Attributed
     [AttributeUsage(AttributeTargets.Property)]
     public class NotLoggedAttribute : DestructuringAttribute
     {
-        protected internal override bool TryCreateLogEventProperty(string name, object value, out LogEventProperty property)
+        protected internal override bool TryCreateLogEventProperty(string name, object value, ILogEventPropertyValueFactory propertyValueFactory, out LogEventProperty property)
         {
             property = null;
             return false;

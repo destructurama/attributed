@@ -13,6 +13,7 @@
 // limitations under the License.
 
 using System;
+using Serilog.Core;
 using Serilog.Events;
 
 namespace Destructurama.Attributed
@@ -42,7 +43,7 @@ namespace Destructurama.Attributed
             return new ScalarValue(_isMutable ? value?.ToString() : value);
         }
 
-        protected internal override bool TryCreateLogEventProperty(string name, object value, out LogEventProperty property)
+        protected internal override bool TryCreateLogEventProperty(string name, object value, ILogEventPropertyValueFactory propertyValueFactory, out LogEventProperty property)
         {
             property = new LogEventProperty(name, CreateLogEventPropertyValue(value));
             return true;
