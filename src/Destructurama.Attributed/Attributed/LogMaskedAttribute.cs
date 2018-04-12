@@ -1,4 +1,4 @@
-﻿// Copyright 2015 Destructurama Contributors, Serilog Contributors
+﻿// Copyright 2015-2018 Destructurama Contributors, Serilog Contributors
 // 
 // Licensed under the Apache License, Version 2.0 (the "License");
 // you may not use this file except in compliance with the License.
@@ -21,15 +21,12 @@ namespace Destructurama.Attributed
     [AttributeUsage(AttributeTargets.Property)]
     public class LogMaskedAttribute : DestructuringAttribute
     {
-        private const string DefaultMask = "***";
+        const string DefaultMask = "***";
 
-        public LogMaskedAttribute(string Text = DefaultMask, int ShowFirst = 0, int ShowLast = 0, bool PreserveLength = false)
-        {
-            this.Text = Text;
-            this.ShowFirst = ShowFirst;
-            this.ShowLast = ShowLast;
-            this.PreserveLength = PreserveLength;
-        }
+        public string Text { get; set; } = DefaultMask;
+        public int ShowFirst { get; set; }
+        public int ShowLast { get; set; }
+        public bool PreserveLength { get; set; }
 
         /// <summary>
         /// Check to see if custom Text has been provided.
@@ -41,11 +38,6 @@ namespace Destructurama.Attributed
             return Text == DefaultMask;
         }
 
-        private string Text { get; }
-        private int ShowFirst { get; }
-        private int ShowLast { get; }
-        private bool PreserveLength { get; }
-
         internal object FormatMaskedValue(object propValue)
         {
             var val = propValue as string;
@@ -56,7 +48,7 @@ namespace Destructurama.Attributed
             if (ShowFirst == 0 && ShowLast == 0)
             {
                 if (PreserveLength)
-                    return new String(Text[0], val.Length);
+                    return new string(Text[0], val.Length);
 
                 return Text;
             }
@@ -65,37 +57,29 @@ namespace Destructurama.Attributed
             {
                 var first = val.Substring(0, Math.Min(ShowFirst, val.Length));
 
-                if (PreserveLength && IsDefaultMask())
-                {
-                    string mask;
-                    if (ShowFirst > val.Length)
-                        mask = "";
-                    else
-                        mask = new String(Text[0], val.Length - ShowFirst);
-                    return first + mask;
-                }
+                if (!PreserveLength || !IsDefaultMask())
+                    return first + Text;
 
-                return first + Text;
+                var mask = "";
+                if (ShowFirst <= val.Length)
+                    mask = new string(Text[0], val.Length - ShowFirst);
+
+                return first + mask;
+
             }
 
             if (ShowFirst == 0 && ShowLast > 0)
             {
-                string last;
-                if (ShowLast > val.Length)
-                    last = val;
-                else
-                    last = val.Substring(val.Length - ShowLast);
+                var last = ShowLast > val.Length ? val : val.Substring(val.Length - ShowLast);
 
-                if (PreserveLength && IsDefaultMask())
-                {
-                    var mask = "";
-                    if (ShowLast <= val.Length)
-                        mask = new String(Text[0], val.Length - ShowLast);
+                if (!PreserveLength || !IsDefaultMask())
+                    return Text + last;
 
-                    return mask + last;
-                }
+                var mask = "";
+                if (ShowLast <= val.Length)
+                    mask = new string(Text[0], val.Length - ShowLast);
 
-                return Text + last;
+                return mask + last;
             }
 
             if (ShowFirst > 0 && ShowLast > 0)

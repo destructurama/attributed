@@ -18,18 +18,18 @@ using Serilog.Events;
 
 namespace Destructurama.Util
 {
-    internal struct CacheEntry
+    struct CacheEntry
     {
         public CacheEntry(Func<object, ILogEventPropertyValueFactory, LogEventPropertyValue> destructureFunc)
         {
             CanDestructure = true;
-            DestructureFunc = destructureFunc;
+            DestructureFunc = destructureFunc ?? throw new ArgumentNullException(nameof(destructureFunc));
         }
 
-        private CacheEntry(bool canDestructure, Func<object, ILogEventPropertyValueFactory, LogEventPropertyValue> destructureFunc)
+        CacheEntry(bool canDestructure, Func<object, ILogEventPropertyValueFactory, LogEventPropertyValue> destructureFunc)
         {
             CanDestructure = canDestructure;
-            DestructureFunc = destructureFunc;
+            DestructureFunc = destructureFunc ?? throw new ArgumentNullException(nameof(destructureFunc));
         }
 
         public bool CanDestructure { get; }
