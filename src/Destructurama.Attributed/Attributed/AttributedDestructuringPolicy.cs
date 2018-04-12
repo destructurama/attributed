@@ -1,4 +1,4 @@
-﻿// Copyright 2015 Destructurama Contributors, Serilog Contributors
+﻿// Copyright 2015-2018 Destructurama Contributors, Serilog Contributors
 // 
 // Licensed under the Apache License, Version 2.0 (the "License");
 // you may not use this file except in compliance with the License.
@@ -23,10 +23,10 @@ using Serilog.Events;
 
 namespace Destructurama.Attributed
 {
-    public class AttributedDestructuringPolicy : IDestructuringPolicy
+    class AttributedDestructuringPolicy : IDestructuringPolicy
     {
-        private readonly object _cacheLock = new object();
-        private readonly IDictionary<Type, CacheEntry> _cache = new Dictionary<Type, CacheEntry>();
+        readonly object _cacheLock = new object();
+        readonly IDictionary<Type, CacheEntry> _cache = new Dictionary<Type, CacheEntry>();
 
         public bool TryDestructure(object value, ILogEventPropertyValueFactory propertyValueFactory, out LogEventPropertyValue result)
         {
@@ -34,13 +34,15 @@ namespace Destructurama.Attributed
 
             while (true)
             {
+                CacheEntry cached;
+                bool isCached;
                 lock (_cacheLock)
+                    isCached = _cache.TryGetValue(type, out cached);
+
+                if (isCached)
                 {
-                    if (_cache.TryGetValue(type, out var cached))
-                    {
-                        result = cached.DestructureFunc(value, propertyValueFactory);
-                        return cached.CanDestructure;
-                    }
+                    result = cached.DestructureFunc(value, propertyValueFactory);
+                    return cached.CanDestructure;
                 }
 
                 var cacheEntry = CreateCacheEntry(type);
@@ -49,7 +51,7 @@ namespace Destructurama.Attributed
             }
         }
 
-        private static CacheEntry CreateCacheEntry(Type type)
+        static CacheEntry CreateCacheEntry(Type type)
         {
             var logAsScalar = type.GetTypeInfo().GetCustomAttribute<LogAsScalarAttribute>();
             if (logAsScalar != null)
@@ -67,7 +69,7 @@ namespace Destructurama.Attributed
             return new CacheEntry((o, f) => MakeStructure(o, properties, destructuringAttributes, f, type));
         }
 
-        private static LogEventPropertyValue MakeStructure(object o, IEnumerable<PropertyInfo> loggedProperties, IDictionary<PropertyInfo, DestructuringAttribute> destructuringAttributes, ILogEventPropertyValueFactory propertyValueFactory, Type type)
+        static LogEventPropertyValue MakeStructure(object o, IEnumerable<PropertyInfo> loggedProperties, IDictionary<PropertyInfo, DestructuringAttribute> destructuringAttributes, ILogEventPropertyValueFactory propertyValueFactory, Type type)
         {
             var structureProperties = new List<LogEventProperty>();
             foreach (var pi in loggedProperties)
@@ -88,7 +90,7 @@ namespace Destructurama.Attributed
             return new StructureValue(structureProperties, type.Name);
         }
 
-        private static object SafeGetPropValue(object o, PropertyInfo pi)
+        static object SafeGetPropValue(object o, PropertyInfo pi)
         {
             try
             {
