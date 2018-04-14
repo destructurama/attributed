@@ -17,8 +17,8 @@ using Serilog.Events;
 
 namespace Destructurama.Attributed
 {
-    public interface IPropertyDestructurer
+    public interface ITypeDestructuringAttribute
     {
-        bool TryCreateLogEventProperty(string name, object value, ILogEventPropertyValueFactory propertyValueFactory, out LogEventProperty property);
+        LogEventPropertyValue CreateLogEventPropertyValue(object value, ILogEventPropertyValueFactory propertyValueFactory);
     }
 }

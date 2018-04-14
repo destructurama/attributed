@@ -19,7 +19,7 @@ using Serilog.Events;
 namespace Destructurama.Attributed
 {
     [AttributeUsage(AttributeTargets.Property)]
-    public class LogMaskedAttribute : Attribute, IPropertyDestructurer
+    public class LogMaskedAttribute : Attribute, IPropertyDestructuringAttribute
     {
         const string DefaultMask = "***";
 

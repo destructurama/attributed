@@ -23,7 +23,7 @@ namespace Destructurama.Attributed
     /// destructured; instead it should be logged as an atomic value.
     /// </summary>
     [AttributeUsage(AttributeTargets.Class | AttributeTargets.Property)]
-    public class LogAsScalarAttribute : Attribute, IClassDestructurer, IPropertyDestructurer
+    public class LogAsScalarAttribute : Attribute, ITypeDestructuringAttribute, IPropertyDestructuringAttribute
     {
         readonly bool _isMutable;
 
