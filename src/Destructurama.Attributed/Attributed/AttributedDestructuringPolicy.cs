@@ -53,23 +53,23 @@ namespace Destructurama.Attributed
 
         static CacheEntry CreateCacheEntry(Type type)
         {
-            var logAsScalar = type.GetTypeInfo().GetCustomAttribute<LogAsScalarAttribute>();
-            if (logAsScalar != null)
-                return new CacheEntry((o, f) => logAsScalar.CreateLogEventPropertyValue(o));
-
+            var classDestructurer = type.GetTypeInfo().GetCustomAttribute<ITypeDestructuringAttribute>();
+            if (classDestructurer != null)
+                return new CacheEntry((o, f) => classDestructurer.CreateLogEventPropertyValue(o, f));
+            
             var properties = type.GetPropertiesRecursive().ToList();
-            if (properties.All(pi => pi.GetCustomAttribute<DestructuringAttribute>() == null))
+            if (properties.All(pi => pi.GetCustomAttribute<IPropertyDestructuringAttribute>() == null))
                 return CacheEntry.Ignore;
             
             var destructuringAttributes = properties
-                .Select(pi => new {pi, Attribute = pi.GetCustomAttribute<DestructuringAttribute>()})
+                .Select(pi => new {pi, Attribute = pi.GetCustomAttribute<IPropertyDestructuringAttribute>() })
                 .Where(o => o.Attribute != null)
                 .ToDictionary(o => o.pi, o => o.Attribute);
 
             return new CacheEntry((o, f) => MakeStructure(o, properties, destructuringAttributes, f, type));
         }
 
-        static LogEventPropertyValue MakeStructure(object o, IEnumerable<PropertyInfo> loggedProperties, IDictionary<PropertyInfo, DestructuringAttribute> destructuringAttributes, ILogEventPropertyValueFactory propertyValueFactory, Type type)
+        static LogEventPropertyValue MakeStructure(object o, IEnumerable<PropertyInfo> loggedProperties, IDictionary<PropertyInfo, IPropertyDestructuringAttribute> destructuringAttributes, ILogEventPropertyValueFactory propertyValueFactory, Type type)
         {
             var structureProperties = new List<LogEventProperty>();
             foreach (var pi in loggedProperties)

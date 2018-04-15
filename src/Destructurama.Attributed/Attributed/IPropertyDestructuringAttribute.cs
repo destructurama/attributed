@@ -12,18 +12,13 @@
 // See the License for the specific language governing permissions and
 // limitations under the License.
 
-using System;
 using Serilog.Core;
 using Serilog.Events;
 
 namespace Destructurama.Attributed
 {
-    /// <summary>
-    /// The base class for all destructuring attributes.
-    /// Inherit from this class to extend this library.
-    /// </summary>
-    public abstract class DestructuringAttribute : Attribute
+    public interface IPropertyDestructuringAttribute
     {
-        protected internal abstract bool TryCreateLogEventProperty(string name, object value, ILogEventPropertyValueFactory propertyValueFactory, out LogEventProperty property);
+        bool TryCreateLogEventProperty(string name, object value, ILogEventPropertyValueFactory propertyValueFactory, out LogEventProperty property);
     }
 }
