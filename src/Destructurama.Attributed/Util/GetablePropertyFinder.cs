@@ -21,7 +21,7 @@ namespace Destructurama.Util
 {
     static class GetablePropertyFinder
     {
-        internal static IEnumerable<PropertyInfo> GetPropertiesRecursive(this Type type)
+        public static IEnumerable<PropertyInfo> GetPropertiesRecursive(this Type type)
         {
             var seenNames = new HashSet<string>();
 

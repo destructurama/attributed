@@ -13,6 +13,8 @@
 // limitations under the License.
 
 using System;
+using Serilog.Core;
+using Serilog.Events;
 
 namespace Destructurama.Attributed
 {
@@ -21,7 +23,7 @@ namespace Destructurama.Attributed
     /// destructured; instead it should be logged as an atomic value.
     /// </summary>
     [AttributeUsage(AttributeTargets.Class | AttributeTargets.Property)]
-    public class LogAsScalarAttribute : Attribute
+    public class LogAsScalarAttribute : Attribute, ITypeDestructuringAttribute, IPropertyDestructuringAttribute
     {
         readonly bool _isMutable;
 
@@ -36,12 +38,15 @@ namespace Destructurama.Attributed
             _isMutable = isMutable;
         }
 
-        /// <summary>
-        /// Whether the scalar value should be converted into a string before being passed to the pipeline.
-        /// </summary>
-        public bool IsMutable
+        public LogEventPropertyValue CreateLogEventPropertyValue(object value, ILogEventPropertyValueFactory propertyValueFactory)
         {
-            get { return _isMutable; }
+            return new ScalarValue(_isMutable ? value?.ToString() : value);
+        }
+
+        public bool TryCreateLogEventProperty(string name, object value, ILogEventPropertyValueFactory propertyValueFactory, out LogEventProperty property)
+        {
+            property = new LogEventProperty(name, CreateLogEventPropertyValue(value, propertyValueFactory));
+            return true;
         }
     }
 }

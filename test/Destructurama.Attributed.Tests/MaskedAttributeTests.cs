@@ -2,7 +2,6 @@
 using NUnit.Framework;
 using Serilog;
 using Serilog.Events;
-using System;
 using System.Linq;
 
 namespace Destructurama.Attributed.Tests
@@ -18,85 +17,85 @@ namespace Destructurama.Attributed.Tests
         /// <summary>
         /// 123456789 results in "*********"
         /// </summary>
-        [LogMasked(PreserveLength: true)]
+        [LogMasked(PreserveLength = true)]
         public string DefaultMaskedPreserved { get; set; }
 
         /// <summary>
         ///  123456789 results in "#"
         /// </summary>
-        [LogMasked(Text: "_REMOVED_")]
+        [LogMasked(Text = "_REMOVED_")]
         public string CustomMasked { get; set; }
 
         /// <summary>
         ///  123456789 results in "#########"
         /// </summary>
-        [LogMasked(Text: "#", PreserveLength: true)]
+        [LogMasked(Text = "#", PreserveLength = true)]
         public string CustomMaskedPreservedLength { get; set; }
 
         /// <summary>
         ///  123456789 results in "123******"
         /// </summary>
-        [LogMasked(ShowFirst: 3)]
+        [LogMasked(ShowFirst = 3)]
         public string ShowFirstThreeThenDefaultMasked { get; set; }
 
         /// <summary>
         /// 123456789 results in "123******"
         /// </summary>
-        [LogMasked(ShowFirst: 3, PreserveLength: true)]
+        [LogMasked(ShowFirst = 3, PreserveLength = true)]
         public string ShowFirstThreeThenDefaultMaskedPreservedLength { get; set; }
 
         /// <summary>
         /// 123456789 results in "***789"
         /// </summary>
-        [LogMasked(ShowLast: 3)]
+        [LogMasked(ShowLast = 3)]
         public string ShowLastThreeThenDefaultMasked { get; set; }
 
         /// <summary>
         /// 123456789 results in "******789"
         /// </summary>
-        [LogMasked(ShowLast: 3, PreserveLength: true)]
+        [LogMasked(ShowLast = 3, PreserveLength = true)]
         public string ShowLastThreeThenDefaultMaskedPreservedLength { get; set; }
 
         /// <summary>
         ///  123456789 results in "123REMOVED"
         /// </summary>
-        [LogMasked(Text: "_REMOVED_", ShowFirst: 3)]
+        [LogMasked(Text = "_REMOVED_", ShowFirst = 3)]
         public string ShowFirstThreeThenCustomMask { get; set; }
 
         /// <summary>
         ///  123456789 results in "123_REMOVED_"
         /// </summary>
-        [LogMasked(Text: "_REMOVED_", ShowFirst: 3, PreserveLength: true)]
+        [LogMasked(Text = "_REMOVED_", ShowFirst = 3, PreserveLength = true)]
         public string ShowFirstThreeThenCustomMaskPreservedLengthIgnored { get; set; }
 
         /// <summary>
         ///  123456789 results in "_REMOVED_789"
         /// </summary>
-        [LogMasked(Text: "_REMOVED_", ShowLast: 3)]
+        [LogMasked(Text = "_REMOVED_", ShowLast = 3)]
         public string ShowLastThreeThenCustomMask { get; set; }
 
         /// <summary>
         ///  123456789 results in "_REMOVED_789"
         /// </summary>
-        [LogMasked(Text: "_REMOVED_", ShowLast: 3, PreserveLength: true)]
+        [LogMasked(Text = "_REMOVED_", ShowLast = 3, PreserveLength = true)]
         public string ShowLastThreeThenCustomMaskPreservedLengthIgnored { get; set; }
 
         /// <summary>
         /// 123456789 results in "123***789"
         /// </summary>
-        [LogMasked(ShowFirst: 3, ShowLast: 3)]
+        [LogMasked(ShowFirst = 3, ShowLast = 3)]
         public string ShowFirstAndLastThreeAndDefaultMaskeInTheMiddle { get; set; }
 
         /// <summary>
         ///  123456789 results in "123_REMOVED_789                                                                                                                                                                                                                                                                                                                <               °                       °    °                                         °                     789"
         /// </summary>
-        [LogMasked(Text: "_REMOVED_", ShowFirst: 3, ShowLast: 3)]
+        [LogMasked(Text = "_REMOVED_", ShowFirst = 3, ShowLast = 3)]
         public string ShowFirstAndLastThreeAndCustomMaskInTheMiddle { get; set; }
 
         /// <summary>
         ///  123456789 results in "123_REMOVED_789". PreserveLength is ignored                                                                                                                                                                                                                                                                                                          <               °                       °    °                                         °                     789"
         /// </summary>
-        [LogMasked(Text: "_REMOVED_", ShowFirst: 3, ShowLast: 3, PreserveLength: true)]
+        [LogMasked(Text = "_REMOVED_", ShowFirst = 3, ShowLast = 3, PreserveLength = true)]
         public string ShowFirstAndLastThreeAndCustomMaskInTheMiddlePreservedLengthIgnored { get; set; }
     }
 
@@ -160,7 +159,7 @@ namespace Destructurama.Attributed.Tests
         [Test]
         public void LogMaskedAttribute_Replaces_Value_With_Provided_Mask()
         {
-            //  [LogMasked(Text: "#")]
+            //  [LogMasked(Text = "#")]
             //   123456789 -> "_REMOVED_"
 
             LogEvent evt = null;
@@ -187,7 +186,7 @@ namespace Destructurama.Attributed.Tests
         [Test]
         public void LogMaskedAttribute_Replaces_Value_With_Provided_Mask_And_PreservedLength()
         {
-            //  [LogMasked(Text: "#")]
+            //  [LogMasked(Text = "#")]
             //   123456789 -> "#########"
 
             LogEvent evt = null;
@@ -214,7 +213,7 @@ namespace Destructurama.Attributed.Tests
         [Test]
         public void LogMaskedAttribute_Shows_First_NChars_Then_Replaces_All_With_Custom_Mask()
         {
-            // [LogMasked(Text: "REMOVED", ShowFirst = 3)]
+            // [LogMasked(Text = "REMOVED", ShowFirst = 3)]
             // -> "123_REMOVED_"
 
             LogEvent evt = null;
@@ -241,7 +240,7 @@ namespace Destructurama.Attributed.Tests
         [Test]
         public void LogMaskedAttribute_Shows_First_NChars_Then_Replaces_All_With_Custom_Mask_PreservedLength_Ignored()
         {
-            // [LogMasked(Text: "REMOVED", ShowFirst = 3,PreserveLength = true)]
+            // [LogMasked(Text = "REMOVED", ShowFirst = 3,PreserveLength = true)]
             // -> "123_REMOVED_"
 
             LogEvent evt = null;
@@ -295,7 +294,7 @@ namespace Destructurama.Attributed.Tests
         [Test]
         public void LogMaskedAttribute_Shows_First_NChars_And_Last_NChars_Then_Replaces_All_Other_Chars_With_Custom_Mask()
         {
-            // [LogMasked(Text: "REMOVED", ShowFirst = 3, ShowLast = 3)]
+            // [LogMasked(Text = "REMOVED", ShowFirst = 3, ShowLast = 3)]
             // 12345678987654321 -> 123_REMOVED_321     
 
             LogEvent evt = null;
@@ -322,7 +321,7 @@ namespace Destructurama.Attributed.Tests
         [Test]
         public void LogMaskedAttribute_Shows_First_NChars_And_Last_NChars_Then_Replaces_All_Other_Chars_With_Custom_Mask_And_PreservedLength()
         {
-            // [LogMasked(Text: "#", ShowFirst = 3, ShowLast = 3)]
+            // [LogMasked(Text = "#", ShowFirst = 3, ShowLast = 3)]
             // 12345678987654321 -> "123_REMOVED_321"
 
             LogEvent evt = null;
@@ -349,7 +348,7 @@ namespace Destructurama.Attributed.Tests
         [Test]
         public void LogMaskedAttribute_Shows_First_NChars_And_Last_NChars_Then_Replaces_All_Other_Chars_With_Custom_Mask_And_PreservedLength_Even_When_Input_Length_Is_Less_Than_ShowFirst()
         {
-            // [LogMasked(Text: "#", ShowFirst = 3, ShowLast = 3)]
+            // [LogMasked(Text = "#", ShowFirst = 3, ShowLast = 3)]
             // 12 -> "12"
 
             LogEvent evt = null;
@@ -376,7 +375,7 @@ namespace Destructurama.Attributed.Tests
         [Test]
         public void LogMaskedAttribute_Shows_First_NChars_And_Last_NChars_Then_Replaces_All_Other_Chars_With_Custom_Mask_And_PreservedLength_Even_When_Input_Length_Is_Less_Than_ShowFirst_Plus_ShowLast()
         {
-            // [LogMasked(Text: "#", ShowFirst = 3, ShowLast = 3)]
+            // [LogMasked(Text = "#", ShowFirst = 3, ShowLast = 3)]
             // 1234 -> "1234"
 
             LogEvent evt = null;
@@ -430,7 +429,7 @@ namespace Destructurama.Attributed.Tests
         [Test]
         public void LogMaskedAttribute_Shows_Last_NChars_Then_Replaces_All_Other_Chars_With_Custom_Mask()
         {
-            //  [LogMasked(Text: "_REMOVED_", ShowLast = 3)]
+            //  [LogMasked(Text = "_REMOVED_", ShowLast = 3)]
             //  123456789 -> "_REMOVED_789"
 
             LogEvent evt = null;
@@ -457,7 +456,7 @@ namespace Destructurama.Attributed.Tests
         [Test]
         public void LogMaskedAttribute_Shows_Last_NChars_Then_Replaces_All_Other_Chars_With_Custom_Mask_PreserveLength_Ignored()
         {
-            //  [LogMasked(Text: "_REMOVED_", ShowLast = 3, PreserveLength = true)]
+            //  [LogMasked(Text = "_REMOVED_", ShowLast = 3, PreserveLength = true)]
             //  123456789 -> "_REMOVED_789"
 
             LogEvent evt = null;
@@ -511,7 +510,7 @@ namespace Destructurama.Attributed.Tests
         [Test]
         public void LogMaskedAttribute_Shows_First_NChars_Then_Replaces_All_Other_Chars_With_Default_StarMask_And_PreservedLength()
         {
-            //  [LogMasked(ShowFirst = 3,PreserveLength: true))]
+            //  [LogMasked(ShowFirst = 3,PreserveLength = true))]
             // -> "123******"
 
             LogEvent evt = null;
@@ -538,7 +537,7 @@ namespace Destructurama.Attributed.Tests
         [Test]
         public void LogMaskedAttribute_Shows_First_NChars_Then_Replaces_All_Other_Chars_With_Default_StarMask_And_PreservedLength_Even_For_An_Empty_Input()
         {
-            //  [LogMasked(ShowFirst = 3,PreserveLength: true))]
+            //  [LogMasked(ShowFirst = 3,PreserveLength = true))]
             // -> ""
 
             LogEvent evt = null;
@@ -566,7 +565,7 @@ namespace Destructurama.Attributed.Tests
         [Test]
         public void LogMaskedAttribute_Shows_First_NChars_Then_Replaces_All_Other_Chars_With_Default_StarMask_And_PreservedLength_Even_For_An_Input_With_Same_Length_As_ShowFirst()
         {
-            //  [LogMasked(ShowFirst = 3,PreserveLength: true))]
+            //  [LogMasked(ShowFirst = 3,PreserveLength = true))]
             // -> "123"
 
             LogEvent evt = null;
@@ -594,7 +593,7 @@ namespace Destructurama.Attributed.Tests
         [Test]
         public void LogMaskedAttribute_Shows_First_NChars_Then_Replaces_All_Other_Chars_With_Default_StarMask_And_PreservedLength_Even_For_An_Input_Shorter_Than_ShowFirst()
         {
-            //  [LogMasked(ShowFirst = 3,PreserveLength: true))]
+            //  [LogMasked(ShowFirst = 3,PreserveLength = true))]
             // -> "12"
 
             LogEvent evt = null;
@@ -622,7 +621,7 @@ namespace Destructurama.Attributed.Tests
         [Test]
         public void LogMaskedAttribute_Shows_Last_NChars_Then_Replaces_All_Other_Chars_With_Default_StarMask_And_PreservedLength()
         {
-            //  [LogMasked(ShowLast = 3,PreserveLength: true))]
+            //  [LogMasked(ShowLast = 3,PreserveLength = true))]
             // -> "******789"
 
             LogEvent evt = null;
@@ -649,7 +648,7 @@ namespace Destructurama.Attributed.Tests
         [Test]
         public void LogMaskedAttribute_Shows_Last_NChars_Then_Replaces_All_Other_Chars_With_Default_StarMask_And_PreservedLength_Even_For_An_Input_With_Same_Length_As_ShowLast()
         {
-            //  [LogMasked(ShowLast = 3,PreserveLength: true))]
+            //  [LogMasked(ShowLast = 3,PreserveLength = true))]
             // -> "123"
 
             LogEvent evt = null;
@@ -676,7 +675,7 @@ namespace Destructurama.Attributed.Tests
         [Test]
         public void LogMaskedAttribute_Shows_Last_NChars_Then_Replaces_All_Other_Chars_With_Default_StarMask_And_PreservedLength_Even_For_An_Input_Shorter_Than_ShowLast()
         {
-            //  [LogMasked(ShowLast = 3,PreserveLength: true))]
+            //  [LogMasked(ShowLast = 3,PreserveLength = true))]
             // -> "12"
 
             LogEvent evt = null;
@@ -703,7 +702,7 @@ namespace Destructurama.Attributed.Tests
         [Test]
         public void LogMaskedAttribute_Shows_First_NChars_And_Last_NChars_Then_Replaces_All_Other_Chars_With_Custom_Mask_And_PreservedLength_That_Gives_Warning()
         {
-            // [LogMasked(Text: "REMOVED", ShowFirst = 3, ShowLast = 3, PreserveLength = true)]
+            // [LogMasked(Text = "REMOVED", ShowFirst = 3, ShowLast = 3, PreserveLength = true)]
             // 12345678987654321 -> 123_REMOVED_321 
 
             LogEvent evt = null;
