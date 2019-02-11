@@ -58,7 +58,7 @@ Apply the `LogMasked` attribute with various settings:
 public class Creditcard
 {
   /// <summary>
-  /// 123456789 results in "*********"
+  /// 123456789 results in "***"
   /// </summary>
   [LogMasked]
   public string DefaultMasked { get; set; }
