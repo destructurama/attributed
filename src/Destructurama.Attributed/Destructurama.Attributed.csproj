@@ -1,26 +1,29 @@
 ﻿<Project Sdk="Microsoft.NET.Sdk">
 
   <PropertyGroup>
-    <TargetFramework>netstandard1.1</TargetFramework>
+    <TargetFrameworks>netstandard2.0;netstandard1.1</TargetFrameworks>
+    <LangVersion>latest</LangVersion>
     <AssemblyName>Destructurama.Attributed</AssemblyName>
     <VersionPrefix>2.0.1</VersionPrefix>
     <PackageId>Destructurama.Attributed</PackageId>
-    <PackageTargetFallback>$(PackageTargetFallback);dnxcore50</PackageTargetFallback>
+    <PackageTargetFallback Condition="'$(TargetFramework)' == 'netstandard1.1'">$(PackageTargetFallback);dnxcore50</PackageTargetFallback>
     <RootNamespace>Destructurama</RootNamespace>
     <GeneratePackageOnBuild>True</GeneratePackageOnBuild>
     <Authors>Serilog Contributors</Authors>
     <Description>Use attributes to control how complex types are logged to Serilog.</Description>
     <PackageProjectUrl>https://github.com/destructurama</PackageProjectUrl>
-    <PackageLicenseUrl>http://www.apache.org/licenses/LICENSE-2.0</PackageLicenseUrl>
-    <PackageIconUrl>http://destructurama.github.io/pages/images/destructurama.png</PackageIconUrl>
+    <PackageLicenseExpression>Apache-2.0</PackageLicenseExpression>
+    <PackageIcon>icon.png</PackageIcon>
     <PackageTags>serilog;attributed</PackageTags>
     <GenerateAssemblyVersionAttribute>true</GenerateAssemblyVersionAttribute>
     <!-- Don't reference the full NETStandard.Library -->
-    <DisableImplicitFrameworkReferences>true</DisableImplicitFrameworkReferences>
+    <DisableImplicitFrameworkReferences Condition="'$(TargetFramework)' == 'netstandard1.1'">true</DisableImplicitFrameworkReferences>
   </PropertyGroup>
 
   <ItemGroup>
-    <PackageReference Include="Serilog" Version="2.*" />
+    <PackageReference Condition="'$(TargetFramework)' == 'netstandard1.1'" Include="Serilog" Version="2.*" />
+    <PackageReference Condition="'$(TargetFramework)' == 'netstandard2.0'" Include="Serilog" Version="[2.8.0,3.0.0)" />
+    <None Include="..\..\assets\icon.png" Pack="true" PackagePath=""/>
   </ItemGroup>
 
 </Project>
