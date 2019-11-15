@@ -13,6 +13,7 @@
 // limitations under the License.
 
 using System;
+using System.Collections.Concurrent;
 using System.Collections.Generic;
 using System.Linq;
 using System.Reflection;
@@ -25,30 +26,13 @@ namespace Destructurama.Attributed
 {
     class AttributedDestructuringPolicy : IDestructuringPolicy
     {
-        readonly object _cacheLock = new object();
-        readonly IDictionary<Type, CacheEntry> _cache = new Dictionary<Type, CacheEntry>();
+        readonly static ConcurrentDictionary<Type, CacheEntry> _cache = new ConcurrentDictionary<Type, CacheEntry>();
 
         public bool TryDestructure(object value, ILogEventPropertyValueFactory propertyValueFactory, out LogEventPropertyValue result)
         {
-            var type = value.GetType();
-
-            while (true)
-            {
-                CacheEntry cached;
-                bool isCached;
-                lock (_cacheLock)
-                    isCached = _cache.TryGetValue(type, out cached);
-
-                if (isCached)
-                {
-                    result = cached.DestructureFunc(value, propertyValueFactory);
-                    return cached.CanDestructure;
-                }
-
-                var cacheEntry = CreateCacheEntry(type);
-                lock (_cacheLock)
-                    _cache[type] = cacheEntry;
-            }
+            var cached = _cache.GetOrAdd(value.GetType(), CreateCacheEntry);
+            result = cached.DestructureFunc(value, propertyValueFactory);
+            return cached.CanDestructure;
         }
 
         static CacheEntry CreateCacheEntry(Type type)
@@ -62,7 +46,7 @@ namespace Destructurama.Attributed
                 return CacheEntry.Ignore;
             
             var destructuringAttributes = properties
-                .Select(pi => new {pi, Attribute = pi.GetCustomAttribute<IPropertyDestructuringAttribute>() })
+                .Select(pi => new { pi, Attribute = pi.GetCustomAttribute<IPropertyDestructuringAttribute>() })
                 .Where(o => o.Attribute != null)
                 .ToDictionary(o => o.pi, o => o.Attribute);
 
