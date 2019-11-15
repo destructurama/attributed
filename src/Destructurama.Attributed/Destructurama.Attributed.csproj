@@ -6,7 +6,7 @@
     <AssemblyName>Destructurama.Attributed</AssemblyName>
     <VersionPrefix>2.0.1</VersionPrefix>
     <PackageId>Destructurama.Attributed</PackageId>
-    <PackageTargetFallback>$(PackageTargetFallback);dnxcore50</PackageTargetFallback>
+    <PackageTargetFallback Condition="'$(TargetFramework)' == 'netstandard1.1'">$(PackageTargetFallback);dnxcore50</PackageTargetFallback>
     <RootNamespace>Destructurama</RootNamespace>
     <GeneratePackageOnBuild>True</GeneratePackageOnBuild>
     <Authors>Serilog Contributors</Authors>
