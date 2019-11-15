@@ -2,7 +2,7 @@ version: '{build}'
 skip_tags: true
 image: Visual Studio 2019
 configuration: Release
-test: off
+test: on
 build_script:
 - ps: ./Build.ps1
 artifacts:
