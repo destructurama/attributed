@@ -137,3 +137,51 @@ public class Creditcard
   public string ShowFirstAndLastThreeAndCustomMaskInTheMiddle { get; set; }
 }
 ```
+
+#### Masking a string property with RegEx
+
+Apply the `LogRegex` attribute with various properties:
+
+ - **Pattern:** The pattern that should be applied on value. Default is all.
+ - **Replacement:** The string that will be applied by RegEx. 
+ - **RegexOptions:** The [RegexOptions](https://docs.microsoft.com/en-us/dotnet/api/system.text.regularexpressions.regexoptions?view=netcore-3.1) that have to be applied. 
+
+ **Examples**
+
+```csharp
+  /// <summary>
+  /// 123456789 results in "***"
+  /// </summary>
+  [LogRegex]
+  public string DefaultRegex { get; set; }
+
+  /// <summary>
+  /// 123456789 results in "*****"
+  /// </summary>
+  [LogRegex(Replacement = "*****")]
+  public string RegexWithReplacement { get; set; }
+
+  /// <summary>
+  /// 123|456|789 results in "***|456|789"
+  /// </summary>
+  [LogRegex(Pattern = RegexWithVerticalBars, Replacement = "***|$2|$3")]
+  public string RegexReplaceFirst { get; set; }
+
+  /// <summary>
+  /// 123|456|789 results in "123|***|789"
+  /// </summary>
+  [LogRegex(Pattern = RegexWithVerticalBars, Replacement = "$1|***|$3")]
+  public string RegexReplaceSecond { get; set; }
+
+  /// <summary>
+  /// 123|456|789 results in "123|456|***"
+  /// </summary>
+  [LogRegex(Pattern = RegexWithVerticalBars, Replacement = "$1|$2|***")]
+  public string RegexReplaceThird { get; set; }
+
+  /// <summary>
+  /// 123|456|789 results in "***|456|****"
+  /// </summary>
+  [LogRegex(Pattern = RegexWithVerticalBars, Replacement = "***|$2|****")]
+  public string RegexReplaceFirstThird { get; set; }
+```
