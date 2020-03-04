@@ -40,9 +40,17 @@ namespace Destructurama.Attributed
 
             try
             {
-                var replacement = Regex.Replace(value as string, Pattern, Replacement, RegexOptions);
-                property = new LogEventProperty(name, new ScalarValue(replacement));
-                return true;
+                if (value is string s)
+                {
+                    var replacement = Regex.Replace(s, Pattern, Replacement, RegexOptions);
+                    property = new LogEventProperty(name, new ScalarValue(replacement));
+                    return true;
+                }
+                else
+                {
+                    property = null;
+                    return false;
+                }
             }
             catch
             {
