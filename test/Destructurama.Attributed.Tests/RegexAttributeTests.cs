@@ -9,100 +9,35 @@ namespace Destructurama.Attributed.Tests
     public class CustomizedRegexLogs
     {
         const string RegexWithVerticalBars = @"([a-zA-Z0-9]+)\|([a-zA-Z0-9]+)\|([a-zA-Z0-9]+)";
-        /// <summary>
-        /// 123456789 results in "***"
-        /// </summary>
-        [LogRegex]
-        public string DefaultRegex { get; set; }
-
-        /// <summary>
-        /// 123456789 results in "*****"
-        /// </summary>
-        [LogRegex(Replacement = "*****")]
-        public string RegexWithReplacement { get; set; }
 
         /// <summary>
         /// 123|456|789 results in "***|456|789"
         /// </summary>
-        [LogRegex(Pattern = RegexWithVerticalBars, Replacement = "***|$2|$3")]
+        [LogReplaced(RegexWithVerticalBars, "***|$2|$3")]
         public string RegexReplaceFirst { get; set; }
 
         /// <summary>
         /// 123|456|789 results in "123|***|789"
         /// </summary>
-        [LogRegex(Pattern = RegexWithVerticalBars, Replacement = "$1|***|$3")]
+        [LogReplaced(RegexWithVerticalBars, "$1|***|$3")]
         public string RegexReplaceSecond { get; set; }
 
         /// <summary>
         /// 123|456|789 results in "123|456|***"
         /// </summary>
-        [LogRegex(Pattern = RegexWithVerticalBars, Replacement = "$1|$2|***")]
+        [LogReplaced(RegexWithVerticalBars, "$1|$2|***")]
         public string RegexReplaceThird { get; set; }
 
         /// <summary>
         /// 123|456|789 results in "***|456|****"
         /// </summary>
-        [LogRegex(Pattern = RegexWithVerticalBars, Replacement = "***|$2|****")]
+        [LogReplaced(RegexWithVerticalBars, "***|$2|****")]
         public string RegexReplaceFirstThird { get; set; }
     }
 
     [TestFixture]
     public class RegexAttributeTests
     {
-        [Test]
-        public void LogRegexAttribute_Replaces_Value_With_DefaultStars()
-        {
-            // [LogRegex]
-            // 123456789 -> "***"
-
-            LogEvent evt = null;
-
-            var log = new LoggerConfiguration()
-                .Destructure.UsingAttributes()
-                .WriteTo.Sink(new DelegatingSink(e => evt = e))
-                .CreateLogger();
-
-            var customized = new CustomizedRegexLogs
-            {
-                DefaultRegex = "123456789"
-            };
-
-            log.Information("Here is {@Customized}", customized);
-
-            var sv = (StructureValue)evt.Properties["Customized"];
-            var props = sv.Properties.ToDictionary(p => p.Name, p => p.Value);
-
-            Assert.IsTrue(props.ContainsKey("DefaultRegex"));
-            Assert.AreEqual("***", props["DefaultRegex"].LiteralValue());
-        }
-
-        [Test]
-        public void LogRegexAttribute_Replaces_Value_With_Stars()
-        {
-            // [LogRegex(Replacement = "*****")]
-            // 123456789 -> "*****"
-
-            LogEvent evt = null;
-
-            var log = new LoggerConfiguration()
-                .Destructure.UsingAttributes()
-                .WriteTo.Sink(new DelegatingSink(e => evt = e))
-                .CreateLogger();
-
-            var customized = new CustomizedRegexLogs
-            {
-                RegexWithReplacement = "123456789"
-            };
-
-            log.Information("Here is {@Customized}", customized);
-
-            var sv = (StructureValue)evt.Properties["Customized"];
-            var props = sv.Properties.ToDictionary(p => p.Name, p => p.Value);
-
-            Assert.IsTrue(props.ContainsKey("RegexWithReplacement"));
-            Assert.AreEqual("*****", props["RegexWithReplacement"].LiteralValue());
-        }
-
         [Test]
         public void LogRegexAttribute_Replaces_First()
         {

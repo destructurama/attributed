@@ -20,15 +20,23 @@ using Serilog.Events;
 namespace Destructurama.Attributed
 {
     [AttributeUsage(AttributeTargets.Property)]
-    public class LogRegexAttribute : Attribute, IPropertyDestructuringAttribute
+    public class LogReplacedAttribute : Attribute, IPropertyDestructuringAttribute
     {
-        // Everything except blank characters
-        const string DefaultPattern = @"^(?!\s*$).+";
-        const string DefaultReplacement = "***";
+        private readonly string pattern;
+        private readonly string replacement;
+        private readonly RegexOptions regexOptions;
 
-        public RegexOptions RegexOptions { get; set; }
-        public string Pattern = DefaultPattern;
-        public string Replacement = DefaultReplacement;
+        public LogReplacedAttribute(string pattern, string replacement)
+            : this(pattern, replacement, RegexOptions.None)
+        {
+        }
+
+        public LogReplacedAttribute(string pattern, string replacement, RegexOptions regexOptions)
+        {
+            this.pattern = pattern;
+            this.replacement = replacement;
+            this.regexOptions = regexOptions;
+        }
 
         public bool TryCreateLogEventProperty(string name, object value, ILogEventPropertyValueFactory propertyValueFactory, out LogEventProperty property)
         {
@@ -42,7 +50,7 @@ namespace Destructurama.Attributed
             {
                 if (value is string s)
                 {
-                    var replacement = Regex.Replace(s, Pattern, Replacement, RegexOptions);
+                    var replacement = Regex.Replace(s, pattern, this.replacement, regexOptions);
                     property = new LogEventProperty(name, new ScalarValue(replacement));
                     return true;
                 }
