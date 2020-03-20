@@ -36,12 +36,12 @@ namespace Destructurama.Attributed.Tests
     }
 
     [TestFixture]
-    public class RegexAttributeTests
+    public class ReplacedAttributeTests
     {
         [Test]
-        public void LogRegexAttribute_Replaces_First()
+        public void LogReplacedAttribute_Replaces_First()
         {
-            // [LogRegex(Pattern = @"([a-zA-Z0-9]+)\|([a-zA-Z0-9]+)\|([a-zA-Z0-9]+)", Replacement = "***|$2|$3")]
+            // [LogReplaced(@"([a-zA-Z0-9]+)\|([a-zA-Z0-9]+)\|([a-zA-Z0-9]+)", "***|$2|$3")]
             // 123|456|789 -> "***|456|789"
 
             LogEvent evt = null;
@@ -66,9 +66,9 @@ namespace Destructurama.Attributed.Tests
         }
 
         [Test]
-        public void LogRegexAttribute_Replaces_Second()
+        public void LogReplacedAttribute_Replaces_Second()
         {
-            // [LogRegex(Pattern = @"([a-zA-Z0-9]+)\|([a-zA-Z0-9]+)\|([a-zA-Z0-9]+)", Replacement = "$1|***|$3")]
+            // [LogReplaced(@"([a-zA-Z0-9]+)\|([a-zA-Z0-9]+)\|([a-zA-Z0-9]+)", "$1|***|$3")]
             // 123|456|789 -> "123|***|789"
 
             LogEvent evt = null;
@@ -93,9 +93,9 @@ namespace Destructurama.Attributed.Tests
         }
 
         [Test]
-        public void LogRegexAttribute_Replaces_Third()
+        public void LogReplacedAttribute_Replaces_Third()
         {
-            // [LogRegex(Pattern = @"([a-zA-Z0-9]+)\|([a-zA-Z0-9]+)\|([a-zA-Z0-9]+)", Replacement = "$1|$2|***")]
+            // [LogReplaced(@"([a-zA-Z0-9]+)\|([a-zA-Z0-9]+)\|([a-zA-Z0-9]+)", "$1|$2|***")]
             // 123|456|789 -> "123|456|***"
 
             LogEvent evt = null;
@@ -120,9 +120,9 @@ namespace Destructurama.Attributed.Tests
         }
 
         [Test]
-        public void LogRegexAttribute_Replaces_FirstThird()
+        public void LogReplacedAttribute_Replaces_FirstThird()
         {
-            // [LogRegex(Pattern = @"([a-zA-Z0-9]+)\|([a-zA-Z0-9]+)\|([a-zA-Z0-9]+)", Replacement = "***|$2|****")]
+            // [LogReplaced(@"([a-zA-Z0-9]+)\|([a-zA-Z0-9]+)\|([a-zA-Z0-9]+)", "***|$2|****")]
             // 123|456|789 -> "***|456|****"
 
             LogEvent evt = null;
@@ -147,9 +147,9 @@ namespace Destructurama.Attributed.Tests
         }
 
         [Test]
-        public void LogRegexAttribute_Replaces_First_And_Third()
+        public void LogReplacedAttribute_Replaces_First_And_Third()
         {
-            // [LogRegex(Pattern = @"([a-zA-Z0-9]+)\|([a-zA-Z0-9]+)\|([a-zA-Z0-9]+)", Replacement = "***|$2|$3")]
+            // [LogReplaced(@"([a-zA-Z0-9]+)\|([a-zA-Z0-9]+)\|([a-zA-Z0-9]+)", "***|$2|$3")]
             // 123|456|789 -> "***|456|789"
 
             LogEvent evt = null;
