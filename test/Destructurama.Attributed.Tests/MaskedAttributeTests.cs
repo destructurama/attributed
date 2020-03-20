@@ -274,7 +274,7 @@ namespace Destructurama.Attributed.Tests
         public void LogMaskedAttribute_Shows_First_NChars_And_Last_NChars_Replaces_Value_With_Default_StarMask()
         {
             // [LogMasked(ShowFirst = 3, ShowLast = 3)]
-            // -> "123***********321"
+            // -> "123***321"
 
             LogEvent evt = null;
 
