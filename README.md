@@ -167,6 +167,8 @@ LogReplaced(string pattern, string replacement, RegexOptions regexOptions)
 ```csharp
 public class CreditCard
 {
+  const string RegexWithVerticalBars = @"([a-zA-Z0-9]+)\|([a-zA-Z0-9]+)\|([a-zA-Z0-9]+)";
+  
   /// <summary>
   /// 123|456|789 results in "***|456|789"
   /// </summary>
