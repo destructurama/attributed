@@ -55,7 +55,7 @@ Apply the `LogMasked` attribute with various settings:
  **Examples**
 
 ```csharp
-public class Creditcard
+public class CreditCard
 {
   /// <summary>
   /// 123456789 results in "*********"
@@ -149,39 +149,30 @@ Apply the `LogRegex` attribute with various properties:
  **Examples**
 
 ```csharp
-  /// <summary>
-  /// 123456789 results in "***"
-  /// </summary>
-  [LogRegex]
-  public string DefaultRegex { get; set; }
-
-  /// <summary>
-  /// 123456789 results in "*****"
-  /// </summary>
-  [LogRegex(Replacement = "*****")]
-  public string RegexWithReplacement { get; set; }
-
+public class CreditCard
+{
   /// <summary>
   /// 123|456|789 results in "***|456|789"
   /// </summary>
-  [LogRegex(Pattern = RegexWithVerticalBars, Replacement = "***|$2|$3")]
+  [LogReplaced(RegexWithVerticalBars, "***|$2|$3")]
   public string RegexReplaceFirst { get; set; }
 
   /// <summary>
   /// 123|456|789 results in "123|***|789"
   /// </summary>
-  [LogRegex(Pattern = RegexWithVerticalBars, Replacement = "$1|***|$3")]
+  [LogReplaced(RegexWithVerticalBars, "$1|***|$3")]
   public string RegexReplaceSecond { get; set; }
 
   /// <summary>
   /// 123|456|789 results in "123|456|***"
   /// </summary>
-  [LogRegex(Pattern = RegexWithVerticalBars, Replacement = "$1|$2|***")]
+  [LogReplaced(RegexWithVerticalBars, "$1|$2|***")]
   public string RegexReplaceThird { get; set; }
 
   /// <summary>
   /// 123|456|789 results in "***|456|****"
   /// </summary>
-  [LogRegex(Pattern = RegexWithVerticalBars, Replacement = "***|$2|****")]
+  [LogReplaced(RegexWithVerticalBars, "***|$2|****")]
   public string RegexReplaceFirstThird { get; set; }
+}
 ```
