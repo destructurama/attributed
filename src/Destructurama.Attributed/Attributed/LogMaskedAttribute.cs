@@ -91,7 +91,7 @@ namespace Destructurama.Attributed
                 var last = val.Substring(val.Length - ShowLast);
 
                 string mask = null;
-                if(PreserveLength && IsDefaultMask())
+                if (PreserveLength && IsDefaultMask())
                     mask = new string(Text[0], val.Length - ShowFirst - ShowLast);
 
                 return first + (mask ?? Text) + last;
