@@ -180,17 +180,5 @@ public class CreditCard
   /// </summary>
   [LogReplaced(RegexWithVerticalBars, "$1|***|$3")]
   public string RegexReplaceSecond { get; set; }
-
-  /// <summary>
-  /// 123|456|789 results in "123|456|***"
-  /// </summary>
-  [LogReplaced(RegexWithVerticalBars, "$1|$2|***")]
-  public string RegexReplaceThird { get; set; }
-
-  /// <summary>
-  /// 123|456|789 results in "***|456|****"
-  /// </summary>
-  [LogReplaced(RegexWithVerticalBars, "***|$2|****")]
-  public string RegexReplaceFirstThird { get; set; }
 }
 ```

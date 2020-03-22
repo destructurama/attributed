@@ -22,20 +22,15 @@ namespace Destructurama.Attributed
     [AttributeUsage(AttributeTargets.Property)]
     public class LogReplacedAttribute : Attribute, IPropertyDestructuringAttribute
     {
-        private readonly string pattern;
-        private readonly string replacement;
-        private readonly RegexOptions regexOptions;
+        readonly string _pattern;
+        readonly string _replacement;
+
+        RegexOptions Options { get; set; }
 
         public LogReplacedAttribute(string pattern, string replacement)
-            : this(pattern, replacement, RegexOptions.None)
         {
-        }
-
-        public LogReplacedAttribute(string pattern, string replacement, RegexOptions regexOptions)
-        {
-            this.pattern = pattern;
-            this.replacement = replacement;
-            this.regexOptions = regexOptions;
+            _pattern = pattern;
+            _replacement = replacement;
         }
 
         public bool TryCreateLogEventProperty(string name, object value, ILogEventPropertyValueFactory propertyValueFactory, out LogEventProperty property)
@@ -46,25 +41,15 @@ namespace Destructurama.Attributed
                 return true;
             }
 
-            try
+            if (value is string s)
             {
-                if (value is string s)
-                {
-                    var replacement = Regex.Replace(s, pattern, this.replacement, regexOptions);
-                    property = new LogEventProperty(name, new ScalarValue(replacement));
-                    return true;
-                }
-                else
-                {
-                    property = null;
-                    return false;
-                }
+                var replacement = Regex.Replace(s, _pattern, _replacement, Options);
+                property = new LogEventProperty(name, new ScalarValue(replacement));
+                return true;
             }
-            catch
-            {
-                property = null;
-                return false;
-            }
+
+            property = null;
+            return false;
         }
     }
 }
