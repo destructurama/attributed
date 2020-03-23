@@ -25,7 +25,7 @@ namespace Destructurama.Attributed
         readonly string _pattern;
         readonly string _replacement;
 
-        RegexOptions Options { get; set; }
+        public RegexOptions Options { get; set; }
 
         public LogReplacedAttribute(string pattern, string replacement)
         {
