@@ -55,7 +55,7 @@ Apply the `LogMasked` attribute with various settings:
  **Examples**
 
 ```csharp
-public class Creditcard
+public class CreditCard
 {
   /// <summary>
   /// 123456789 results in "*********"
@@ -135,5 +135,50 @@ public class Creditcard
   /// </summary>
   [LogMasked(Text="REMOVED", ShowFirst=3, ShowLast=3, PreserveLength=true)]
   public string ShowFirstAndLastThreeAndCustomMaskInTheMiddle { get; set; }
+}
+```
+
+#### Masking a string property with Regular Expressions
+
+Apply the `LogReplaced` attribute on a string, in which you want to apply a RegEx replacement during Logging.
+
+This is applicable in scenarios which a string contains both Sensitive and Non-Sensitive information. An example of this could be a string such as "__Sensitive|NonSensitive__". Then you can apply the attibute like the following snippet:
+```csharp
+[LogReplaced(@"([a-zA-Z0-9]+)\|([a-zA-Z0-9]+)", "***|$2")]
+public property Information { get; set; }
+
+// Will log: "***|NonSensitive"
+``` 
+
+`LogReplaced` attribute is available with two constructors:
+
+```csharp
+LogReplaced(string pattern, string replacement)
+
+LogReplaced(string pattern, string replacement, RegexOptions regexOptions)
+```
+
+ - **Pattern:** The pattern that should be applied on value..
+ - **Replacement:** The string that will be applied by RegEx. 
+ - **RegexOptions:** The [RegexOptions](https://docs.microsoft.com/en-us/dotnet/api/system.text.regularexpressions.regexoptions?view=netcore-3.1) that will be applied. Defaults to __RegexOptions.None__
+
+ **Examples**
+
+```csharp
+public class CreditCard
+{
+  const string RegexWithVerticalBars = @"([a-zA-Z0-9]+)\|([a-zA-Z0-9]+)\|([a-zA-Z0-9]+)";
+  
+  /// <summary>
+  /// 123|456|789 results in "***|456|789"
+  /// </summary>
+  [LogReplaced(RegexWithVerticalBars, "***|$2|$3")]
+  public string RegexReplaceFirst { get; set; }
+
+  /// <summary>
+  /// 123|456|789 results in "123|***|789"
+  /// </summary>
+  [LogReplaced(RegexWithVerticalBars, "$1|***|$3")]
+  public string RegexReplaceSecond { get; set; }
 }
 ```
