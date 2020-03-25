@@ -150,17 +150,18 @@ public property Information { get; set; }
 // Will log: "***|NonSensitive"
 ``` 
 
-`LogReplaced` attribute is available with two constructors:
+`LogReplaced` attribute is available with the following constructor:
 
 ```csharp
 LogReplaced(string pattern, string replacement)
-
-LogReplaced(string pattern, string replacement, RegexOptions regexOptions)
 ```
 
- - **Pattern:** The pattern that should be applied on value..
- - **Replacement:** The string that will be applied by RegEx. 
- - **RegexOptions:** The [RegexOptions](https://docs.microsoft.com/en-us/dotnet/api/system.text.regularexpressions.regexoptions?view=netcore-3.1) that will be applied. Defaults to __RegexOptions.None__
+__Constructor arguments__:
+ - **pattern:** The pattern that should be applied on value.
+ - **replacement:** The string that will be applied by RegEx. 
+
+__Available properties__:
+ - **Options:** The [RegexOptions](https://docs.microsoft.com/en-us/dotnet/api/system.text.regularexpressions.regexoptions?view=netcore-3.1) that will be applied. Defaults to __RegexOptions.None__
 
  **Examples**
 
