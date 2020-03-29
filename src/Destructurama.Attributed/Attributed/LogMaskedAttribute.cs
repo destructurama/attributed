@@ -96,7 +96,7 @@ namespace Destructurama.Attributed
             return propValue;
         }
 
-        public bool TryCreateLogEventProperty(string name, object value, ILogEventPropertyValueFactory propertyValueFactory, out LogEventProperty property)
+        public bool TryCreateLogEventProperty(string name, object value, Type type, ILogEventPropertyValueFactory propertyValueFactory, out LogEventProperty property)
         {
             property = new LogEventProperty(name, new ScalarValue(FormatMaskedValue(value)));
             return true;

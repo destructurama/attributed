@@ -13,6 +13,7 @@
 // limitations under the License.
 
 using System;
+using System.Collections.Concurrent;
 using Serilog.Core;
 using Serilog.Events;
 #if NETSTANDARD1_1
@@ -21,31 +22,65 @@ using System.Reflection;
 
 namespace Destructurama.Attributed
 {
+    abstract class CachedValue
+    {
+        public abstract bool IsDefaultValue(object value);
+    }
+
+    class CachedValue<T> : CachedValue
+    {
+        T Value { get; set; }
+
+        public CachedValue(T value)
+        {
+            Value = value;
+        }
+
+        public override bool IsDefaultValue(object value)
+        {
+            return Value.Equals(value);
+        }
+    }
+
     /// <summary>
     /// Specified that a property with default value for its type should not be included when destructuring an object for logging.
     /// </summary>
     [AttributeUsage(AttributeTargets.Property)]
     public class NotLoggedIfDefaultAttribute : Attribute, IPropertyDestructuringAttribute
     {
-        public bool TryCreateLogEventProperty(string name, object value, ILogEventPropertyValueFactory propertyValueFactory, out LogEventProperty property)
+        readonly static ConcurrentDictionary<Type, CachedValue> _cache = new ConcurrentDictionary<Type, CachedValue>();
+
+        public bool TryCreateLogEventProperty(string name, object value, Type type, ILogEventPropertyValueFactory propertyValueFactory, out LogEventProperty property)
         {
             if (value != null)
             {
-                var type = value.GetType();
-                object typeDefaultValue = null;
 
 #if NETSTANDARD1_1
                 if (type.GetTypeInfo().IsValueType)
 #else
                 if (type.IsValueType)
 #endif
-                    typeDefaultValue = Activator.CreateInstance(type);
-
-                if (!value.Equals(typeDefaultValue))
                 {
-                    property = new LogEventProperty(name, new ScalarValue(value));
-                    return true;
+                    CachedValue cachedValue;
+
+                    if (!_cache.TryGetValue(type, out cachedValue))
+                    {
+                        var cachedValueType = typeof(CachedValue<>).MakeGenericType(type);
+                        var defaultValue = Activator.CreateInstance(type);
+                        cachedValue = (CachedValue)Activator.CreateInstance(cachedValueType, defaultValue);
+
+                        _cache.TryAdd(type, cachedValue);
+                    }
+
+                    if (cachedValue.IsDefaultValue(value))
+                    {
+                        property = null;
+                        return false;
+                    }
                 }
+
+                property = new LogEventProperty(name, new ScalarValue(value));
+                return true;
             }
 
             property = null;

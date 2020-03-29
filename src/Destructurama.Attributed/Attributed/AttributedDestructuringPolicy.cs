@@ -15,6 +15,7 @@
 using System;
 using System.Collections.Concurrent;
 using System.Collections.Generic;
+using System.Diagnostics;
 using System.Linq;
 using System.Reflection;
 using Destructurama.Util;
@@ -40,11 +41,11 @@ namespace Destructurama.Attributed
             var classDestructurer = type.GetTypeInfo().GetCustomAttribute<ITypeDestructuringAttribute>();
             if (classDestructurer != null)
                 return new CacheEntry((o, f) => classDestructurer.CreateLogEventPropertyValue(o, f));
-            
+
             var properties = type.GetPropertiesRecursive().ToList();
             if (properties.All(pi => pi.GetCustomAttribute<IPropertyDestructuringAttribute>() == null))
                 return CacheEntry.Ignore;
-            
+
             var destructuringAttributes = properties
                 .Select(pi => new { pi, Attribute = pi.GetCustomAttribute<IPropertyDestructuringAttribute>() })
                 .Where(o => o.Attribute != null)
@@ -62,7 +63,7 @@ namespace Destructurama.Attributed
 
                 if (destructuringAttributes.TryGetValue(pi, out var destructuringAttribute))
                 {
-                    if (destructuringAttribute.TryCreateLogEventProperty(pi.Name, propValue, propertyValueFactory, out var property))
+                    if (destructuringAttribute.TryCreateLogEventProperty(pi.Name, propValue, pi.PropertyType, propertyValueFactory, out var property))
                         structureProperties.Add(property);
                 }
                 else
