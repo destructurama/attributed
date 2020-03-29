@@ -12,6 +12,7 @@
 // See the License for the specific language governing permissions and
 // limitations under the License.
 
+using System;
 using Serilog.Core;
 using Serilog.Events;
 
@@ -19,6 +20,6 @@ namespace Destructurama.Attributed
 {
     public interface IPropertyDestructuringAttribute
     {
-        bool TryCreateLogEventProperty(string name, object value, ILogEventPropertyValueFactory propertyValueFactory, out LogEventProperty property);
+        bool TryCreateLogEventProperty(string name, object value, Type type, ILogEventPropertyValueFactory propertyValueFactory, out LogEventProperty property);
     }
 }

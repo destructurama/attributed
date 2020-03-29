@@ -6,7 +6,7 @@ using System.Linq;
 
 namespace Destructurama.Attributed.Tests
 {
-    public class CustomizedRegexLogs
+    public class CustomizedDefaultLogs
     {
         const string RegexWithVerticalBars = @"([a-zA-Z0-9]+)\|([a-zA-Z0-9]+)\|([a-zA-Z0-9]+)";
 
@@ -51,7 +51,7 @@ namespace Destructurama.Attributed.Tests
                 .WriteTo.Sink(new DelegatingSink(e => evt = e))
                 .CreateLogger();
 
-            var customized = new CustomizedRegexLogs
+            var customized = new CustomizedDefaultLogs
             {
                 RegexReplaceFirst = "123|456|789"
             };
@@ -78,7 +78,7 @@ namespace Destructurama.Attributed.Tests
                 .WriteTo.Sink(new DelegatingSink(e => evt = e))
                 .CreateLogger();
 
-            var customized = new CustomizedRegexLogs
+            var customized = new CustomizedDefaultLogs
             {
                 RegexReplaceSecond = "123|456|789"
             };
@@ -105,7 +105,7 @@ namespace Destructurama.Attributed.Tests
                 .WriteTo.Sink(new DelegatingSink(e => evt = e))
                 .CreateLogger();
 
-            var customized = new CustomizedRegexLogs
+            var customized = new CustomizedDefaultLogs
             {
                 RegexReplaceThird = "123|456|789"
             };
@@ -132,7 +132,7 @@ namespace Destructurama.Attributed.Tests
                 .WriteTo.Sink(new DelegatingSink(e => evt = e))
                 .CreateLogger();
 
-            var customized = new CustomizedRegexLogs
+            var customized = new CustomizedDefaultLogs
             {
                 RegexReplaceFirstThird = "123|456|789"
             };
@@ -159,7 +159,7 @@ namespace Destructurama.Attributed.Tests
                 .WriteTo.Sink(new DelegatingSink(e => evt = e))
                 .CreateLogger();
 
-            var customized = new CustomizedRegexLogs
+            var customized = new CustomizedDefaultLogs
             {
                 RegexReplaceFirst = "123|456|789",
                 RegexReplaceThird = "123|456|789"

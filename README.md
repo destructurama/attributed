@@ -39,6 +39,23 @@ var command = new LoginCommand { Username = "logged", Password = "not logged" };
 log.Information("Logging in {@Command}", command);
 ```
 
+#### Ignoring a property if it's the default value
+
+Apply the `NotLoggedIfDefault` attribute:
+
+```csharp
+public class LoginCommand
+{
+  public string Username { get; set; }
+
+  [NotLoggedIfDefault]
+  public string Password { get; set; }
+
+  [NotLoggedIfDefault]
+  public DateTime TimeStamp { get; set; }
+}
+```
+
 #### Treating types and properties as scalars
 
 To prevent destructuring of a type or property at all, apply the `[LoggedAsScalar]` attribute.
@@ -182,3 +199,5 @@ public class CreditCard
   public string RegexReplaceSecond { get; set; }
 }
 ```
+
+
