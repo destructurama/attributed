@@ -41,7 +41,7 @@ log.Information("Logging in {@Command}", command);
 
 #### Treating types and properties as scalars
 
-To prevent destructuring of a type or property at all, apply the `[LoggedAsScalar]` attribute.
+To prevent destructuring of a type or property at all, apply the `[LogAsScalar]` attribute.
 
 #### Masking a string property
 
