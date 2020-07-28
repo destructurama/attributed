@@ -52,6 +52,8 @@ Apply the `LogMasked` attribute with various settings:
  - **ShowLast:** Shows the last x characters in the property value 
  - **PreserveLength:** If set it will swap out each character with the default value. Note that this property will be ignored if Text has been set to custom value.
 
+Note that masking also works for properties of type `IEnumerable<string>` or derived from it, for example, `string[]` or `List<string>`.
+
  **Examples**
 
 ```csharp
@@ -63,6 +65,12 @@ public class CreditCard
   [LogMasked]
   public string DefaultMasked { get; set; }
   
+  /// <summary>
+  /// [123456789,123456789,123456789] results in [***,***,***]
+  /// </summary>
+  [LogMasked]
+  public string[] DefaultMaskedArray { get; set; }
+
   /// <summary>
   ///  123456789 results in "REMOVED"
   /// </summary>
