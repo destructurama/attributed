@@ -13,6 +13,8 @@
 // limitations under the License.
 
 using System;
+using System.Collections.Generic;
+using System.Linq;
 using Serilog.Core;
 using Serilog.Events;
 
@@ -38,10 +40,8 @@ namespace Destructurama.Attributed
             return Text == DefaultMask;
         }
 
-        internal object FormatMaskedValue(object propValue)
+        private object FormatMaskedValue(string val)
         {
-            var val = propValue as string;
-
             if (string.IsNullOrEmpty(val))
                 return val;
 
@@ -93,13 +93,23 @@ namespace Destructurama.Attributed
                 return first + Text + last;
             }
 
-            return propValue;
+            return val;
         }
 
         public bool TryCreateLogEventProperty(string name, object value, ILogEventPropertyValueFactory propertyValueFactory, out LogEventProperty property)
         {
-            property = new LogEventProperty(name, new ScalarValue(FormatMaskedValue(value)));
+            property = new LogEventProperty(name, CreateValue(value));
             return true;
+        }
+
+        private LogEventPropertyValue CreateValue(object value)
+        {
+            return value switch
+            {
+                IEnumerable<string> strings => new SequenceValue(strings.Select(s => new ScalarValue(FormatMaskedValue(s)))),
+                string s => new ScalarValue(FormatMaskedValue(s)),
+                _ => new ScalarValue(null)
+            };
         }
     }
 }
