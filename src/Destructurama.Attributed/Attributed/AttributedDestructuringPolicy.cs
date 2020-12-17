@@ -109,7 +109,7 @@ namespace Destructurama.Attributed
 
                 if (destructuringAttributes.TryGetValue(pi, out var destructuringAttribute))
                 {
-                    if (destructuringAttribute.TryCreateLogEventProperty(pi.Name, propValue, pi.PropertyType, propertyValueFactory, out var property))
+                    if (destructuringAttribute.TryCreateLogEventProperty(pi.Name, propValue, propertyValueFactory, out var property))
                         structureProperties.Add(property);
                 }
                 else

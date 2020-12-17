@@ -20,6 +20,6 @@ namespace Destructurama.Attributed
 {
     public interface IPropertyDestructuringAttribute
     {
-        bool TryCreateLogEventProperty(string name, object value, Type type, ILogEventPropertyValueFactory propertyValueFactory, out LogEventProperty property);
+        bool TryCreateLogEventProperty(string name, object value, ILogEventPropertyValueFactory propertyValueFactory, out LogEventProperty property);
     }
 }
