@@ -14,8 +14,6 @@
 
 using System;
 using System.Collections.Concurrent;
-using Serilog.Core;
-using Serilog.Events;
 #if NETSTANDARD1_1
 using System.Reflection;
 #endif
@@ -46,11 +44,11 @@ namespace Destructurama.Attributed
     /// Specified that a property with default value for its type should not be included when destructuring an object for logging.
     /// </summary>
     [AttributeUsage(AttributeTargets.Property)]
-    public class NotLoggedIfDefaultAttribute : Attribute, IPropertyDestructuringAttribute
+    public class NotLoggedIfDefaultAttribute : Attribute, IPropertyOptionalIgnoreAttribute
     {
         readonly static ConcurrentDictionary<Type, CachedValue> _cache = new ConcurrentDictionary<Type, CachedValue>();
 
-        public bool TryCreateLogEventProperty(string name, object value, Type type, ILogEventPropertyValueFactory propertyValueFactory, out LogEventProperty property)
+        public bool ShouldPropertyBeIgnored(string name, object value, Type type)
         {
             if (value != null)
             {
@@ -62,7 +60,6 @@ namespace Destructurama.Attributed
 #endif
                 {
                     CachedValue cachedValue;
-
                     if (!_cache.TryGetValue(type, out cachedValue))
                     {
                         var cachedValueType = typeof(CachedValue<>).MakeGenericType(type);
@@ -74,17 +71,14 @@ namespace Destructurama.Attributed
 
                     if (cachedValue.IsDefaultValue(value))
                     {
-                        property = null;
-                        return false;
+                        return true;
                     }
                 }
 
-                property = new LogEventProperty(name, new ScalarValue(value));
-                return true;
+                return false;
             }
 
-            property = null;
-            return false;
+            return true;
         }
     }
 }

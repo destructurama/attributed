@@ -7,68 +7,69 @@ using System.Linq;
 
 namespace Destructurama.Attributed.Tests
 {
-    struct NotLoggedIfDefaultStruct
-    {
-        public int Integer { get; set; }
-
-        public DateTime DateTime { get; set; }
-    }
-
-    struct NotLoggedIfDefaultStructWithAttributes
-    {
-        [NotLoggedIfDefault]
-        public int Integer { get; set; }
-
-        [NotLoggedIfDefault]
-        public DateTime DateTime { get; set; }
-
-        public int IntegerLogged { get; set; }
-
-        public DateTime DateTimeLogged { get; set; }
-    }
-
-    class NotLoggedIfDefaultCustomizedDefaultLogs
-    {
-        [NotLoggedIfDefault]
-        public string String { get; set; }
-
-        [NotLoggedIfDefault]
-        public int Integer { get; set; }
-
-        [NotLoggedIfDefault]
-        public int? NullableInteger { get; set; }
-
-        [NotLoggedIfDefault]
-        public object Object { get; set; }
-
-        [NotLoggedIfDefault]
-        public object IntegerAsObject { get; set; }
-
-        [NotLoggedIfDefault]
-        public DateTime DateTime { get; set; }
-
-        [NotLoggedIfDefault]
-        public NotLoggedIfDefaultStruct Struct { get; set; }
-
-        public NotLoggedIfDefaultStructWithAttributes StructWithAttributes { get; set; }
-
-        public string StringLogged { get; set; }
-
-        public int IntegerLogged { get; set; }
-
-        public int? NullableIntegerLogged { get; set; }
-
-        public object ObjectLogged { get; set; }
-
-        public DateTime DateTimeLogged { get; set; }
-
-        [LogAsScalar]
-        public NotLoggedIfDefaultStruct StructLogged { get; set; }
-    }
-
     [TestFixture]
     public class NotLoggedIfDefaultAttributeTests
     {
+        struct NotLoggedIfDefaultStruct
+        {
+            public int Integer { get; set; }
+
+            public DateTime DateTime { get; set; }
+        }
+
+        struct NotLoggedIfDefaultStructWithAttributes
+        {
+            [NotLoggedIfDefault]
+            public int Integer { get; set; }
+
+            [NotLoggedIfDefault]
+            public DateTime DateTime { get; set; }
+
+            public int IntegerLogged { get; set; }
+
+            public DateTime DateTimeLogged { get; set; }
+        }
+
+        class NotLoggedIfDefaultCustomizedDefaultLogs
+        {
+            [NotLoggedIfDefault]
+            public string String { get; set; }
+
+            [NotLoggedIfDefault]
+            public int Integer { get; set; }
+
+            [NotLoggedIfDefault]
+            public int? NullableInteger { get; set; }
+
+            [NotLoggedIfDefault]
+            public object Object { get; set; }
+
+            [NotLoggedIfDefault]
+            public object IntegerAsObject { get; set; }
+
+            [NotLoggedIfDefault]
+            public DateTime DateTime { get; set; }
+
+            [NotLoggedIfDefault]
+            public NotLoggedIfDefaultStruct Struct { get; set; }
+
+            public NotLoggedIfDefaultStructWithAttributes StructWithAttributes { get; set; }
+
+            public string StringLogged { get; set; }
+
+            public int IntegerLogged { get; set; }
+
+            public int? NullableIntegerLogged { get; set; }
+
+            public object ObjectLogged { get; set; }
+
+            public DateTime DateTimeLogged { get; set; }
+
+            [LogAsScalar]
+            public NotLoggedIfDefaultStruct StructLogged { get; set; }
+        }
+
+
         [Test]
         public void NotLoggedIfDefault_Uninitialized()
         {
@@ -181,7 +182,7 @@ namespace Destructurama.Attributed.Tests
             Assert.AreEqual(5, props["NullableInteger"].LiteralValue());
             Assert.AreEqual("Bar", props["Object"].LiteralValue());
             Assert.AreEqual(dateTime, props["DateTime"].LiteralValue());
-            Assert.AreEqual(theStruct, props["Struct"].LiteralValue());
+            Assert.IsInstanceOf<StructureValue>(props["Struct"]);
             Assert.AreEqual(0, props["IntegerAsObject"].LiteralValue());
 
             Assert.AreEqual(default(string), props["StringLogged"].LiteralValue());

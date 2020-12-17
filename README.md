@@ -56,6 +56,31 @@ public class LoginCommand
 }
 ```
 
+#### Ignoring a property if it has the null value
+
+Apply the `NotLoggedIfNull` attribute:
+
+```csharp
+public class LoginCommand
+{
+  public string Username { get; set; }
+
+  [NotLoggedIfNull]
+  public string Password { get; set; }
+
+  [NotLoggedIfNull]
+  public DateTime TimeStamp { get; set; }
+}
+```
+
+It has effect only on reference types and nullables.
+
+Ignore null properties can be globally applied without applying attributes:
+```
+Destructurama.Attributed.AttributedDestructuringPolicy.IgnoreNullProperties = true;
+```
+
+
 #### Treating types and properties as scalars
 
 To prevent destructuring of a type or property at all, apply the `[LoggedAsScalar]` attribute.

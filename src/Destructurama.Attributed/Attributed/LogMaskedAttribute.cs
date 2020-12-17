@@ -13,6 +13,7 @@
 // limitations under the License.
 
 using System;
+using System.Globalization;
 using Serilog.Core;
 using Serilog.Events;
 
@@ -40,7 +41,14 @@ namespace Destructurama.Attributed
 
         internal object FormatMaskedValue(object propValue)
         {
-            var val = propValue as string;
+            if (propValue == null)
+                return null;
+
+            string val;
+            if (propValue is string)
+                val = propValue as string;
+            else
+                val = string.Format(CultureInfo.InvariantCulture, "{0}", propValue);
 
             if (string.IsNullOrEmpty(val))
                 return val;

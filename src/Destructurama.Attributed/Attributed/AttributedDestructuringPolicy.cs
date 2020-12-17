@@ -13,9 +13,9 @@
 // limitations under the License.
 
 using System;
+using System.Collections;
 using System.Collections.Concurrent;
 using System.Collections.Generic;
-using System.Diagnostics;
 using System.Linq;
 using System.Reflection;
 using Destructurama.Util;
@@ -25,8 +25,15 @@ using Serilog.Events;
 
 namespace Destructurama.Attributed
 {
-    class AttributedDestructuringPolicy : IDestructuringPolicy
+    public class AttributedDestructuringPolicy : IDestructuringPolicy
     {
+        /// <summary>
+        /// By setting IgnoreNullProperties to true no need to set [NotLoggedIfDefault] for every logged property.
+        /// Custom types implemenenting IEnumerable, will be destructed as StructureValue and affected by IgnoreNullProperties 
+        /// only in case at least one property (or the type itself) has Destructurama attribute applied.
+        /// </summary>
+        public static bool IgnoreNullProperties = false;
+
         readonly static ConcurrentDictionary<Type, CacheEntry> _cache = new ConcurrentDictionary<Type, CacheEntry>();
 
         public bool TryDestructure(object value, ILogEventPropertyValueFactory propertyValueFactory, out LogEventPropertyValue result)
@@ -38,28 +45,67 @@ namespace Destructurama.Attributed
 
         static CacheEntry CreateCacheEntry(Type type)
         {
-            var classDestructurer = type.GetTypeInfo().GetCustomAttribute<ITypeDestructuringAttribute>();
+            var ti = type.GetTypeInfo();
+            var classDestructurer = ti.GetCustomAttribute<ITypeDestructuringAttribute>();
             if (classDestructurer != null)
                 return new CacheEntry((o, f) => classDestructurer.CreateLogEventPropertyValue(o, f));
 
             var properties = type.GetPropertiesRecursive().ToList();
-            if (properties.All(pi => pi.GetCustomAttribute<IPropertyDestructuringAttribute>() == null))
+            if (!IgnoreNullProperties 
+                && properties.All(pi => 
+                    pi.GetCustomAttribute<IPropertyDestructuringAttribute>() == null
+                    && pi.GetCustomAttribute<IPropertyOptionalIgnoreAttribute>() == null))
+            {
                 return CacheEntry.Ignore;
+            }
+
+            var optionalIgnoreAttributes = properties
+                .Select(pi => new { pi, Attribute = pi.GetCustomAttribute<IPropertyOptionalIgnoreAttribute>() })
+                .Where(o => o.Attribute != null)
+                .ToDictionary(o => o.pi, o => o.Attribute);
 
             var destructuringAttributes = properties
                 .Select(pi => new { pi, Attribute = pi.GetCustomAttribute<IPropertyDestructuringAttribute>() })
                 .Where(o => o.Attribute != null)
                 .ToDictionary(o => o.pi, o => o.Attribute);
 
-            return new CacheEntry((o, f) => MakeStructure(o, properties, destructuringAttributes, f, type));
+            if (IgnoreNullProperties && !optionalIgnoreAttributes.Any() && !destructuringAttributes.Any())
+            {
+#if NETSTANDARD1_1
+                if (ti.ImplementedInterfaces.Any(x => x == typeof(IEnumerable)))
+#else
+                if (typeof(IEnumerable).IsAssignableFrom(type))
+#endif
+                    return CacheEntry.Ignore;
+            }
+
+            return new CacheEntry((o, f) => MakeStructure(o, properties, optionalIgnoreAttributes, destructuringAttributes, f, type));
         }
 
-        static LogEventPropertyValue MakeStructure(object o, IEnumerable<PropertyInfo> loggedProperties, IDictionary<PropertyInfo, IPropertyDestructuringAttribute> destructuringAttributes, ILogEventPropertyValueFactory propertyValueFactory, Type type)
+        static LogEventPropertyValue MakeStructure(
+            object o, 
+            IEnumerable<PropertyInfo> loggedProperties, 
+            IDictionary<PropertyInfo, IPropertyOptionalIgnoreAttribute> optionalIgnoreAttributes, 
+            IDictionary<PropertyInfo, IPropertyDestructuringAttribute> destructuringAttributes, 
+            ILogEventPropertyValueFactory propertyValueFactory, 
+            Type type)
         {
             var structureProperties = new List<LogEventProperty>();
             foreach (var pi in loggedProperties)
             {
                 var propValue = SafeGetPropValue(o, pi);
+
+                if (optionalIgnoreAttributes.TryGetValue(pi, out var optionalIgnoreAttribute))
+                {
+                    if (optionalIgnoreAttribute.ShouldPropertyBeIgnored(pi.Name, propValue, pi.PropertyType))
+                        continue;
+                }
+
+                if (IgnoreNullProperties)
+                {
+                    if (NotLoggedIfNullAttribute.Instance.ShouldPropertyBeIgnored(pi.Name, propValue, pi.PropertyType))
+                        continue;
+                }
 
                 if (destructuringAttributes.TryGetValue(pi, out var destructuringAttribute))
                 {
