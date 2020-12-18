@@ -44,10 +44,7 @@ namespace Destructurama.Attributed
             if (propValue == null)
                 return null;
 
-            string val;
-            if (propValue is string)
-                val = propValue as string;
-            else
+            if (propValue is not string val)
                 val = string.Format(CultureInfo.InvariantCulture, "{0}", propValue);
 
             if (string.IsNullOrEmpty(val))

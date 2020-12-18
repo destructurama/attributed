@@ -13,6 +13,8 @@
 // limitations under the License.
 
 using System;
+using Serilog.Core;
+using Serilog.Events;
 
 namespace Destructurama.Attributed
 {
@@ -20,9 +22,12 @@ namespace Destructurama.Attributed
     /// Specified that a property should not be included when destructuring an object for logging.
     /// </summary>
     [AttributeUsage(AttributeTargets.Property)]
-    public class NotLoggedAttribute : Attribute, IPropertyOptionalIgnoreAttribute
+    public class NotLoggedAttribute : Attribute, IPropertyDestructuringAttribute
     {
-        public bool ShouldPropertyBeIgnored(string name, object value, Type type)
-            => true;
+        public bool TryCreateLogEventProperty(string name, object value, ILogEventPropertyValueFactory propertyValueFactory, out LogEventProperty property)
+        {
+            property = null;
+            return false;
+        }
     }
 }

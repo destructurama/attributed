@@ -59,8 +59,7 @@ namespace Destructurama.Attributed
                 if (type.IsValueType)
 #endif
                 {
-                    CachedValue cachedValue;
-                    if (!_cache.TryGetValue(type, out cachedValue))
+                    if (!_cache.TryGetValue(type, out CachedValue cachedValue))
                     {
                         var cachedValueType = typeof(CachedValue<>).MakeGenericType(type);
                         var defaultValue = Activator.CreateInstance(type);

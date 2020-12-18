@@ -25,16 +25,21 @@ using Serilog.Events;
 
 namespace Destructurama.Attributed
 {
-    public class AttributedDestructuringPolicy : IDestructuringPolicy
+    class AttributedDestructuringPolicy : IDestructuringPolicy
     {
-        /// <summary>
-        /// By setting IgnoreNullProperties to true no need to set [NotLoggedIfDefault] for every logged property.
-        /// Custom types implemenenting IEnumerable, will be destructed as StructureValue and affected by IgnoreNullProperties 
-        /// only in case at least one property (or the type itself) has Destructurama attribute applied.
-        /// </summary>
-        public static bool IgnoreNullProperties = false;
-
         readonly static ConcurrentDictionary<Type, CacheEntry> _cache = new ConcurrentDictionary<Type, CacheEntry>();
+        private readonly AttributedDestructuringPolicyOptions _options;
+
+        public AttributedDestructuringPolicy()
+        {
+            _options = new AttributedDestructuringPolicyOptions();
+        }
+
+        public AttributedDestructuringPolicy(Action<AttributedDestructuringPolicyOptions> configure)
+            : this()
+        {
+            configure?.Invoke(_options);
+        }
 
         public bool TryDestructure(object value, ILogEventPropertyValueFactory propertyValueFactory, out LogEventPropertyValue result)
         {
@@ -43,7 +48,7 @@ namespace Destructurama.Attributed
             return cached.CanDestructure;
         }
 
-        static CacheEntry CreateCacheEntry(Type type)
+        private CacheEntry CreateCacheEntry(Type type)
         {
             var ti = type.GetTypeInfo();
             var classDestructurer = ti.GetCustomAttribute<ITypeDestructuringAttribute>();
@@ -51,7 +56,7 @@ namespace Destructurama.Attributed
                 return new CacheEntry((o, f) => classDestructurer.CreateLogEventPropertyValue(o, f));
 
             var properties = type.GetPropertiesRecursive().ToList();
-            if (!IgnoreNullProperties 
+            if (!_options.IgnoreNullProperties 
                 && properties.All(pi => 
                     pi.GetCustomAttribute<IPropertyDestructuringAttribute>() == null
                     && pi.GetCustomAttribute<IPropertyOptionalIgnoreAttribute>() == null))
@@ -69,7 +74,7 @@ namespace Destructurama.Attributed
                 .Where(o => o.Attribute != null)
                 .ToDictionary(o => o.pi, o => o.Attribute);
 
-            if (IgnoreNullProperties && !optionalIgnoreAttributes.Any() && !destructuringAttributes.Any())
+            if (_options.IgnoreNullProperties && !optionalIgnoreAttributes.Any() && !destructuringAttributes.Any())
             {
 #if NETSTANDARD1_1
                 if (ti.ImplementedInterfaces.Any(x => x == typeof(IEnumerable)))
@@ -82,7 +87,7 @@ namespace Destructurama.Attributed
             return new CacheEntry((o, f) => MakeStructure(o, properties, optionalIgnoreAttributes, destructuringAttributes, f, type));
         }
 
-        static LogEventPropertyValue MakeStructure(
+        private LogEventPropertyValue MakeStructure(
             object o, 
             IEnumerable<PropertyInfo> loggedProperties, 
             IDictionary<PropertyInfo, IPropertyOptionalIgnoreAttribute> optionalIgnoreAttributes, 
@@ -101,7 +106,7 @@ namespace Destructurama.Attributed
                         continue;
                 }
 
-                if (IgnoreNullProperties)
+                if (_options.IgnoreNullProperties)
                 {
                     if (NotLoggedIfNullAttribute.Instance.ShouldPropertyBeIgnored(pi.Name, propValue, pi.PropertyType))
                         continue;
