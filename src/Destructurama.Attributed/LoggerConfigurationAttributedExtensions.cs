@@ -16,6 +16,9 @@ using Destructurama.Attributed;
 using Serilog;
 using Serilog.Configuration;
 using System;
+using System.Runtime.CompilerServices;
+
+[assembly: InternalsVisibleTo("Destructurama.Attributed.Tests")]
 
 namespace Destructurama
 {

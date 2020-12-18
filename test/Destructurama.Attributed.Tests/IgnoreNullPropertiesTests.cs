@@ -6,6 +6,7 @@ using System;
 using System.Collections;
 using System.Collections.Generic;
 using System.Linq;
+using System.Reflection;
 
 namespace Destructurama.Attributed.Tests
 {
@@ -149,6 +150,18 @@ namespace Destructurama.Attributed.Tests
 
             IEnumerator IEnumerable.GetEnumerator()
                 => GetEnumerator();
+        }
+
+        [SetUp]
+        public void SetUp()
+        {
+            AttributedDestructuringPolicy.Clear();
+        }
+
+        [TearDown]
+        public void TearDown()
+        {
+            AttributedDestructuringPolicy.Clear();
         }
 
         [Test]

@@ -138,5 +138,10 @@ namespace Destructurama.Attributed
                 return "The property accessor threw an exception: " + ex.InnerException.GetType().Name;
             }
         }
+
+        internal static void Clear()
+        {
+            _cache.Clear();
+        }
     }
 }
