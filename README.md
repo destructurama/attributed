@@ -63,23 +63,34 @@ Apply the `NotLoggedIfNull` attribute:
 ```csharp
 public class LoginCommand
 {
+  /// <summary>
+  ///  `null` value results in removed property
+  /// </summary>
+  [NotLoggedIfNull]
   public string Username { get; set; }
 
-  [NotLoggedIfNull]
+  /// <summary>
+  ///  Can be applied with [LogMasked] or [LogReplaced] attributes
+  ///  `null` value results in removed property
+  ///  "123456789" results in "***"
+  /// </summary>
+  [NotLoggedIfNull] [LogMasked]
   public string Password { get; set; }
 
+  /// <summary>
+  ///  Attribute has no effect on non-reference and non-nullable types
+  /// </summary>
   [NotLoggedIfNull]
-  public DateTime TimeStamp { get; set; }
+  public int TimeStamp { get; set; }
 }
 ```
 
-It has effect only on reference types and nullables.
-
-Ignore null properties can be globally applied without applying attributes:
+Ignore null properties can be globally applied during initialization without need to apply attributes:
+```csharp
+var log = new LoggerConfiguration()
+  .Destructure.UsingAttributes(x => x.IgnoreNullProperties = true)
+  ...
 ```
-Destructurama.Attributed.AttributedDestructuringPolicy.IgnoreNullProperties = true;
-```
-
 
 #### Treating types and properties as scalars
 
@@ -177,6 +188,21 @@ public class CreditCard
   /// </summary>
   [LogMasked(Text="REMOVED", ShowFirst=3, ShowLast=3, PreserveLength=true)]
   public string ShowFirstAndLastThreeAndCustomMaskInTheMiddle { get; set; }
+
+  /// <summary>
+  ///  NOTE When applied on non-string types value will be converted to string with InvariantCulture
+  ///  123456789 results in "123***"
+  /// </summary>
+  [LogMasked(ShowFirst=3)]
+  public int IntMasked { get; set; }
+
+  /// <summary>
+  ///  When applied on non-string types value will be converted to string with InvariantCulture
+  ///  new DateTime(2000, 1, 2, 3, 4, 5) results in "01/02/2000 ***"
+  /// </summary>
+  [LogMasked(ShowFirst=11)]
+  public DateTime DateTimeMasked { get; set; }
+
 }
 ```
 
