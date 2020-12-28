@@ -15,6 +15,10 @@
 using Destructurama.Attributed;
 using Serilog;
 using Serilog.Configuration;
+using System;
+using System.Runtime.CompilerServices;
+
+[assembly: InternalsVisibleTo("Destructurama.Attributed.Tests")]
 
 namespace Destructurama
 {
@@ -30,6 +34,18 @@ namespace Destructurama
         public static LoggerConfiguration UsingAttributes(this LoggerDestructuringConfiguration configuration)
         {
             return configuration.With<AttributedDestructuringPolicy>();
+        }
+
+        /// <summary>
+        /// </summary>
+        /// <param name="configuration">The logger configuration to apply configuration to.</param>
+        /// <param name="configure">Configure Destructurama options</param>
+        /// <returns>An object allowing configuration to continue.</returns>
+        public static LoggerConfiguration UsingAttributes(this LoggerDestructuringConfiguration configuration, 
+            Action<AttributedDestructuringPolicyOptions> configure)
+        {
+            var policy = new AttributedDestructuringPolicy(configure);
+            return configuration.With(policy);
         }
     }
 }

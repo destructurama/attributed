@@ -39,6 +39,59 @@ var command = new LoginCommand { Username = "logged", Password = "not logged" };
 log.Information("Logging in {@Command}", command);
 ```
 
+#### Ignoring a property if it's the default value
+
+Apply the `NotLoggedIfDefault` attribute:
+
+```csharp
+public class LoginCommand
+{
+  public string Username { get; set; }
+
+  [NotLoggedIfDefault]
+  public string Password { get; set; }
+
+  [NotLoggedIfDefault]
+  public DateTime TimeStamp { get; set; }
+}
+```
+
+#### Ignoring a property if it has the null value
+
+Apply the `NotLoggedIfNull` attribute:
+
+```csharp
+public class LoginCommand
+{
+  /// <summary>
+  ///  `null` value results in removed property
+  /// </summary>
+  [NotLoggedIfNull]
+  public string Username { get; set; }
+
+  /// <summary>
+  ///  Can be applied with [LogMasked] or [LogReplaced] attributes
+  ///  `null` value results in removed property
+  ///  "123456789" results in "***"
+  /// </summary>
+  [NotLoggedIfNull] [LogMasked]
+  public string Password { get; set; }
+
+  /// <summary>
+  ///  Attribute has no effect on non-reference and non-nullable types
+  /// </summary>
+  [NotLoggedIfNull]
+  public int TimeStamp { get; set; }
+}
+```
+
+Ignore null properties can be globally applied during initialization without need to apply attributes:
+```csharp
+var log = new LoggerConfiguration()
+  .Destructure.UsingAttributes(x => x.IgnoreNullProperties = true)
+  ...
+```
+
 #### Treating types and properties as scalars
 
 To prevent destructuring of a type or property at all, apply the `[LoggedAsScalar]` attribute.
@@ -135,6 +188,21 @@ public class CreditCard
   /// </summary>
   [LogMasked(Text="REMOVED", ShowFirst=3, ShowLast=3, PreserveLength=true)]
   public string ShowFirstAndLastThreeAndCustomMaskInTheMiddle { get; set; }
+
+  /// <summary>
+  ///  NOTE When applied on non-string types value will be converted to string with InvariantCulture
+  ///  123456789 results in "123***"
+  /// </summary>
+  [LogMasked(ShowFirst=3)]
+  public int IntMasked { get; set; }
+
+  /// <summary>
+  ///  When applied on non-string types value will be converted to string with InvariantCulture
+  ///  new DateTime(2000, 1, 2, 3, 4, 5) results in "01/02/2000 ***"
+  /// </summary>
+  [LogMasked(ShowFirst=11)]
+  public DateTime DateTimeMasked { get; set; }
+
 }
 ```
 
@@ -182,3 +250,5 @@ public class CreditCard
   public string RegexReplaceSecond { get; set; }
 }
 ```
+
+
