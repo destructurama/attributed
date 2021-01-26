@@ -27,7 +27,7 @@ public class Person
   public string FirstName { get; set; }
   
   [LogWithName("bdate")]
-  public string DateOfBirth { get; set; }
+  public string Birthdate { get; set; }
   
   public string Age { get; set; }
 }
