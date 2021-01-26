@@ -23,9 +23,15 @@ Apply the `LogWithName` attribute:
 ```csharp
 public class Person
 {
-  [LogWithName("fname")]
+  [LogWithName("name")]
   public string FirstName { get; set; }
+  
+  [LogWithName("bdate")]
+  public string DateOfBirth { get; set; }
+  
+  public string Age { get; set; }
 }
+```
 
 #### Ignoring a property
 
