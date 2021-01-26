@@ -15,6 +15,8 @@
 using Serilog.Core;
 using Serilog.Events;
 using System;
+using System.Collections.Generic;
+using System.Security;
 
 namespace Destructurama.Attributed
 {
@@ -30,7 +32,19 @@ namespace Destructurama.Attributed
 
         public bool TryCreateLogEventProperty(string name, object value, ILogEventPropertyValueFactory propertyValueFactory, out LogEventProperty property)
         {
-            property = new LogEventProperty(PropertyName, new ScalarValue(value));
+            var propValue = propertyValueFactory.CreatePropertyValue(value);
+            LogEventPropertyValue logEventPropVal = null;
+
+            if (propValue is ScalarValue)
+                logEventPropVal = new ScalarValue(propValue);
+            else if (propValue is DictionaryValue)
+                logEventPropVal = new DictionaryValue(((DictionaryValue)propValue).Elements);
+            else if (propValue is SequenceValue)
+                logEventPropVal = new SequenceValue(((SequenceValue)propValue).Elements);
+            else if (propValue is StructureValue)
+                logEventPropVal = new StructureValue(((StructureValue)propValue).Properties);
+
+            property = new LogEventProperty(PropertyName, logEventPropVal);
             return true;
         }
     }
