@@ -24,11 +24,7 @@ Apply the `LogWithName` attribute:
 public class Person
 {
   [LogWithName("fname")]
-  public string FirstName
-  {
-    get;
-    set;
-   }
+  public string FirstName { get; set; }
 }
 
 #### Ignoring a property
