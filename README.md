@@ -17,6 +17,19 @@ var log = new LoggerConfiguration()
   .Destructure.UsingAttributes()
   ...
 ```
+#### Changing a property name
+Apply the `LogWithName` attribute:
+
+```csharp
+public class Person
+{
+  [LogWithName("fname")]
+  public string FirstName
+  {
+    get;
+    set;
+   }
+}
 
 #### Ignoring a property
 
