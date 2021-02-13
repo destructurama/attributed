@@ -43,7 +43,7 @@ namespace Destructurama.Attributed.Tests
     }
 
     [TestFixture]
-    public class AttributedDestructuringTests
+    public class LogWithNameAttributedTests
     {
         [Test]
         public void AttributesAreConsultedWhenDestructuring()
