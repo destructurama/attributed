@@ -1,8 +1,8 @@
-### Destructurama.Attributed [![Build status](https://ci.appveyor.com/api/projects/status/1tutmofqjb9wq627?svg=true)](https://ci.appveyor.com/project/Destructurama/attributed)
+# Destructurama.Attributed [![Build status](https://ci.appveyor.com/api/projects/status/1tutmofqjb9wq627?svg=true)](https://ci.appveyor.com/project/Destructurama/attributed)
 
 This package makes it possible to manipulate how objects are logged to [Serilog](http://serilog.net) using attributes.
 
-#### Enabling the module:
+## Enabling the module:
 
 Install from NuGet:
 
@@ -18,7 +18,7 @@ var log = new LoggerConfiguration()
   ...
 ```
 
-#### Ignoring a property
+## Ignoring a property
 
 Apply the `NotLogged` attribute:
 
@@ -39,11 +39,11 @@ var command = new LoginCommand { Username = "logged", Password = "not logged" };
 log.Information("Logging in {@Command}", command);
 ```
 
-#### Treating types and properties as scalars
+## Treating types and properties as scalars
 
 To prevent destructuring of a type or property at all, apply the `[LoggedAsScalar]` attribute.
 
-#### Masking a string property
+## Masking a string property
 
 Apply the `LogMasked` attribute with various settings:
 
@@ -52,7 +52,7 @@ Apply the `LogMasked` attribute with various settings:
  - **ShowLast:** Shows the last x characters in the property value 
  - **PreserveLength:** If set it will swap out each character with the default value. Note that this property will be ignored if Text has been set to custom value.
 
- **Examples**
+### Examples
 
 ```csharp
 public class CreditCard
@@ -138,7 +138,7 @@ public class CreditCard
 }
 ```
 
-#### Masking a string property with Regular Expressions
+## Masking a string property with regular expressions
 
 Apply the `LogReplaced` attribute on a string, in which you want to apply a RegEx replacement during Logging.
 
@@ -162,7 +162,7 @@ LogReplaced(string pattern, string replacement, RegexOptions regexOptions)
  - **Replacement:** The string that will be applied by RegEx. 
  - **RegexOptions:** The [RegexOptions](https://docs.microsoft.com/en-us/dotnet/api/system.text.regularexpressions.regexoptions?view=netcore-3.1) that will be applied. Defaults to __RegexOptions.None__
 
- **Examples**
+### Examples
 
 ```csharp
 public class CreditCard
