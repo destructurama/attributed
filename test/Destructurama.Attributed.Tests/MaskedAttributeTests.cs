@@ -17,6 +17,12 @@ namespace Destructurama.Attributed.Tests
         public string DefaultMasked { get; set; }
 
         /// <summary>
+        /// [123456789,123456789,123456789] results in [***,***,***]
+        /// </summary>
+        [LogMasked]
+        public string[] DefaultMaskedArray { get; set; }
+
+        /// <summary>
         /// 123456789 results in "*********"
         /// </summary>
         [LogMasked(PreserveLength = true)]
