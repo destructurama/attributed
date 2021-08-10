@@ -36,7 +36,7 @@ public class PersonalData
     public string Name { get; set; }
 }
 ```
-<sup><a href='/test/Destructurama.Attributed.Tests/LogWithNameAttributedTests.cs#L38-L44' title='Snippet source file'>snippet source</a> | <a href='#snippet-logwithname' title='Start of snippet'>anchor</a></sup>
+<sup><a href='/test/Destructurama.Attributed.Tests/LogWithNameAttributedTests.cs#L37-L43' title='Snippet source file'>snippet source</a> | <a href='#snippet-logwithname' title='Start of snippet'>anchor</a></sup>
 <!-- endSnippet -->
 
 
