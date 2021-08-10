@@ -6,6 +6,8 @@ using System.Linq;
 
 namespace Destructurama.Attributed.Tests
 {
+    #region CustomizedMaskedLogs
+
     public class CustomizedMaskedLogs
     {
         /// <summary>
@@ -98,6 +100,8 @@ namespace Destructurama.Attributed.Tests
         [LogMasked(Text = "_REMOVED_", ShowFirst = 3, ShowLast = 3, PreserveLength = true)]
         public string ShowFirstAndLastThreeAndCustomMaskInTheMiddlePreservedLengthIgnored { get; set; }
     }
+
+    #endregion
 
     [TestFixture]
     public class MaskedAttributeTests
@@ -727,5 +731,3 @@ namespace Destructurama.Attributed.Tests
         }
     }
 }
-
-
