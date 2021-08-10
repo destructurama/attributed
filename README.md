@@ -168,7 +168,7 @@ public class CustomizedMaskedLogs
     /// 123456789 results in "123***789"
     /// </summary>
     [LogMasked(ShowFirst = 3, ShowLast = 3)]
-    public string ShowFirstAndLastThreeAndDefaultMaskeInTheMiddle { get; set; }
+    public string ShowFirstAndLastThreeAndDefaultMaskInTheMiddle { get; set; }
 
     /// <summary>
     ///  123456789 results in "123_REMOVED_789"

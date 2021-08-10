@@ -86,7 +86,7 @@ namespace Destructurama.Attributed.Tests
         /// 123456789 results in "123***789"
         /// </summary>
         [LogMasked(ShowFirst = 3, ShowLast = 3)]
-        public string ShowFirstAndLastThreeAndDefaultMaskeInTheMiddle { get; set; }
+        public string ShowFirstAndLastThreeAndDefaultMaskInTheMiddle { get; set; }
 
         /// <summary>
         ///  123456789 results in "123_REMOVED_789"
@@ -283,7 +283,7 @@ namespace Destructurama.Attributed.Tests
 
             var customized = new CustomizedMaskedLogs
             {
-                ShowFirstAndLastThreeAndDefaultMaskeInTheMiddle = "12345678987654321"
+                ShowFirstAndLastThreeAndDefaultMaskInTheMiddle = "12345678987654321"
             };
 
             log.Information("Here is {@Customized}", customized);
@@ -291,8 +291,8 @@ namespace Destructurama.Attributed.Tests
             var sv = (StructureValue)evt.Properties["Customized"];
             var props = sv.Properties.ToDictionary(p => p.Name, p => p.Value);
 
-            Assert.IsTrue(props.ContainsKey("ShowFirstAndLastThreeAndDefaultMaskeInTheMiddle"));
-            Assert.AreEqual("123***321", props["ShowFirstAndLastThreeAndDefaultMaskeInTheMiddle"].LiteralValue());
+            Assert.IsTrue(props.ContainsKey("ShowFirstAndLastThreeAndDefaultMaskInTheMiddle"));
+            Assert.AreEqual("123***321", props["ShowFirstAndLastThreeAndDefaultMaskInTheMiddle"].LiteralValue());
         }
 
         [Test]
