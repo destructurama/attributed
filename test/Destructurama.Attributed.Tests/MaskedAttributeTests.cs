@@ -17,6 +17,12 @@ namespace Destructurama.Attributed.Tests
         public string DefaultMasked { get; set; }
 
         /// <summary>
+        /// [123456789,123456789,123456789] results in [***,***,***]
+        /// </summary>
+        [LogMasked]
+        public string[] DefaultMaskedArray { get; set; }
+
+        /// <summary>
         /// 123456789 results in "*********"
         /// </summary>
         [LogMasked(PreserveLength = true)]
@@ -137,6 +143,35 @@ namespace Destructurama.Attributed.Tests
 
             Assert.IsTrue(props.ContainsKey("DefaultMasked"));
             Assert.AreEqual("***", props["DefaultMasked"].LiteralValue());
+        }
+
+        [Test]
+        public void LogMaskedAttribute_Replaces_Array_Value_With_DefaultStars_Mask()
+        {
+            // [LogMasked]
+            // [123456789,123456789,123456789] results in [***,***,***]
+
+            LogEvent evt = null;
+
+            var log = new LoggerConfiguration()
+                .Destructure.UsingAttributes()
+                .WriteTo.Sink(new DelegatingSink(e => evt = e))
+                .CreateLogger();
+
+            var customized = new CustomizedMaskedLogs
+            {
+                DefaultMaskedArray = new[] { "123456789", "123456789", "123456789" }
+            };
+
+            log.Information("Here is {@Customized}", customized);
+
+            var sv = (StructureValue)evt.Properties["Customized"];
+            var props = sv.Properties.ToDictionary(p => p.Name, p => p.Value);
+
+            Assert.IsTrue(props.ContainsKey("DefaultMaskedArray"));
+            var seq = props["DefaultMaskedArray"] as SequenceValue;
+            foreach (var elem in seq.Elements)
+                Assert.AreEqual("***", elem.LiteralValue());
         }
 
         [Test]
