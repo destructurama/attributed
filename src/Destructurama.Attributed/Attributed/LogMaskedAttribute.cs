@@ -115,7 +115,6 @@ namespace Destructurama.Attributed
         public bool TryCreateLogEventProperty(string name, object value, ILogEventPropertyValueFactory propertyValueFactory, out LogEventProperty property)
         {
             property = new LogEventProperty(name, CreateValue(value));
-            property = new(name, new ScalarValue(FormatMaskedValue(value)));
             return true;
         }
 
