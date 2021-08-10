@@ -24,19 +24,16 @@ namespace Destructurama.Attributed
     [AttributeUsage(AttributeTargets.Property)]
     public class LogWithNameAttribute : Attribute, IPropertyDestructuringAttribute
     {
+        private string _newName;
+
         /// <summary>
         /// Initialize a new instance of <see cref="LogWithNameAttribute"/>.
         /// </summary>
         /// <param name="newName">The new name to use when logging the target property.</param>
         public LogWithNameAttribute(string newName)
         {
-            PropertyName = newName;
+            _newName = newName;
         }
-
-        /// <summary>
-        /// The new name to use when logging the target property.
-        /// </summary>
-        public string PropertyName { get; }
 
         /// <summary>
         /// <inheritdoc/>
@@ -54,7 +51,7 @@ namespace Destructurama.Attributed
                 _ => null
             };
 
-            property = new LogEventProperty(PropertyName, logEventPropVal);
+            property = new LogEventProperty(_newName, logEventPropVal);
             return true;
         }
     }
