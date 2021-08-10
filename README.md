@@ -3,7 +3,7 @@
 [![Build status](https://ci.appveyor.com/api/projects/status/1tutmofqjb9wq627/branch/master?svg=true)](https://ci.appveyor.com/project/Destructurama/attributed)
 [![NuGet Status](https://img.shields.io/nuget/v/Destructurama.Attributed.svg)](https://www.nuget.org/packages/Destructurama.Attributed/)
 
-This package makes it possible to manipulate how objects are logged to [Serilog](http://serilog.net) using attributes.
+This package makes it possible to manipulate how objects are logged to [Serilog](https://serilog.net) using attributes.
 
 
 ## Enabling the module:
@@ -27,22 +27,30 @@ var log = new LoggerConfiguration()
 
 Apply the `NotLogged` attribute:
 
-```csharp
+<!-- snippet: LoginCommand -->
+<a id='snippet-logincommand'></a>
+```cs
 public class LoginCommand
 {
-  public string Username { get; set; }
+    public string Username { get; set; }
 
-  [NotLogged]
-  public string Password { get; set; }
+    [NotLogged]
+    public string Password { get; set; }
 }
 ```
+<sup><a href='/test/Destructurama.Attributed.Tests/Snippets.cs#L12-L20' title='Snippet source file'>snippet source</a> | <a href='#snippet-logincommand' title='Start of snippet'>anchor</a></sup>
+<!-- endSnippet -->
 
 When the object is passed using `{@...}` syntax the attributes will be consulted.
 
-```csharp
+<!-- snippet: LogCommand -->
+<a id='snippet-logcommand'></a>
+```cs
 var command = new LoginCommand { Username = "logged", Password = "not logged" };
 log.Information("Logging in {@Command}", command);
 ```
+<sup><a href='/test/Destructurama.Attributed.Tests/Snippets.cs#L27-L30' title='Snippet source file'>snippet source</a> | <a href='#snippet-logcommand' title='Start of snippet'>anchor</a></sup>
+<!-- endSnippet -->
 
 
 ## Treating types and properties as scalars
