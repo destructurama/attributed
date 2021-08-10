@@ -1,11 +1,11 @@
 ﻿// Copyright 2015-2018 Destructurama Contributors, Serilog Contributors
-// 
+//
 // Licensed under the Apache License, Version 2.0 (the "License");
 // you may not use this file except in compliance with the License.
 // You may obtain a copy of the License at
-// 
+//
 //     http://www.apache.org/licenses/LICENSE-2.0
-// 
+//
 // Unless required by applicable law or agreed to in writing, software
 // distributed under the License is distributed on an "AS IS" BASIS,
 // WITHOUT WARRANTIES OR CONDITIONS OF ANY KIND, either express or implied.
@@ -20,22 +20,33 @@ using Serilog.Events;
 
 namespace Destructurama.Attributed
 {
+    /// <summary>
+    /// Apply to a property to apply a mask to the logged value.
+    /// </summary>
     [AttributeUsage(AttributeTargets.Property)]
     public class LogMaskedAttribute : Attribute, IPropertyDestructuringAttribute
     {
         const string DefaultMask = "***";
 
+        /// <summary>
+        /// If set, the property value will be set to this text.
+        /// </summary>
         public string Text { get; set; } = DefaultMask;
+        /// <summary>
+        /// Shows the first x characters in the property value.
+        /// </summary>
         public int ShowFirst { get; set; }
+        /// <summary>
+        /// Shows the last x characters in the property value.
+        /// </summary>
         public int ShowLast { get; set; }
+        /// <summary>
+        /// If set, it will swap out each character with the default value. Note that this
+        /// property will be ignored if <see cref="Text"/> has been set to custom value.
+        /// </summary>
         public bool PreserveLength { get; set; }
 
-        /// <summary>
-        /// Check to see if custom Text has been provided.
-        /// If true PreserveLength is ignored.
-        /// </summary>
-        /// <returns></returns>
-        internal bool IsDefaultMask()
+        private bool IsDefaultMask()
         {
             return Text == DefaultMask;
         }
@@ -62,7 +73,7 @@ namespace Destructurama.Attributed
 
                 var mask = "";
                 if (ShowFirst <= val.Length)
-                    mask = new string(Text[0], val.Length - ShowFirst);
+                    mask = new(Text[0], val.Length - ShowFirst);
 
                 return first + mask;
 
@@ -77,7 +88,7 @@ namespace Destructurama.Attributed
 
                 var mask = "";
                 if (ShowLast <= val.Length)
-                    mask = new string(Text[0], val.Length - ShowLast);
+                    mask = new(Text[0], val.Length - ShowLast);
 
                 return mask + last;
             }
@@ -90,15 +101,21 @@ namespace Destructurama.Attributed
                 var first = val.Substring(0, ShowFirst);
                 var last = val.Substring(val.Length - ShowLast);
 
-                return first + Text + last;
+                string mask = null;
+                if (PreserveLength && IsDefaultMask())
+                    mask = new string(Text[0], val.Length - ShowFirst - ShowLast);
+
+                return first + (mask ?? Text) + last;
             }
 
             return val;
         }
 
+        /// <inheritdoc/>
         public bool TryCreateLogEventProperty(string name, object value, ILogEventPropertyValueFactory propertyValueFactory, out LogEventProperty property)
         {
             property = new LogEventProperty(name, CreateValue(value));
+            property = new(name, new ScalarValue(FormatMaskedValue(value)));
             return true;
         }
 

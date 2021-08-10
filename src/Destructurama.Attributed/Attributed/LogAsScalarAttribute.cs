@@ -1,11 +1,11 @@
 ﻿// Copyright 2015 Destructurama Contributors, Serilog Contributors
-// 
+//
 // Licensed under the Apache License, Version 2.0 (the "License");
 // you may not use this file except in compliance with the License.
 // You may obtain a copy of the License at
-// 
+//
 //     http://www.apache.org/licenses/LICENSE-2.0
-// 
+//
 // Unless required by applicable law or agreed to in writing, software
 // distributed under the License is distributed on an "AS IS" BASIS,
 // WITHOUT WARRANTIES OR CONDITIONS OF ANY KIND, either express or implied.
@@ -31,21 +31,23 @@ namespace Destructurama.Attributed
         /// Construct a <see cref="LogAsScalarAttribute"/>.
         /// </summary>
         /// <param name="isMutable">Whether the scalar value should be converted into a string before
-        /// being passed down the (asynchronous) logging pipeline. For mutable types, specify 
+        /// being passed down the (asynchronous) logging pipeline. For mutable types, specify
         /// <code>true</code>, otherwise leave as false.</param>
         public LogAsScalarAttribute(bool isMutable = false)
         {
             _isMutable = isMutable;
         }
 
+        /// <inheritdoc/>
         public LogEventPropertyValue CreateLogEventPropertyValue(object value, ILogEventPropertyValueFactory propertyValueFactory)
         {
             return new ScalarValue(_isMutable ? value?.ToString() : value);
         }
 
+        /// <inheritdoc/>
         public bool TryCreateLogEventProperty(string name, object value, ILogEventPropertyValueFactory propertyValueFactory, out LogEventProperty property)
         {
-            property = new LogEventProperty(name, CreateLogEventPropertyValue(value, propertyValueFactory));
+            property = new(name, CreateLogEventPropertyValue(value, propertyValueFactory));
             return true;
         }
     }
