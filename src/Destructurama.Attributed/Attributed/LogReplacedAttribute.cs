@@ -37,14 +37,14 @@ namespace Destructurama.Attributed
         {
             if (value == null)
             {
-                property = new LogEventProperty(name, new ScalarValue(value));
+                property = new(name, new ScalarValue(value));
                 return true;
             }
 
             if (value is string s)
             {
                 var replacement = Regex.Replace(s, _pattern, _replacement, Options);
-                property = new LogEventProperty(name, new ScalarValue(replacement));
+                property = new(name, new ScalarValue(replacement));
                 return true;
             }
 

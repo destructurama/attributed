@@ -53,12 +53,12 @@ namespace Destructurama.Attributed.Tests
 
             var customized = new Customized
             {
-                ImmutableScalar = new ImmutableScalar(),
-                MutableScalar = new MutableScalar(),
-                NotAScalar = new NotAScalar(),
+                ImmutableScalar = new(),
+                MutableScalar = new(),
+                NotAScalar = new(),
                 Ignored = "Hello, there",
-                ScalarAnyway = new NotAScalar(),
-                AuthData = new UserAuthData
+                ScalarAnyway = new(),
+                AuthData = new()
                 {
                     Username = "This is a username",
                     Password = "This is a password"
