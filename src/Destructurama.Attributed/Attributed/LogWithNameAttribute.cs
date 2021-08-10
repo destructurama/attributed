@@ -18,16 +18,29 @@ using System;
 
 namespace Destructurama.Attributed
 {
+    /// <summary>
+    ///Apply to a property to use a custom name when that property is logged.
+    /// </summary>
     [AttributeUsage(AttributeTargets.Property)]
     public class LogWithNameAttribute : Attribute, IPropertyDestructuringAttribute
     {
+        /// <summary>
+        /// Initialize a new instance of <see cref="LogWithNameAttribute"/>.
+        /// </summary>
+        /// <param name="newName">The new name to use when logging the target property.</param>
         public LogWithNameAttribute(string newName)
         {
             PropertyName = newName;
         }
 
+        /// <summary>
+        /// The new name to use when logging the target property.
+        /// </summary>
         public string PropertyName { get; }
 
+        /// <summary>
+        /// <inheritdoc/>
+        /// </summary>
         public bool TryCreateLogEventProperty(string name, object value, ILogEventPropertyValueFactory propertyValueFactory, out LogEventProperty property)
         {
             var propValue = propertyValueFactory.CreatePropertyValue(value);
