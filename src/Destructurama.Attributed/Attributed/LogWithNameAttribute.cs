@@ -19,7 +19,7 @@ using System;
 namespace Destructurama.Attributed
 {
     /// <summary>
-    ///Apply to a property to use a custom name when that property is logged.
+    /// Apply to a property to use a custom name when that property is logged.
     /// </summary>
     [AttributeUsage(AttributeTargets.Property)]
     public class LogWithNameAttribute : Attribute, IPropertyDestructuringAttribute
