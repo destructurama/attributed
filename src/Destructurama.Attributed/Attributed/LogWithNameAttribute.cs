@@ -34,10 +34,10 @@ namespace Destructurama.Attributed
 
             LogEventPropertyValue logEventPropVal = propValue switch
             {
-                ScalarValue => new ScalarValue(propValue),
-                DictionaryValue dictionaryValue => new DictionaryValue(dictionaryValue.Elements),
-                SequenceValue sequenceValue => new SequenceValue(sequenceValue.Elements),
-                StructureValue structureValue => new StructureValue(structureValue.Properties),
+                ScalarValue scalar => new ScalarValue(scalar.Value),
+                DictionaryValue dictionary => new DictionaryValue(dictionary.Elements),
+                SequenceValue sequence => new SequenceValue(sequence.Elements),
+                StructureValue structure => new StructureValue(structure.Properties),
                 _ => null
             };
 

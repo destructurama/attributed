@@ -30,12 +30,17 @@ namespace Destructurama.Attributed.Tests
             var sv = (StructureValue)evt.Properties["PersonData"];
             var props = sv.Properties.ToDictionary(p => p.Name, p => p.Value);
 
-            Assert.AreEqual("John Doe", props["FullName"].LiteralValue());
+            var literalValue = props["FullName"].LiteralValue();
+            var type = literalValue.GetType();
+            Assert.AreEqual("John Doe", literalValue);
         }
 
+        #region LogWithName
         public class PersonalData
         {
-            [LogWithName("FullName")] public string Name { get; set; }
+            [LogWithName("FullName")]
+            public string Name { get; set; }
         }
+        #endregion
     }
 }

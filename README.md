@@ -21,21 +21,23 @@ var log = new LoggerConfiguration()
   .Destructure.UsingAttributes()
   ...
 ```
+
+
 #### Changing a property name
+
 Apply the `LogWithName` attribute:
 
-```csharp
-public class Person
+<!-- snippet: LogWithName -->
+<a id='snippet-logwithname'></a>
+```cs
+public class PersonalData
 {
-  public int ID { get;set; }
-  
-  [LogWithName("name")]
-  public string FirstName { get; set; }
-  
-  [LogWithName("bdate")]
-  public string Birthdate { get; set; }
+    [LogWithName("FullName")]
+    public string Name { get; set; }
 }
 ```
+<sup><a href='/test/Destructurama.Attributed.Tests/LogWithNameAttributedTests.cs#L38-L44' title='Snippet source file'>snippet source</a> | <a href='#snippet-logwithname' title='Start of snippet'>anchor</a></sup>
+<!-- endSnippet -->
 
 
 ## Ignoring a property

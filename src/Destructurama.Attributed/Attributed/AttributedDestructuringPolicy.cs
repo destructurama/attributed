@@ -1,11 +1,11 @@
 ﻿// Copyright 2015-2018 Destructurama Contributors, Serilog Contributors
-// 
+//
 // Licensed under the Apache License, Version 2.0 (the "License");
 // you may not use this file except in compliance with the License.
 // You may obtain a copy of the License at
-// 
+//
 //     http://www.apache.org/licenses/LICENSE-2.0
-// 
+//
 // Unless required by applicable law or agreed to in writing, software
 // distributed under the License is distributed on an "AS IS" BASIS,
 // WITHOUT WARRANTIES OR CONDITIONS OF ANY KIND, either express or implied.
@@ -40,11 +40,11 @@ namespace Destructurama.Attributed
             var classDestructurer = type.GetTypeInfo().GetCustomAttribute<ITypeDestructuringAttribute>();
             if (classDestructurer != null)
                 return new((o, f) => classDestructurer.CreateLogEventPropertyValue(o, f));
-            
+
             var properties = type.GetPropertiesRecursive().ToList();
             if (properties.All(pi => pi.GetCustomAttribute<IPropertyDestructuringAttribute>() == null))
                 return CacheEntry.Ignore;
-            
+
             var destructuringAttributes = properties
                 .Select(pi => new { pi, Attribute = pi.GetCustomAttribute<IPropertyDestructuringAttribute>() })
                 .Where(o => o.Attribute != null)
