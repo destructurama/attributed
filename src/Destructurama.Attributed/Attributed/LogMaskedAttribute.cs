@@ -62,7 +62,7 @@ namespace Destructurama.Attributed
 
                 var mask = "";
                 if (ShowFirst <= val.Length)
-                    mask = new string(Text[0], val.Length - ShowFirst);
+                    mask = new(Text[0], val.Length - ShowFirst);
 
                 return first + mask;
 
@@ -77,7 +77,7 @@ namespace Destructurama.Attributed
 
                 var mask = "";
                 if (ShowLast <= val.Length)
-                    mask = new string(Text[0], val.Length - ShowLast);
+                    mask = new(Text[0], val.Length - ShowLast);
 
                 return mask + last;
             }
@@ -98,7 +98,7 @@ namespace Destructurama.Attributed
 
         public bool TryCreateLogEventProperty(string name, object value, ILogEventPropertyValueFactory propertyValueFactory, out LogEventProperty property)
         {
-            property = new LogEventProperty(name, new ScalarValue(FormatMaskedValue(value)));
+            property = new(name, new ScalarValue(FormatMaskedValue(value)));
             return true;
         }
     }

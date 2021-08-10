@@ -36,6 +36,6 @@ namespace Destructurama.Util
 
         public Func<object, ILogEventPropertyValueFactory, LogEventPropertyValue> DestructureFunc { get; }
 
-        public static CacheEntry Ignore { get; } = new CacheEntry(false, (o, f) => null);
+        public static CacheEntry Ignore { get; } = new(false, (_, _) => null);
     }
 }

@@ -30,6 +30,16 @@ namespace Destructurama.Attributed.Tests
             var personalData = new PersonalData
             {
                 Name = "John Doe"
+                ImmutableScalar = new(),
+                MutableScalar = new(),
+                NotAScalar = new(),
+                Ignored = "Hello, there",
+                ScalarAnyway = new(),
+                AuthData = new()
+                {
+                    Username = "This is a username",
+                    Password = "This is a password"
+                }
             };
 
             log.Information("Here is {@PersonData}", personalData);

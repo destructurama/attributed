@@ -26,7 +26,7 @@ namespace Destructurama.Attributed
 {
     class AttributedDestructuringPolicy : IDestructuringPolicy
     {
-        readonly static ConcurrentDictionary<Type, CacheEntry> _cache = new ConcurrentDictionary<Type, CacheEntry>();
+        readonly static ConcurrentDictionary<Type, CacheEntry> _cache = new();
 
         public bool TryDestructure(object value, ILogEventPropertyValueFactory propertyValueFactory, out LogEventPropertyValue result)
         {
@@ -39,7 +39,7 @@ namespace Destructurama.Attributed
         {
             var classDestructurer = type.GetTypeInfo().GetCustomAttribute<ITypeDestructuringAttribute>();
             if (classDestructurer != null)
-                return new CacheEntry((o, f) => classDestructurer.CreateLogEventPropertyValue(o, f));
+                return new((o, f) => classDestructurer.CreateLogEventPropertyValue(o, f));
             
             var properties = type.GetPropertiesRecursive().ToList();
             if (properties.All(pi => pi.GetCustomAttribute<IPropertyDestructuringAttribute>() == null))
@@ -50,7 +50,7 @@ namespace Destructurama.Attributed
                 .Where(o => o.Attribute != null)
                 .ToDictionary(o => o.pi, o => o.Attribute);
 
-            return new CacheEntry((o, f) => MakeStructure(o, properties, destructuringAttributes, f, type));
+            return new((o, f) => MakeStructure(o, properties, destructuringAttributes, f, type));
         }
 
         static LogEventPropertyValue MakeStructure(object o, IEnumerable<PropertyInfo> loggedProperties, IDictionary<PropertyInfo, IPropertyDestructuringAttribute> destructuringAttributes, ILogEventPropertyValueFactory propertyValueFactory, Type type)
@@ -67,7 +67,7 @@ namespace Destructurama.Attributed
                 }
                 else
                 {
-                    structureProperties.Add(new LogEventProperty(pi.Name, propertyValueFactory.CreatePropertyValue(propValue, true)));
+                    structureProperties.Add(new(pi.Name, propertyValueFactory.CreatePropertyValue(propValue, true)));
                 }
             }
 

@@ -6,6 +6,8 @@ using System.Linq;
 
 namespace Destructurama.Attributed.Tests
 {
+    #region CustomizedMaskedLogs
+
     public class CustomizedMaskedLogs
     {
         /// <summary>
@@ -87,17 +89,19 @@ namespace Destructurama.Attributed.Tests
         public string ShowFirstAndLastThreeAndDefaultMaskeInTheMiddle { get; set; }
 
         /// <summary>
-        ///  123456789 results in "123_REMOVED_789                                                                                                                                                                                                                                                                                                                <               °                       °    °                                         °                     789"
+        ///  123456789 results in "123_REMOVED_789"
         /// </summary>
         [LogMasked(Text = "_REMOVED_", ShowFirst = 3, ShowLast = 3)]
         public string ShowFirstAndLastThreeAndCustomMaskInTheMiddle { get; set; }
 
         /// <summary>
-        ///  123456789 results in "123_REMOVED_789". PreserveLength is ignored                                                                                                                                                                                                                                                                                                          <               °                       °    °                                         °                     789"
+        ///  123456789 results in "123_REMOVED_789". PreserveLength is ignored"
         /// </summary>
         [LogMasked(Text = "_REMOVED_", ShowFirst = 3, ShowLast = 3, PreserveLength = true)]
         public string ShowFirstAndLastThreeAndCustomMaskInTheMiddlePreservedLengthIgnored { get; set; }
     }
+
+    #endregion
 
     [TestFixture]
     public class MaskedAttributeTests
@@ -727,5 +731,3 @@ namespace Destructurama.Attributed.Tests
         }
     }
 }
-
-
