@@ -6,6 +6,8 @@ using System.Linq;
 
 namespace Destructurama.Attributed.Tests
 {
+    #region CustomizedMaskedLogs
+
     public class CustomizedMaskedLogs
     {
         /// <summary>
@@ -93,17 +95,19 @@ namespace Destructurama.Attributed.Tests
         public string ShowFirstAndLastThreeAndDefaultMaskInTheMiddlePreservedLength { get; set; }
 
         /// <summary>
-        ///  123456789 results in "123_REMOVED_789                                                                                                                                                                                                                                                                                                                <               °                       °    °                                         °                     789"
+        ///  123456789 results in "123_REMOVED_789"
         /// </summary>
         [LogMasked(Text = "_REMOVED_", ShowFirst = 3, ShowLast = 3)]
         public string ShowFirstAndLastThreeAndCustomMaskInTheMiddle { get; set; }
 
         /// <summary>
-        ///  123456789 results in "123_REMOVED_789". PreserveLength is ignored                                                                                                                                                                                                                                                                                                          <               °                       °    °                                         °                     789"
+        ///  123456789 results in "123_REMOVED_789". PreserveLength is ignored"
         /// </summary>
         [LogMasked(Text = "_REMOVED_", ShowFirst = 3, ShowLast = 3, PreserveLength = true)]
         public string ShowFirstAndLastThreeAndCustomMaskInTheMiddlePreservedLengthIgnored { get; set; }
     }
+
+    #endregion
 
     [TestFixture]
     public class MaskedAttributeTests
@@ -355,7 +359,7 @@ namespace Destructurama.Attributed.Tests
         public void LogMaskedAttribute_Shows_First_NChars_And_Last_NChars_Then_Replaces_All_Other_Chars_With_Custom_Mask()
         {
             // [LogMasked(Text = "REMOVED", ShowFirst = 3, ShowLast = 3)]
-            // 12345678987654321 -> 123_REMOVED_321     
+            // 12345678987654321 -> 123_REMOVED_321
 
             LogEvent evt = null;
 
@@ -763,7 +767,7 @@ namespace Destructurama.Attributed.Tests
         public void LogMaskedAttribute_Shows_First_NChars_And_Last_NChars_Then_Replaces_All_Other_Chars_With_Custom_Mask_And_PreservedLength_That_Gives_Warning()
         {
             // [LogMasked(Text = "REMOVED", ShowFirst = 3, ShowLast = 3, PreserveLength = true)]
-            // 12345678987654321 -> 123_REMOVED_321 
+            // 12345678987654321 -> 123_REMOVED_321
 
             LogEvent evt = null;
 
@@ -787,5 +791,3 @@ namespace Destructurama.Attributed.Tests
         }
     }
 }
-
-

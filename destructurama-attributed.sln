@@ -1,7 +1,7 @@
 ﻿
 Microsoft Visual Studio Solution File, Format Version 12.00
-# Visual Studio 15
-VisualStudioVersion = 15.0.26430.6
+# Visual Studio Version 16
+VisualStudioVersion = 16.0.31507.150
 MinimumVisualStudioVersion = 10.0.40219.1
 Project("{9A19103F-16F7-4668-BE54-9A1E7A4F7556}") = "Destructurama.Attributed", "src\Destructurama.Attributed\Destructurama.Attributed.csproj", "{A79F906E-0298-49DC-93EC-CE4F1F5D13E2}"
 EndProject
@@ -14,6 +14,7 @@ Project("{2150E333-8FDC-42A3-9474-1A3956D46DE8}") = "global", "global", "{A195B0
 		appveyor.yml = appveyor.yml
 		Build.ps1 = Build.ps1
 		CHANGES.md = CHANGES.md
+		Directory.Build.props = Directory.Build.props
 		LICENSE = LICENSE
 		README.md = README.md
 	EndProjectSection
@@ -43,5 +44,8 @@ Global
 	GlobalSection(NestedProjects) = preSolution
 		{A79F906E-0298-49DC-93EC-CE4F1F5D13E2} = {677924A1-EB38-4E04-9D13-3DD4C3C9C514}
 		{182ECDA3-A97D-4BB6-BC6F-60A137478B92} = {F56115EE-0998-40B3-9FA7-734D83DCF884}
+	EndGlobalSection
+	GlobalSection(ExtensibilityGlobals) = postSolution
+		SolutionGuid = {F09D8B7B-37C6-417E-B8DA-296735211A4E}
 	EndGlobalSection
 EndGlobal
