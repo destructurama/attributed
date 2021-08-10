@@ -31,16 +31,15 @@ namespace Destructurama.Attributed
         public bool TryCreateLogEventProperty(string name, object value, ILogEventPropertyValueFactory propertyValueFactory, out LogEventProperty property)
         {
             var propValue = propertyValueFactory.CreatePropertyValue(value);
-            LogEventPropertyValue logEventPropVal = null;
 
-            if (propValue is ScalarValue)
-                logEventPropVal = new ScalarValue(propValue);
-            else if (propValue is DictionaryValue)
-                logEventPropVal = new DictionaryValue(((DictionaryValue)propValue).Elements);
-            else if (propValue is SequenceValue)
-                logEventPropVal = new SequenceValue(((SequenceValue)propValue).Elements);
-            else if (propValue is StructureValue)
-                logEventPropVal = new StructureValue(((StructureValue)propValue).Properties);
+            LogEventPropertyValue logEventPropVal = propValue switch
+            {
+                ScalarValue => new ScalarValue(propValue),
+                DictionaryValue dictionaryValue => new DictionaryValue(dictionaryValue.Elements),
+                SequenceValue sequenceValue => new SequenceValue(sequenceValue.Elements),
+                StructureValue structureValue => new StructureValue(structureValue.Properties),
+                _ => null
+            };
 
             property = new LogEventProperty(PropertyName, logEventPropVal);
             return true;
