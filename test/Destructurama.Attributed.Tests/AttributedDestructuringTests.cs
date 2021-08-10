@@ -6,39 +6,7 @@ using Serilog.Events;
 
 namespace Destructurama.Attributed.Tests
 {
-    [LogAsScalar]
-    public class ImmutableScalar { }
-
-    [LogAsScalar(isMutable: true)]
-    public class MutableScalar { }
-
-    public class NotAScalar { }
-
-    public class Customized
-    {
-        // ReSharper disable UnusedAutoPropertyAccessor.Global
-        public ImmutableScalar ImmutableScalar { get; set; }
-        public MutableScalar MutableScalar { get; set; }
-        public NotAScalar NotAScalar { get; set; }
-
-        [NotLogged]
-        public string Ignored { get; set; }
-
-        [LogAsScalar]
-        public NotAScalar ScalarAnyway { get; set; }
-
-        public UserAuthData AuthData { get; set; }
-    }
-
-    public class UserAuthData
-    {
-        public string Username { get; set; }
-
-        [NotLogged]
-        public string Password { get; set; }
-    }
-
-[TestFixture]
+    [TestFixture]
     public class AttributedDestructuringTests
     {
         [Test]
@@ -80,49 +48,41 @@ namespace Destructurama.Attributed.Tests
             Assert.That(str.Contains("This is a username"));
             Assert.False(str.Contains("This is a password"));
         }
-    }
-    
-    public class PersonalData
-    {
-        [LogWithName("FullName")]
-        public string Name { get; set; }
-    }
 
-
-    [TestFixture]
-    public class LogWithNameAttributedTests
-    {
-        [Test]
-        public void AttributesAreConsultedWhenDestructuring()
+        [LogAsScalar]
+        public class ImmutableScalar
         {
-            LogEvent evt = null;
-            
-            var log = new LoggerConfiguration()
-                .Destructure.UsingAttributes()
-                .WriteTo.Sink(new DelegatingSink(e => evt = e))
-                .CreateLogger();
-
-            var personalData = new PersonalData
-            {
-                Name = "John Doe"
-                ImmutableScalar = new(),
-                MutableScalar = new(),
-                NotAScalar = new(),
-                Ignored = "Hello, there",
-                ScalarAnyway = new(),
-                AuthData = new()
-                {
-                    Username = "This is a username",
-                    Password = "This is a password"
-                }
-            };
-
-            log.Information("Here is {@PersonData}", personalData);
-
-            var sv = (StructureValue)evt.Properties["PersonData"];
-            var props = sv.Properties.ToDictionary(p => p.Name, p => p.Value);
-
-            Assert.AreEqual("John Doe", props["FullName"].LiteralValue());
         }
+
+        [LogAsScalar(isMutable: true)]
+        public class MutableScalar
+        {
+        }
+
+        public class NotAScalar
+        {
+        }
+
+        public class Customized
+        {
+            // ReSharper disable UnusedAutoPropertyAccessor.Global
+            public ImmutableScalar ImmutableScalar { get; set; }
+            public MutableScalar MutableScalar { get; set; }
+            public NotAScalar NotAScalar { get; set; }
+
+            [NotLogged] public string Ignored { get; set; }
+
+            [LogAsScalar] public NotAScalar ScalarAnyway { get; set; }
+
+            public UserAuthData AuthData { get; set; }
+        }
+
+        public class UserAuthData
+        {
+            public string Username { get; set; }
+
+            [NotLogged] public string Password { get; set; }
+        }
+
     }
 }
