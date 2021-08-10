@@ -26,7 +26,7 @@ namespace Destructurama.Attributed
             PropertyName = newName;
         }
 
-        public string PropertyName { get; set; }
+        public string PropertyName { get; }
 
         public bool TryCreateLogEventProperty(string name, object value, ILogEventPropertyValueFactory propertyValueFactory, out LogEventProperty property)
         {
