@@ -8,7 +8,7 @@ namespace Destructurama.Attributed.Tests
     public class WithRegex
     {
         const string RegexWithVerticalBars = @"([a-zA-Z0-9]+)\|([a-zA-Z0-9]+)\|([a-zA-Z0-9]+)";
-  
+
         /// <summary>
         /// 123|456|789 results in "***|456|789"
         /// </summary>
@@ -35,9 +35,9 @@ namespace Destructurama.Attributed.Tests
             public string Password { get; set; }
         }
         #endregion
-        
+
         static ILogger log = Log.ForContext<Snippets>();
-        
+
         [Test]
         public void LogCommand()
         {

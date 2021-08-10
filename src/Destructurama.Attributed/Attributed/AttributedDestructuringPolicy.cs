@@ -83,7 +83,7 @@ namespace Destructurama.Attributed
             catch (TargetInvocationException ex)
             {
                 SelfLog.WriteLine("The property accessor {0} threw exception {1}", pi, ex);
-                return "The property accessor threw an exception: " + ex.InnerException.GetType().Name;
+                return $"The property accessor threw an exception: {ex.InnerException!.GetType().Name}";
             }
         }
     }

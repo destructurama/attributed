@@ -31,7 +31,6 @@ namespace Destructurama.Attributed.Tests
             var props = sv.Properties.ToDictionary(p => p.Name, p => p.Value);
 
             var literalValue = props["FullName"].LiteralValue();
-            var type = literalValue.GetType();
             Assert.AreEqual("John Doe", literalValue);
         }
 

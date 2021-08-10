@@ -177,5 +177,3 @@ namespace Destructurama.Attributed.Tests
         }
     }
 }
-
-
