@@ -1,6 +1,10 @@
-# Destructurama.Attributed [![Build status](https://ci.appveyor.com/api/projects/status/1tutmofqjb9wq627?svg=true)](https://ci.appveyor.com/project/Destructurama/attributed)
+# <img src="/assets/icon.png" height="30px"> Destructurama.Attributed
+
+[![Build status](https://ci.appveyor.com/api/projects/status/1tutmofqjb9wq627/branch/master?svg=true)](https://ci.appveyor.com/project/Destructurama/attributed)
+[![NuGet Status](https://img.shields.io/nuget/v/Destructurama.Attributed.svg)](https://www.nuget.org/packages/Destructurama.Attributed/)
 
 This package makes it possible to manipulate how objects are logged to [Serilog](http://serilog.net) using attributes.
+
 
 ## Enabling the module:
 
@@ -17,6 +21,7 @@ var log = new LoggerConfiguration()
   .Destructure.UsingAttributes()
   ...
 ```
+
 
 ## Ignoring a property
 
@@ -39,9 +44,11 @@ var command = new LoginCommand { Username = "logged", Password = "not logged" };
 log.Information("Logging in {@Command}", command);
 ```
 
+
 ## Treating types and properties as scalars
 
 To prevent destructuring of a type or property at all, apply the `[LoggedAsScalar]` attribute.
+
 
 ## Masking a string property
 
@@ -51,6 +58,7 @@ Apply the `LogMasked` attribute with various settings:
  - **ShowFirst:** Shows the first x characters in the property value 
  - **ShowLast:** Shows the last x characters in the property value 
  - **PreserveLength:** If set it will swap out each character with the default value. Note that this property will be ignored if Text has been set to custom value.
+
 
 ### Examples
 
@@ -138,6 +146,7 @@ public class CreditCard
 }
 ```
 
+
 ## Masking a string property with regular expressions
 
 Apply the `LogReplaced` attribute on a string, in which you want to apply a RegEx replacement during Logging.
@@ -161,6 +170,7 @@ LogReplaced(string pattern, string replacement, RegexOptions regexOptions)
  - **Pattern:** The pattern that should be applied on value..
  - **Replacement:** The string that will be applied by RegEx. 
  - **RegexOptions:** The [RegexOptions](https://docs.microsoft.com/en-us/dotnet/api/system.text.regularexpressions.regexoptions?view=netcore-3.1) that will be applied. Defaults to __RegexOptions.None__
+
 
 ### Examples
 
