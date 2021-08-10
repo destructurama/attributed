@@ -1,8 +1,8 @@
-using System.Linq;
-using Destructurama.Attributed.Tests.Support;
+﻿using Destructurama.Attributed.Tests.Support;
 using NUnit.Framework;
 using Serilog;
 using Serilog.Events;
+using System.Linq;
 
 namespace Destructurama.Attributed.Tests
 {
@@ -28,6 +28,10 @@ namespace Destructurama.Attributed.Tests
         public NotAScalar ScalarAnyway { get; set; }
 
         public UserAuthData AuthData { get; set; }
+
+
+        [LogWithName("LogPropertyName")]
+        public string PropertyName { get; set; }
     }
 
     public class UserAuthData
@@ -37,57 +41,6 @@ namespace Destructurama.Attributed.Tests
         [NotLogged]
         public string Password { get; set; }
     }
-
-[TestFixture]
-    public class AttributedDestructuringTests
-    {
-        [Test]
-        public void AttributesAreConsultedWhenDestructuring()
-        {
-            LogEvent evt = null;
-
-            var log = new LoggerConfiguration()
-                .Destructure.UsingAttributes()
-                .WriteTo.Sink(new DelegatingSink(e => evt = e))
-                .CreateLogger();
-
-            var customized = new Customized
-            {
-                ImmutableScalar = new(),
-                MutableScalar = new(),
-                NotAScalar = new(),
-                Ignored = "Hello, there",
-                ScalarAnyway = new(),
-                AuthData = new()
-                {
-                    Username = "This is a username",
-                    Password = "This is a password"
-                }
-            };
-
-            log.Information("Here is {@Customized}", customized);
-
-            var sv = (StructureValue)evt.Properties["Customized"];
-            var props = sv.Properties.ToDictionary(p => p.Name, p => p.Value);
-
-            Assert.IsInstanceOf<ImmutableScalar>(props["ImmutableScalar"].LiteralValue());
-            Assert.AreEqual(new MutableScalar().ToString(), props["MutableScalar"].LiteralValue());
-            Assert.IsInstanceOf<StructureValue>(props["NotAScalar"]);
-            Assert.IsFalse(props.ContainsKey("Ignored"));
-            Assert.IsInstanceOf<NotAScalar>(props["ScalarAnyway"].LiteralValue());
-
-            var str = sv.ToString();
-            Assert.That(str.Contains("This is a username"));
-            Assert.False(str.Contains("This is a password"));
-        }
-    }
-    
-    public class PersonalData
-    {
-        [LogWithName("FullName")]
-        public string Name { get; set; }
-    }
-
 
     [TestFixture]
     public class LogWithNameAttributedTests
@@ -102,27 +55,36 @@ namespace Destructurama.Attributed.Tests
                 .WriteTo.Sink(new DelegatingSink(e => evt = e))
                 .CreateLogger();
 
-            var personalData = new PersonalData
+            var customized = new Customized
             {
-                Name = "John Doe"
-                ImmutableScalar = new(),
-                MutableScalar = new(),
-                NotAScalar = new(),
+                ImmutableScalar = new ImmutableScalar(),
+                MutableScalar = new MutableScalar(),
+                NotAScalar = new NotAScalar(),
                 Ignored = "Hello, there",
-                ScalarAnyway = new(),
-                AuthData = new()
+                ScalarAnyway = new NotAScalar(),
+                AuthData = new UserAuthData
                 {
                     Username = "This is a username",
                     Password = "This is a password"
-                }
+                },
+                PropertyName = "Old name value"
             };
 
-            log.Information("Here is {@PersonData}", personalData);
+            log.Information("Here is {@Customized}", customized);
 
-            var sv = (StructureValue)evt.Properties["PersonData"];
+            var sv = (StructureValue)evt.Properties["Customized"];
             var props = sv.Properties.ToDictionary(p => p.Name, p => p.Value);
 
-            Assert.AreEqual("John Doe", props["FullName"].LiteralValue());
+            Assert.IsInstanceOf<ImmutableScalar>(props["ImmutableScalar"].LiteralValue());
+            Assert.AreEqual(new MutableScalar().ToString(), props["MutableScalar"].LiteralValue());
+            Assert.IsInstanceOf<StructureValue>(props["NotAScalar"]);
+            Assert.IsFalse(props.ContainsKey("Ignored"));
+            Assert.IsInstanceOf<NotAScalar>(props["ScalarAnyway"].LiteralValue());
+
+            Assert.AreEqual("Old name value", props["LogPropertyName"].LiteralValue());
+            var str = sv.ToString();
+            Assert.That(str.Contains("This is a username"));
+            Assert.False(str.Contains("This is a password"));
         }
     }
 }
