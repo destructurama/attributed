@@ -89,6 +89,12 @@ namespace Destructurama.Attributed.Tests
         public string ShowFirstAndLastThreeAndDefaultMaskInTheMiddle { get; set; }
 
         /// <summary>
+        /// 123456789 results in "123***789"
+        /// </summary>
+        [LogMasked(ShowFirst = 3, ShowLast = 3, PreserveLength = true)]
+        public string ShowFirstAndLastThreeAndDefaultMaskInTheMiddlePreservedLength { get; set; }
+
+        /// <summary>
         ///  123456789 results in "123_REMOVED_789"
         /// </summary>
         [LogMasked(Text = "_REMOVED_", ShowFirst = 3, ShowLast = 3)]
@@ -272,7 +278,7 @@ namespace Destructurama.Attributed.Tests
         public void LogMaskedAttribute_Shows_First_NChars_And_Last_NChars_Replaces_Value_With_Default_StarMask()
         {
             // [LogMasked(ShowFirst = 3, ShowLast = 3)]
-            // -> "1234*********4321"
+            // -> "123***321"
 
             LogEvent evt = null;
 
@@ -293,6 +299,60 @@ namespace Destructurama.Attributed.Tests
 
             Assert.IsTrue(props.ContainsKey("ShowFirstAndLastThreeAndDefaultMaskInTheMiddle"));
             Assert.AreEqual("123***321", props["ShowFirstAndLastThreeAndDefaultMaskInTheMiddle"].LiteralValue());
+        }
+
+        [Test]
+        public void LogMaskedAttribute_Shows_First_NChars_And_Last_NChars_Replaces_Value_With_Default_StarMask_PreserveLength()
+        {
+            // [LogMasked(ShowFirst = 3, ShowLast = 3)]
+            // -> "123***********321"
+
+            LogEvent evt = null;
+
+            var log = new LoggerConfiguration()
+                .Destructure.UsingAttributes()
+                .WriteTo.Sink(new DelegatingSink(e => evt = e))
+                .CreateLogger();
+
+            var customized = new CustomizedMaskedLogs
+            {
+                ShowFirstAndLastThreeAndDefaultMaskInTheMiddlePreservedLength = "12345678987654321"
+            };
+
+            log.Information("Here is {@Customized}", customized);
+
+            var sv = (StructureValue)evt.Properties["Customized"];
+            var props = sv.Properties.ToDictionary(p => p.Name, p => p.Value);
+
+            Assert.IsTrue(props.ContainsKey("ShowFirstAndLastThreeAndDefaultMaskInTheMiddlePreservedLength"));
+            Assert.AreEqual("123***********321", props["ShowFirstAndLastThreeAndDefaultMaskInTheMiddlePreservedLength"].LiteralValue());
+        }
+
+        [Test]
+        public void LogMaskedAttribute_Shows_First_NChars_And_Last_NChars_Replaces_Value_With_Default_StarMask_Single_PreserveLength()
+        {
+            // [LogMasked(ShowFirst = 3, ShowLast = 3)]
+            // -> "123*456"
+
+            LogEvent evt = null;
+
+            var log = new LoggerConfiguration()
+                .Destructure.UsingAttributes()
+                .WriteTo.Sink(new DelegatingSink(e => evt = e))
+                .CreateLogger();
+
+            var customized = new CustomizedMaskedLogs
+            {
+                ShowFirstAndLastThreeAndDefaultMaskInTheMiddlePreservedLength = "123x456"
+            };
+
+            log.Information("Here is {@Customized}", customized);
+
+            var sv = (StructureValue)evt.Properties["Customized"];
+            var props = sv.Properties.ToDictionary(p => p.Name, p => p.Value);
+
+            Assert.IsTrue(props.ContainsKey("ShowFirstAndLastThreeAndDefaultMaskInTheMiddlePreservedLength"));
+            Assert.AreEqual("123*456", props["ShowFirstAndLastThreeAndDefaultMaskInTheMiddlePreservedLength"].LiteralValue());
         }
 
         [Test]

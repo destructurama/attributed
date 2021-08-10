@@ -101,7 +101,11 @@ namespace Destructurama.Attributed
                 var first = val.Substring(0, ShowFirst);
                 var last = val.Substring(val.Length - ShowLast);
 
-                return first + Text + last;
+                string mask = null;
+                if (PreserveLength && IsDefaultMask())
+                    mask = new string(Text[0], val.Length - ShowFirst - ShowLast);
+
+                return first + (mask ?? Text) + last;
             }
 
             return propValue;
