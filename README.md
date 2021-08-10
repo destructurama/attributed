@@ -79,10 +79,10 @@ To prevent destructuring of a type or property at all, apply the `[LogAsScalar]`
 
 Apply the `LogMasked` attribute with various settings:
 
- - **Text:** If set the properties value will be set to this text.
- - **ShowFirst:** Shows the first x characters in the property value 
- - **ShowLast:** Shows the last x characters in the property value 
- - **PreserveLength:** If set it will swap out each character with the default value. Note that this property will be ignored if Text has been set to custom value.
+ - **Text:** If set, the property value will be set to this text.
+ - **ShowFirst:** Shows the first x characters in the property value.
+ - **ShowLast:** Shows the last x characters in the property value.
+ - **PreserveLength:** If set, it will swap out each character with the default value. Note that this property will be ignored if Text has been set to custom value.
 
 
 ### Examples

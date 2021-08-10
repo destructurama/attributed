@@ -27,7 +27,7 @@ namespace Destructurama.Attributed
         private string _newName;
 
         /// <summary>
-        /// Initialize a new instance of <see cref="LogWithNameAttribute"/>.
+        /// Construct a <see cref="LogWithNameAttribute"/>.
         /// </summary>
         /// <param name="newName">The new name to use when logging the target property.</param>
         public LogWithNameAttribute(string newName)
@@ -35,9 +35,7 @@ namespace Destructurama.Attributed
             _newName = newName;
         }
 
-        /// <summary>
         /// <inheritdoc/>
-        /// </summary>
         public bool TryCreateLogEventProperty(string name, object value, ILogEventPropertyValueFactory propertyValueFactory, out LogEventProperty property)
         {
             var propValue = propertyValueFactory.CreatePropertyValue(value);

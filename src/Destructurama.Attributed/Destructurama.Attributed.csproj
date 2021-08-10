@@ -12,6 +12,7 @@
     <PackageLicenseExpression>Apache-2.0</PackageLicenseExpression>
     <PackageIcon>icon.png</PackageIcon>
     <PackageTags>serilog;attributed</PackageTags>
+    <GenerateDocumentationFile>true</GenerateDocumentationFile>
     <!-- Don't reference the full NETStandard.Library -->
     <DisableImplicitFrameworkReferences Condition="'$(TargetFramework)' == 'netstandard1.1'">true</DisableImplicitFrameworkReferences>
   </PropertyGroup>
