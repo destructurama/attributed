@@ -38,14 +38,16 @@ namespace Destructurama.Attributed
             _isMutable = isMutable;
         }
 
+        /// <inheritdoc/>
         public LogEventPropertyValue CreateLogEventPropertyValue(object value, ILogEventPropertyValueFactory propertyValueFactory)
         {
             return new ScalarValue(_isMutable ? value?.ToString() : value);
         }
 
+        /// <inheritdoc/>
         public bool TryCreateLogEventProperty(string name, object value, ILogEventPropertyValueFactory propertyValueFactory, out LogEventProperty property)
         {
-            property = new LogEventProperty(name, CreateLogEventPropertyValue(value, propertyValueFactory));
+            property = new(name, CreateLogEventPropertyValue(value, propertyValueFactory));
             return true;
         }
     }

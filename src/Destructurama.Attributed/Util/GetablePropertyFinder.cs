@@ -29,11 +29,12 @@ namespace Destructurama.Util
 
             while (currentTypeInfo.AsType() != typeof(object))
             {
-                var unseenProperties = currentTypeInfo.DeclaredProperties.Where(p => p.CanRead &&
-                                                                                     p.GetMethod.IsPublic &&
-                                                                                     !p.GetMethod.IsStatic &&
-                                                                                     (p.Name != "Item" || p.GetIndexParameters().Length == 0) &&
-                                                                                     !seenNames.Contains(p.Name));
+                var unseenProperties = currentTypeInfo.DeclaredProperties
+                    .Where(p => p.CanRead &&
+                                p.GetMethod.IsPublic &&
+                                !p.GetMethod.IsStatic &&
+                                (p.Name != "Item" || p.GetIndexParameters().Length == 0) &&
+                                !seenNames.Contains(p.Name));
 
                 foreach (var propertyInfo in unseenProperties)
                 {

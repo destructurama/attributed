@@ -13,6 +13,7 @@
 // limitations under the License.
 
 using System;
+using System.Collections.Concurrent;
 using System.Collections.Generic;
 using System.Linq;
 using System.Reflection;
@@ -25,48 +26,31 @@ namespace Destructurama.Attributed
 {
     class AttributedDestructuringPolicy : IDestructuringPolicy
     {
-        readonly object _cacheLock = new object();
-        readonly IDictionary<Type, CacheEntry> _cache = new Dictionary<Type, CacheEntry>();
+        readonly static ConcurrentDictionary<Type, CacheEntry> _cache = new();
 
         public bool TryDestructure(object value, ILogEventPropertyValueFactory propertyValueFactory, out LogEventPropertyValue result)
         {
-            var type = value.GetType();
-
-            while (true)
-            {
-                CacheEntry cached;
-                bool isCached;
-                lock (_cacheLock)
-                    isCached = _cache.TryGetValue(type, out cached);
-
-                if (isCached)
-                {
-                    result = cached.DestructureFunc(value, propertyValueFactory);
-                    return cached.CanDestructure;
-                }
-
-                var cacheEntry = CreateCacheEntry(type);
-                lock (_cacheLock)
-                    _cache[type] = cacheEntry;
-            }
+            var cached = _cache.GetOrAdd(value.GetType(), CreateCacheEntry);
+            result = cached.DestructureFunc(value, propertyValueFactory);
+            return cached.CanDestructure;
         }
 
         static CacheEntry CreateCacheEntry(Type type)
         {
             var classDestructurer = type.GetTypeInfo().GetCustomAttribute<ITypeDestructuringAttribute>();
             if (classDestructurer != null)
-                return new CacheEntry((o, f) => classDestructurer.CreateLogEventPropertyValue(o, f));
+                return new((o, f) => classDestructurer.CreateLogEventPropertyValue(o, f));
 
             var properties = type.GetPropertiesRecursive().ToList();
             if (properties.All(pi => pi.GetCustomAttribute<IPropertyDestructuringAttribute>() == null))
                 return CacheEntry.Ignore;
 
             var destructuringAttributes = properties
-                .Select(pi => new {pi, Attribute = pi.GetCustomAttribute<IPropertyDestructuringAttribute>() })
+                .Select(pi => new { pi, Attribute = pi.GetCustomAttribute<IPropertyDestructuringAttribute>() })
                 .Where(o => o.Attribute != null)
                 .ToDictionary(o => o.pi, o => o.Attribute);
 
-            return new CacheEntry((o, f) => MakeStructure(o, properties, destructuringAttributes, f, type));
+            return new((o, f) => MakeStructure(o, properties, destructuringAttributes, f, type));
         }
 
         static LogEventPropertyValue MakeStructure(object o, IEnumerable<PropertyInfo> loggedProperties, IDictionary<PropertyInfo, IPropertyDestructuringAttribute> destructuringAttributes, ILogEventPropertyValueFactory propertyValueFactory, Type type)
@@ -83,7 +67,7 @@ namespace Destructurama.Attributed
                 }
                 else
                 {
-                    structureProperties.Add(new LogEventProperty(pi.Name, propertyValueFactory.CreatePropertyValue(propValue, true)));
+                    structureProperties.Add(new(pi.Name, propertyValueFactory.CreatePropertyValue(propValue, true)));
                 }
             }
 
@@ -99,7 +83,7 @@ namespace Destructurama.Attributed
             catch (TargetInvocationException ex)
             {
                 SelfLog.WriteLine("The property accessor {0} threw exception {1}", pi, ex);
-                return "The property accessor threw an exception: " + ex.InnerException.GetType().Name;
+                return $"The property accessor threw an exception: {ex.InnerException!.GetType().Name}";
             }
         }
     }

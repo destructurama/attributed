@@ -24,9 +24,9 @@ namespace Destructurama.Util
             return typeInfo.GetCustomAttributes().OfType<T>().FirstOrDefault();
         }
 
-        public static T GetCustomAttribute<T>(this PropertyInfo methodInfo)
+        public static T GetCustomAttribute<T>(this PropertyInfo propertyInfo)
         {
-            return methodInfo.GetCustomAttributes().OfType<T>().FirstOrDefault();
+            return propertyInfo.GetCustomAttributes().OfType<T>().FirstOrDefault();
         }
     }
 }

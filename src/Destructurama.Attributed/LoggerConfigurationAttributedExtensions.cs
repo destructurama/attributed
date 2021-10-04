@@ -15,6 +15,7 @@
 using Destructurama.Attributed;
 using Serilog;
 using Serilog.Configuration;
+using Serilog.Core;
 
 namespace Destructurama
 {
@@ -24,6 +25,8 @@ namespace Destructurama
     public static class LoggerConfigurationAppSettingsExtensions
     {
         /// <summary>
+        /// Adds a custom <see cref="IDestructuringPolicy"/> to enable manipulation of how objects
+        /// are logged to Serilog using attributes.
         /// </summary>
         /// <param name="configuration">The logger configuration to apply configuration to.</param>
         /// <returns>An object allowing configuration to continue.</returns>
