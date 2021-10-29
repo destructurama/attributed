@@ -27,7 +27,6 @@ namespace Destructurama.Attributed
     {
         readonly string _pattern;
         readonly string _replacement;
-        readonly TimeSpan _timeout;
 
         /// <summary>
         /// The RegexOptions that will be applied. Defaults to <see cref="RegexOptions.None"/>
@@ -35,26 +34,19 @@ namespace Destructurama.Attributed
         public RegexOptions Options { get; set; }
 
         /// <summary>
-        /// Construct a <see cref="LogWithNameAttribute"/>.
+        /// A time-out interval to evaluate regular expression. Defaults to <see cref="Regex.InfiniteMatchTimeout"/>
         /// </summary>
-        /// <param name="pattern">The pattern that should be applied on value.</param>
-        /// <param name="replacement">The pattern that should be applied on value.</param>
-        public LogReplacedAttribute(string pattern, string replacement)
-            : this(pattern, replacement, Regex.InfiniteMatchTimeout)
-        {
-        }
+        public TimeSpan Timeout { get; set; } = Regex.InfiniteMatchTimeout;
 
         /// <summary>
         /// Construct a <see cref="LogWithNameAttribute"/>.
         /// </summary>
         /// <param name="pattern">The pattern that should be applied on value.</param>
         /// <param name="replacement">The pattern that should be applied on value.</param>
-        /// <param name="timeout">A time-out interval to evaluate regular expression.</param>
-        public LogReplacedAttribute(string pattern, string replacement, TimeSpan timeout)
+        public LogReplacedAttribute(string pattern, string replacement)
         {
             _pattern = pattern;
             _replacement = replacement;
-            _timeout = timeout;
         }
 
         /// <inheritdoc/>
@@ -68,7 +60,7 @@ namespace Destructurama.Attributed
 
             if (value is string s)
             {
-                var replacement = Regex.Replace(s, _pattern, _replacement, Options, _timeout);
+                var replacement = Regex.Replace(s, _pattern, _replacement, Options, Timeout);
 
                 property = new(name, new ScalarValue(replacement));
                 return true;
