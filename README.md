@@ -226,6 +226,7 @@ __Constructor arguments__:
 
 __Available properties__:
  - **Options:** The [RegexOptions](https://docs.microsoft.com/en-us/dotnet/api/system.text.regularexpressions.regexoptions?view=netcore-3.1) that will be applied. Defaults to __RegexOptions.None__
+ - **Timeout:** A time-out interval to evaluate regular expression. Defaults to __Regex.InfiniteMatchTimeout__
 
 
 ### Examples
