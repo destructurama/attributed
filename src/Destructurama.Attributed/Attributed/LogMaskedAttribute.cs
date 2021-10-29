@@ -101,7 +101,7 @@ namespace Destructurama.Attributed
                 var first = val.Substring(0, ShowFirst);
                 var last = val.Substring(val.Length - ShowLast);
 
-                string mask = null;
+                string? mask = null;
                 if (PreserveLength && IsDefaultMask())
                     mask = new string(Text[0], val.Length - ShowFirst - ShowLast);
 
@@ -112,13 +112,13 @@ namespace Destructurama.Attributed
         }
 
         /// <inheritdoc/>
-        public bool TryCreateLogEventProperty(string name, object value, ILogEventPropertyValueFactory propertyValueFactory, out LogEventProperty property)
+        public bool TryCreateLogEventProperty(string name, object? value, ILogEventPropertyValueFactory propertyValueFactory, out LogEventProperty? property)
         {
             property = new LogEventProperty(name, CreateValue(value));
             return true;
         }
 
-        private LogEventPropertyValue CreateValue(object value)
+        private LogEventPropertyValue CreateValue(object? value)
         {
             return value switch
             {

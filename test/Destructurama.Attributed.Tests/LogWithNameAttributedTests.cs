@@ -13,7 +13,7 @@ namespace Destructurama.Attributed.Tests
         [Test]
         public void AttributesAreConsultedWhenDestructuring()
         {
-            LogEvent evt = null;
+            LogEvent evt = null!;
 
             var log = new LoggerConfiguration()
                 .Destructure.UsingAttributes()
@@ -38,7 +38,7 @@ namespace Destructurama.Attributed.Tests
         public class PersonalData
         {
             [LogWithName("FullName")]
-            public string Name { get; set; }
+            public string? Name { get; set; }
         }
         #endregion
     }

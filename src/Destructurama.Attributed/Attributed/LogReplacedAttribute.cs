@@ -45,7 +45,7 @@ namespace Destructurama.Attributed
         }
 
         /// <inheritdoc/>
-        public bool TryCreateLogEventProperty(string name, object value, ILogEventPropertyValueFactory propertyValueFactory, out LogEventProperty property)
+        public bool TryCreateLogEventProperty(string name, object? value, ILogEventPropertyValueFactory propertyValueFactory, out LogEventProperty? property)
         {
             if (value == null)
             {
