@@ -7,5 +7,6 @@
     <DebugSymbols>true</DebugSymbols>
     <AssemblyOriginatorKeyFile>$(MSBuildThisFileDirectory)key.snk</AssemblyOriginatorKeyFile>
     <SignAssembly>true</SignAssembly>
+    <Nullable>enable</Nullable>
   </PropertyGroup>
 </Project>

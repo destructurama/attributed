@@ -36,11 +36,11 @@ namespace Destructurama.Attributed
         }
 
         /// <inheritdoc/>
-        public bool TryCreateLogEventProperty(string name, object value, ILogEventPropertyValueFactory propertyValueFactory, out LogEventProperty property)
+        public bool TryCreateLogEventProperty(string name, object? value, ILogEventPropertyValueFactory propertyValueFactory, out LogEventProperty? property)
         {
             var propValue = propertyValueFactory.CreatePropertyValue(value);
 
-            LogEventPropertyValue logEventPropVal = propValue switch
+            LogEventPropertyValue? logEventPropVal = propValue switch
             {
                 ScalarValue scalar => new ScalarValue(scalar.Value),
                 DictionaryValue dictionary => new DictionaryValue(dictionary.Elements),

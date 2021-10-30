@@ -14,103 +14,109 @@ namespace Destructurama.Attributed.Tests
         /// 123456789 results in "***"
         /// </summary>
         [LogMasked]
-        public string DefaultMasked { get; set; }
+        public string? DefaultMasked { get; set; }
 
         /// <summary>
         /// [123456789,123456789,123456789] results in [***,***,***]
         /// </summary>
         [LogMasked]
-        public string[] DefaultMaskedArray { get; set; }
+        public string[]? DefaultMaskedArray { get; set; }
 
         /// <summary>
         /// 123456789 results in "*********"
         /// </summary>
         [LogMasked(PreserveLength = true)]
-        public string DefaultMaskedPreserved { get; set; }
+        public string? DefaultMaskedPreserved { get; set; }
 
         /// <summary>
         ///  123456789 results in "#"
         /// </summary>
         [LogMasked(Text = "_REMOVED_")]
-        public string CustomMasked { get; set; }
+        public string? CustomMasked { get; set; }
+
+        /// <summary>
+        ///  123456789 results in "#"
+        /// </summary>
+        [LogMasked(Text = "")]
+        public string? CustomMaskedWithEmptyString { get; set; }
 
         /// <summary>
         ///  123456789 results in "#########"
         /// </summary>
         [LogMasked(Text = "#", PreserveLength = true)]
-        public string CustomMaskedPreservedLength { get; set; }
+        public string? CustomMaskedPreservedLength { get; set; }
 
         /// <summary>
         ///  123456789 results in "123******"
         /// </summary>
         [LogMasked(ShowFirst = 3)]
-        public string ShowFirstThreeThenDefaultMasked { get; set; }
+        public string? ShowFirstThreeThenDefaultMasked { get; set; }
 
         /// <summary>
         /// 123456789 results in "123******"
         /// </summary>
         [LogMasked(ShowFirst = 3, PreserveLength = true)]
-        public string ShowFirstThreeThenDefaultMaskedPreservedLength { get; set; }
+        public string? ShowFirstThreeThenDefaultMaskedPreservedLength { get; set; }
 
         /// <summary>
         /// 123456789 results in "***789"
         /// </summary>
         [LogMasked(ShowLast = 3)]
-        public string ShowLastThreeThenDefaultMasked { get; set; }
+        public string? ShowLastThreeThenDefaultMasked { get; set; }
 
         /// <summary>
         /// 123456789 results in "******789"
         /// </summary>
         [LogMasked(ShowLast = 3, PreserveLength = true)]
-        public string ShowLastThreeThenDefaultMaskedPreservedLength { get; set; }
+        public string? ShowLastThreeThenDefaultMaskedPreservedLength { get; set; }
 
         /// <summary>
         ///  123456789 results in "123REMOVED"
         /// </summary>
         [LogMasked(Text = "_REMOVED_", ShowFirst = 3)]
-        public string ShowFirstThreeThenCustomMask { get; set; }
+        public string? ShowFirstThreeThenCustomMask { get; set; }
 
         /// <summary>
         ///  123456789 results in "123_REMOVED_"
         /// </summary>
         [LogMasked(Text = "_REMOVED_", ShowFirst = 3, PreserveLength = true)]
-        public string ShowFirstThreeThenCustomMaskPreservedLengthIgnored { get; set; }
+        public string? ShowFirstThreeThenCustomMaskPreservedLengthIgnored { get; set; }
 
         /// <summary>
         ///  123456789 results in "_REMOVED_789"
         /// </summary>
         [LogMasked(Text = "_REMOVED_", ShowLast = 3)]
-        public string ShowLastThreeThenCustomMask { get; set; }
+        public string? ShowLastThreeThenCustomMask { get; set; }
 
         /// <summary>
         ///  123456789 results in "_REMOVED_789"
         /// </summary>
         [LogMasked(Text = "_REMOVED_", ShowLast = 3, PreserveLength = true)]
-        public string ShowLastThreeThenCustomMaskPreservedLengthIgnored { get; set; }
+        public string? ShowLastThreeThenCustomMaskPreservedLengthIgnored { get; set; }
 
         /// <summary>
         /// 123456789 results in "123***789"
         /// </summary>
         [LogMasked(ShowFirst = 3, ShowLast = 3)]
-        public string ShowFirstAndLastThreeAndDefaultMaskInTheMiddle { get; set; }
+        public string? ShowFirstAndLastThreeAndDefaultMaskInTheMiddle { get; set; }
 
         /// <summary>
         /// 123456789 results in "123***789"
         /// </summary>
         [LogMasked(ShowFirst = 3, ShowLast = 3, PreserveLength = true)]
-        public string ShowFirstAndLastThreeAndDefaultMaskInTheMiddlePreservedLength { get; set; }
+        public string? ShowFirstAndLastThreeAndDefaultMaskInTheMiddlePreservedLength { get; set; }
 
         /// <summary>
         ///  123456789 results in "123_REMOVED_789"
         /// </summary>
         [LogMasked(Text = "_REMOVED_", ShowFirst = 3, ShowLast = 3)]
-        public string ShowFirstAndLastThreeAndCustomMaskInTheMiddle { get; set; }
+        public string? ShowFirstAndLastThreeAndCustomMaskInTheMiddle { get; set; }
 
         /// <summary>
         ///  123456789 results in "123_REMOVED_789". PreserveLength is ignored"
         /// </summary>
         [LogMasked(Text = "_REMOVED_", ShowFirst = 3, ShowLast = 3, PreserveLength = true)]
-        public string ShowFirstAndLastThreeAndCustomMaskInTheMiddlePreservedLengthIgnored { get; set; }
+        public string? ShowFirstAndLastThreeAndCustomMaskInTheMiddlePreservedLengthIgnored { get; set; }
     }
 
     #endregion
@@ -124,7 +130,7 @@ namespace Destructurama.Attributed.Tests
             // [LogMasked]
             // 123456789 -> "***"
 
-            LogEvent evt = null;
+            LogEvent evt = null!;
 
             var log = new LoggerConfiguration()
                 .Destructure.UsingAttributes()
@@ -151,7 +157,7 @@ namespace Destructurama.Attributed.Tests
             // [LogMasked]
             // [123456789,123456789,123456789] results in [***,***,***]
 
-            LogEvent evt = null;
+            LogEvent evt = null!;
 
             var log = new LoggerConfiguration()
                 .Destructure.UsingAttributes()
@@ -170,7 +176,7 @@ namespace Destructurama.Attributed.Tests
 
             Assert.IsTrue(props.ContainsKey("DefaultMaskedArray"));
             var seq = props["DefaultMaskedArray"] as SequenceValue;
-            foreach (var elem in seq.Elements)
+            foreach (var elem in seq!.Elements)
                 Assert.AreEqual("***", elem.LiteralValue());
         }
 
@@ -180,7 +186,7 @@ namespace Destructurama.Attributed.Tests
             // [LogMasked]
             // 123456789 -> "*********"
 
-            LogEvent evt = null;
+            LogEvent evt = null!;
 
             var log = new LoggerConfiguration()
                 .Destructure.UsingAttributes()
@@ -207,7 +213,7 @@ namespace Destructurama.Attributed.Tests
             //  [LogMasked(Text = "#")]
             //   123456789 -> "_REMOVED_"
 
-            LogEvent evt = null;
+            LogEvent evt = null!;
 
             var log = new LoggerConfiguration()
                 .Destructure.UsingAttributes()
@@ -229,12 +235,39 @@ namespace Destructurama.Attributed.Tests
         }
 
         [Test]
+        public void LogMaskedAttribute_Replaces_Value_With_Provided_Empty_Mask()
+        {
+            //  [LogMasked(Text = "#")]
+            //   123456789 -> "_REMOVED_"
+
+            LogEvent evt = null!;
+
+            var log = new LoggerConfiguration()
+                .Destructure.UsingAttributes()
+                .WriteTo.Sink(new DelegatingSink(e => evt = e))
+                .CreateLogger();
+
+            var customized = new CustomizedMaskedLogs
+            {
+                CustomMaskedWithEmptyString = "123456789"
+            };
+
+            log.Information("Here is {@Customized}", customized);
+
+            var sv = (StructureValue)evt.Properties["Customized"];
+            var props = sv.Properties.ToDictionary(p => p.Name, p => p.Value);
+
+            Assert.IsTrue(props.ContainsKey("CustomMasked"));
+            Assert.AreEqual("", props["CustomMaskedWithEmptyString"].LiteralValue());
+        }
+
+        [Test]
         public void LogMaskedAttribute_Replaces_Value_With_Provided_Mask_And_PreservedLength()
         {
             //  [LogMasked(Text = "#")]
             //   123456789 -> "#########"
 
-            LogEvent evt = null;
+            LogEvent evt = null!;
 
             var log = new LoggerConfiguration()
                 .Destructure.UsingAttributes()
@@ -261,7 +294,7 @@ namespace Destructurama.Attributed.Tests
             // [LogMasked(Text = "REMOVED", ShowFirst = 3)]
             // -> "123_REMOVED_"
 
-            LogEvent evt = null;
+            LogEvent evt = null!;
 
             var log = new LoggerConfiguration()
                 .Destructure.UsingAttributes()
@@ -288,7 +321,7 @@ namespace Destructurama.Attributed.Tests
             // [LogMasked(Text = "REMOVED", ShowFirst = 3,PreserveLength = true)]
             // -> "123_REMOVED_"
 
-            LogEvent evt = null;
+            LogEvent evt = null!;
 
             var log = new LoggerConfiguration()
                 .Destructure.UsingAttributes()
@@ -315,7 +348,7 @@ namespace Destructurama.Attributed.Tests
             // [LogMasked(ShowFirst = 3, ShowLast = 3)]
             // -> "123***321"
 
-            LogEvent evt = null;
+            LogEvent evt = null!;
 
             var log = new LoggerConfiguration()
                 .Destructure.UsingAttributes()
@@ -342,7 +375,7 @@ namespace Destructurama.Attributed.Tests
             // [LogMasked(ShowFirst = 3, ShowLast = 3)]
             // -> "123***********321"
 
-            LogEvent evt = null;
+            LogEvent evt = null!;
 
             var log = new LoggerConfiguration()
                 .Destructure.UsingAttributes()
@@ -369,7 +402,7 @@ namespace Destructurama.Attributed.Tests
             // [LogMasked(ShowFirst = 3, ShowLast = 3)]
             // -> "123*456"
 
-            LogEvent evt = null;
+            LogEvent evt = null!;
 
             var log = new LoggerConfiguration()
                 .Destructure.UsingAttributes()
@@ -396,7 +429,7 @@ namespace Destructurama.Attributed.Tests
             // [LogMasked(Text = "REMOVED", ShowFirst = 3, ShowLast = 3)]
             // 12345678987654321 -> 123_REMOVED_321
 
-            LogEvent evt = null;
+            LogEvent evt = null!;
 
             var log = new LoggerConfiguration()
                 .Destructure.UsingAttributes()
@@ -423,7 +456,7 @@ namespace Destructurama.Attributed.Tests
             // [LogMasked(Text = "#", ShowFirst = 3, ShowLast = 3)]
             // 12345678987654321 -> "123_REMOVED_321"
 
-            LogEvent evt = null;
+            LogEvent evt = null!;
 
             var log = new LoggerConfiguration()
                 .Destructure.UsingAttributes()
@@ -450,7 +483,7 @@ namespace Destructurama.Attributed.Tests
             // [LogMasked(Text = "#", ShowFirst = 3, ShowLast = 3)]
             // 12 -> "12"
 
-            LogEvent evt = null;
+            LogEvent evt = null!;
 
             var log = new LoggerConfiguration()
                 .Destructure.UsingAttributes()
@@ -477,7 +510,7 @@ namespace Destructurama.Attributed.Tests
             // [LogMasked(Text = "#", ShowFirst = 3, ShowLast = 3)]
             // 1234 -> "1234"
 
-            LogEvent evt = null;
+            LogEvent evt = null!;
 
             var log = new LoggerConfiguration()
                 .Destructure.UsingAttributes()
@@ -504,7 +537,7 @@ namespace Destructurama.Attributed.Tests
             //  [LogMasked(ShowLast = 3)]
             //  123456789 -> "123***"
 
-            LogEvent evt = null;
+            LogEvent evt = null!;
 
             var log = new LoggerConfiguration()
                 .Destructure.UsingAttributes()
@@ -531,7 +564,7 @@ namespace Destructurama.Attributed.Tests
             //  [LogMasked(Text = "_REMOVED_", ShowLast = 3)]
             //  123456789 -> "_REMOVED_789"
 
-            LogEvent evt = null;
+            LogEvent evt = null!;
 
             var log = new LoggerConfiguration()
                 .Destructure.UsingAttributes()
@@ -558,7 +591,7 @@ namespace Destructurama.Attributed.Tests
             //  [LogMasked(Text = "_REMOVED_", ShowLast = 3, PreserveLength = true)]
             //  123456789 -> "_REMOVED_789"
 
-            LogEvent evt = null;
+            LogEvent evt = null!;
 
             var log = new LoggerConfiguration()
                 .Destructure.UsingAttributes()
@@ -585,7 +618,7 @@ namespace Destructurama.Attributed.Tests
             //  [LogMasked(ShowLast = 3)]
             //  123456789 -> "***789"
 
-            LogEvent evt = null;
+            LogEvent evt = null!;
 
             var log = new LoggerConfiguration()
                 .Destructure.UsingAttributes()
@@ -612,7 +645,7 @@ namespace Destructurama.Attributed.Tests
             //  [LogMasked(ShowFirst = 3,PreserveLength = true))]
             // -> "123******"
 
-            LogEvent evt = null;
+            LogEvent evt = null!;
 
             var log = new LoggerConfiguration()
                 .Destructure.UsingAttributes()
@@ -639,7 +672,7 @@ namespace Destructurama.Attributed.Tests
             //  [LogMasked(ShowFirst = 3,PreserveLength = true))]
             // -> ""
 
-            LogEvent evt = null;
+            LogEvent evt = null!;
 
             var log = new LoggerConfiguration()
                 .Destructure.UsingAttributes()
@@ -667,7 +700,7 @@ namespace Destructurama.Attributed.Tests
             //  [LogMasked(ShowFirst = 3,PreserveLength = true))]
             // -> "123"
 
-            LogEvent evt = null;
+            LogEvent evt = null!;
 
             var log = new LoggerConfiguration()
                 .Destructure.UsingAttributes()
@@ -695,7 +728,7 @@ namespace Destructurama.Attributed.Tests
             //  [LogMasked(ShowFirst = 3,PreserveLength = true))]
             // -> "12"
 
-            LogEvent evt = null;
+            LogEvent evt = null!;
 
             var log = new LoggerConfiguration()
                 .Destructure.UsingAttributes()
@@ -723,7 +756,7 @@ namespace Destructurama.Attributed.Tests
             //  [LogMasked(ShowLast = 3,PreserveLength = true))]
             // -> "******789"
 
-            LogEvent evt = null;
+            LogEvent evt = null!;
 
             var log = new LoggerConfiguration()
                 .Destructure.UsingAttributes()
@@ -750,7 +783,7 @@ namespace Destructurama.Attributed.Tests
             //  [LogMasked(ShowLast = 3,PreserveLength = true))]
             // -> "123"
 
-            LogEvent evt = null;
+            LogEvent evt = null!;
 
             var log = new LoggerConfiguration()
                 .Destructure.UsingAttributes()
@@ -777,7 +810,7 @@ namespace Destructurama.Attributed.Tests
             //  [LogMasked(ShowLast = 3,PreserveLength = true))]
             // -> "12"
 
-            LogEvent evt = null;
+            LogEvent evt = null!;
 
             var log = new LoggerConfiguration()
                 .Destructure.UsingAttributes()
@@ -804,7 +837,7 @@ namespace Destructurama.Attributed.Tests
             // [LogMasked(Text = "REMOVED", ShowFirst = 3, ShowLast = 3, PreserveLength = true)]
             // 12345678987654321 -> 123_REMOVED_321
 
-            LogEvent evt = null;
+            LogEvent evt = null!;
 
             var log = new LoggerConfiguration()
                 .Destructure.UsingAttributes()

@@ -12,7 +12,7 @@ namespace Destructurama.Attributed.Tests
         [Test]
         public void AttributesAreConsultedWhenDestructuring()
         {
-            LogEvent evt = null;
+            LogEvent evt = null!;
 
             var log = new LoggerConfiguration()
                 .Destructure.UsingAttributes()
@@ -66,22 +66,22 @@ namespace Destructurama.Attributed.Tests
         public class Customized
         {
             // ReSharper disable UnusedAutoPropertyAccessor.Global
-            public ImmutableScalar ImmutableScalar { get; set; }
-            public MutableScalar MutableScalar { get; set; }
-            public NotAScalar NotAScalar { get; set; }
+            public ImmutableScalar? ImmutableScalar { get; set; }
+            public MutableScalar? MutableScalar { get; set; }
+            public NotAScalar? NotAScalar { get; set; }
 
-            [NotLogged] public string Ignored { get; set; }
+            [NotLogged] public string? Ignored { get; set; }
 
-            [LogAsScalar] public NotAScalar ScalarAnyway { get; set; }
+            [LogAsScalar] public NotAScalar? ScalarAnyway { get; set; }
 
-            public UserAuthData AuthData { get; set; }
+            public UserAuthData? AuthData { get; set; }
         }
 
         public class UserAuthData
         {
-            public string Username { get; set; }
+            public string? Username { get; set; }
 
-            [NotLogged] public string Password { get; set; }
+            [NotLogged] public string? Password { get; set; }
         }
 
     }
