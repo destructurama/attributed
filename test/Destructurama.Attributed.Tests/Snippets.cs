@@ -13,13 +13,13 @@ namespace Destructurama.Attributed.Tests
         /// 123|456|789 results in "***|456|789"
         /// </summary>
         [LogReplaced(RegexWithVerticalBars, "***|$2|$3")]
-        public string RegexReplaceFirst { get; set; }
+        public string? RegexReplaceFirst { get; set; }
 
         /// <summary>
         /// 123|456|789 results in "123|***|789"
         /// </summary>
         [LogReplaced(RegexWithVerticalBars, "$1|***|$3")]
-        public string RegexReplaceSecond { get; set; }
+        public string? RegexReplaceSecond { get; set; }
     }
 
     #endregion
@@ -29,10 +29,10 @@ namespace Destructurama.Attributed.Tests
         #region LoginCommand
         public class LoginCommand
         {
-            public string Username { get; set; }
+            public string? Username { get; set; }
 
             [NotLogged]
-            public string Password { get; set; }
+            public string? Password { get; set; }
         }
         #endregion
 

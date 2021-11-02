@@ -28,7 +28,7 @@ namespace Destructurama.Attributed
     {
         readonly static ConcurrentDictionary<Type, CacheEntry> _cache = new();
 
-        public bool TryDestructure(object value, ILogEventPropertyValueFactory propertyValueFactory, out LogEventPropertyValue result)
+        public bool TryDestructure(object value, ILogEventPropertyValueFactory propertyValueFactory, out LogEventPropertyValue? result)
         {
             var cached = _cache.GetOrAdd(value.GetType(), CreateCacheEntry);
             result = cached.DestructureFunc(value, propertyValueFactory);
@@ -63,7 +63,7 @@ namespace Destructurama.Attributed
                 if (destructuringAttributes.TryGetValue(pi, out var destructuringAttribute))
                 {
                     if (destructuringAttribute.TryCreateLogEventProperty(pi.Name, propValue, propertyValueFactory, out var property))
-                        structureProperties.Add(property);
+                        structureProperties.Add(property!);
                 }
                 else
                 {
