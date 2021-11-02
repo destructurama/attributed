@@ -34,6 +34,11 @@ namespace Destructurama.Attributed
         public RegexOptions Options { get; set; }
 
         /// <summary>
+        /// A time-out interval to evaluate regular expression. Defaults to <see cref="Regex.InfiniteMatchTimeout"/>
+        /// </summary>
+        public TimeSpan Timeout { get; set; } = Regex.InfiniteMatchTimeout;
+
+        /// <summary>
         /// Construct a <see cref="LogWithNameAttribute"/>.
         /// </summary>
         /// <param name="pattern">The pattern that should be applied on value.</param>
@@ -55,7 +60,8 @@ namespace Destructurama.Attributed
 
             if (value is string s)
             {
-                var replacement = Regex.Replace(s, _pattern, _replacement, Options);
+                var replacement = Regex.Replace(s, _pattern, _replacement, Options, Timeout);
+
                 property = new(name, new ScalarValue(replacement));
                 return true;
             }
