@@ -17,6 +17,8 @@ Install-Package Destructurama.Attributed
 Modify logger configuration:
 
 ```csharp
+using Destructurama.Attributed;
+...
 var log = new LoggerConfiguration()
   .Destructure.UsingAttributes()
   ...
