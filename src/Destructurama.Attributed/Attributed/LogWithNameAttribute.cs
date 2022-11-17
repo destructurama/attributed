@@ -38,7 +38,7 @@ namespace Destructurama.Attributed
         /// <inheritdoc/>
         public bool TryCreateLogEventProperty(string name, object? value, ILogEventPropertyValueFactory propertyValueFactory, out LogEventProperty? property)
         {
-            var propValue = propertyValueFactory.CreatePropertyValue(value);
+            var propValue = propertyValueFactory.CreatePropertyValue(value!);
 
             LogEventPropertyValue? logEventPropVal = propValue switch
             {
@@ -49,7 +49,7 @@ namespace Destructurama.Attributed
                 _ => null
             };
 
-            property = new LogEventProperty(_newName, logEventPropVal);
+            property = new LogEventProperty(_newName, logEventPropVal!);
             return true;
         }
     }
