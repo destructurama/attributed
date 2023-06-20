@@ -17,7 +17,7 @@
 
   <ItemGroup>
     <PackageReference Include="Microsoft.SourceLink.GitHub" Version="1.0.0" PrivateAssets="All" Condition="$(Configuration) == 'Release'" />
-    <PackageReference Include="Serilog" Version="[3.0.0,4.0.0)" />
+    <PackageReference Include="Serilog" Version="[2.10.0,4.0.0)" />
     <None Include="..\..\assets\icon.png" Pack="true" PackagePath="" />
     <PackageReference Include="Polyfill" Version="1.23.0" PrivateAssets="all" />
   </ItemGroup>
