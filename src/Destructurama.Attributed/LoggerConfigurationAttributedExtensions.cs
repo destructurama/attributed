@@ -30,9 +30,7 @@ namespace Destructurama
         /// </summary>
         /// <param name="configuration">The logger configuration to apply configuration to.</param>
         /// <returns>An object allowing configuration to continue.</returns>
-        public static LoggerConfiguration UsingAttributes(this LoggerDestructuringConfiguration configuration)
-        {
-            return configuration.With<AttributedDestructuringPolicy>();
-        }
+        public static LoggerConfiguration UsingAttributes(this LoggerDestructuringConfiguration configuration) =>
+            configuration.With<AttributedDestructuringPolicy>();
     }
 }
