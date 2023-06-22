@@ -33,7 +33,7 @@ Apply the `LogWithName` attribute:
 public class PersonalData
 {
     [LogWithName("FullName")]
-    public string Name { get; set; }
+    public string? Name { get; set; }
 }
 ```
 <sup><a href='/test/Destructurama.Attributed.Tests/LogWithNameAttributedTests.cs#L37-L43' title='Snippet source file'>snippet source</a> | <a href='#snippet-logwithname' title='Start of snippet'>anchor</a></sup>
@@ -49,10 +49,10 @@ Apply the `NotLogged` attribute:
 ```cs
 public class LoginCommand
 {
-    public string Username { get; set; }
+    public string? Username { get; set; }
 
     [NotLogged]
-    public string Password { get; set; }
+    public string? Password { get; set; }
 }
 ```
 <sup><a href='/test/Destructurama.Attributed.Tests/Snippets.cs#L29-L37' title='Snippet source file'>snippet source</a> | <a href='#snippet-logincommand' title='Start of snippet'>anchor</a></sup>
@@ -98,106 +98,112 @@ public class CustomizedMaskedLogs
     /// 123456789 results in "***"
     /// </summary>
     [LogMasked]
-    public string DefaultMasked { get; set; }
+    public string? DefaultMasked { get; set; }
 
     /// <summary>
     /// [123456789,123456789,123456789] results in [***,***,***]
     /// </summary>
     [LogMasked]
-    public string[] DefaultMaskedArray { get; set; }
+    public string[]? DefaultMaskedArray { get; set; }
 
     /// <summary>
     /// 123456789 results in "*********"
     /// </summary>
     [LogMasked(PreserveLength = true)]
-    public string DefaultMaskedPreserved { get; set; }
+    public string? DefaultMaskedPreserved { get; set; }
 
     /// <summary>
     ///  123456789 results in "#"
     /// </summary>
     [LogMasked(Text = "_REMOVED_")]
-    public string CustomMasked { get; set; }
+    public string? CustomMasked { get; set; }
+
+    /// <summary>
+    ///  123456789 results in "#"
+    /// </summary>
+    [LogMasked(Text = "")]
+    public string? CustomMaskedWithEmptyString { get; set; }
 
     /// <summary>
     ///  123456789 results in "#########"
     /// </summary>
     [LogMasked(Text = "#", PreserveLength = true)]
-    public string CustomMaskedPreservedLength { get; set; }
+    public string? CustomMaskedPreservedLength { get; set; }
 
     /// <summary>
     ///  123456789 results in "123******"
     /// </summary>
     [LogMasked(ShowFirst = 3)]
-    public string ShowFirstThreeThenDefaultMasked { get; set; }
+    public string? ShowFirstThreeThenDefaultMasked { get; set; }
 
     /// <summary>
     /// 123456789 results in "123******"
     /// </summary>
     [LogMasked(ShowFirst = 3, PreserveLength = true)]
-    public string ShowFirstThreeThenDefaultMaskedPreservedLength { get; set; }
+    public string? ShowFirstThreeThenDefaultMaskedPreservedLength { get; set; }
 
     /// <summary>
     /// 123456789 results in "***789"
     /// </summary>
     [LogMasked(ShowLast = 3)]
-    public string ShowLastThreeThenDefaultMasked { get; set; }
+    public string? ShowLastThreeThenDefaultMasked { get; set; }
 
     /// <summary>
     /// 123456789 results in "******789"
     /// </summary>
     [LogMasked(ShowLast = 3, PreserveLength = true)]
-    public string ShowLastThreeThenDefaultMaskedPreservedLength { get; set; }
+    public string? ShowLastThreeThenDefaultMaskedPreservedLength { get; set; }
 
     /// <summary>
     ///  123456789 results in "123REMOVED"
     /// </summary>
     [LogMasked(Text = "_REMOVED_", ShowFirst = 3)]
-    public string ShowFirstThreeThenCustomMask { get; set; }
+    public string? ShowFirstThreeThenCustomMask { get; set; }
 
     /// <summary>
     ///  123456789 results in "123_REMOVED_"
     /// </summary>
     [LogMasked(Text = "_REMOVED_", ShowFirst = 3, PreserveLength = true)]
-    public string ShowFirstThreeThenCustomMaskPreservedLengthIgnored { get; set; }
+    public string? ShowFirstThreeThenCustomMaskPreservedLengthIgnored { get; set; }
 
     /// <summary>
     ///  123456789 results in "_REMOVED_789"
     /// </summary>
     [LogMasked(Text = "_REMOVED_", ShowLast = 3)]
-    public string ShowLastThreeThenCustomMask { get; set; }
+    public string? ShowLastThreeThenCustomMask { get; set; }
 
     /// <summary>
     ///  123456789 results in "_REMOVED_789"
     /// </summary>
     [LogMasked(Text = "_REMOVED_", ShowLast = 3, PreserveLength = true)]
-    public string ShowLastThreeThenCustomMaskPreservedLengthIgnored { get; set; }
+    public string? ShowLastThreeThenCustomMaskPreservedLengthIgnored { get; set; }
 
     /// <summary>
     /// 123456789 results in "123***789"
     /// </summary>
     [LogMasked(ShowFirst = 3, ShowLast = 3)]
-    public string ShowFirstAndLastThreeAndDefaultMaskInTheMiddle { get; set; }
+    public string? ShowFirstAndLastThreeAndDefaultMaskInTheMiddle { get; set; }
 
     /// <summary>
     /// 123456789 results in "123***789"
     /// </summary>
     [LogMasked(ShowFirst = 3, ShowLast = 3, PreserveLength = true)]
-    public string ShowFirstAndLastThreeAndDefaultMaskInTheMiddlePreservedLength { get; set; }
+    public string? ShowFirstAndLastThreeAndDefaultMaskInTheMiddlePreservedLength { get; set; }
 
     /// <summary>
     ///  123456789 results in "123_REMOVED_789"
     /// </summary>
     [LogMasked(Text = "_REMOVED_", ShowFirst = 3, ShowLast = 3)]
-    public string ShowFirstAndLastThreeAndCustomMaskInTheMiddle { get; set; }
+    public string? ShowFirstAndLastThreeAndCustomMaskInTheMiddle { get; set; }
 
     /// <summary>
     ///  123456789 results in "123_REMOVED_789". PreserveLength is ignored"
     /// </summary>
     [LogMasked(Text = "_REMOVED_", ShowFirst = 3, ShowLast = 3, PreserveLength = true)]
-    public string ShowFirstAndLastThreeAndCustomMaskInTheMiddlePreservedLengthIgnored { get; set; }
+    public string? ShowFirstAndLastThreeAndCustomMaskInTheMiddlePreservedLengthIgnored { get; set; }
 }
 ```
-<sup><a href='/test/Destructurama.Attributed.Tests/MaskedAttributeTests.cs#L9-L116' title='Snippet source file'>snippet source</a> | <a href='#snippet-customizedmaskedlogs' title='Start of snippet'>anchor</a></sup>
+<sup><a href='/test/Destructurama.Attributed.Tests/MaskedAttributeTests.cs#L9-L122' title='Snippet source file'>snippet source</a> | <a href='#snippet-customizedmaskedlogs' title='Start of snippet'>anchor</a></sup>
 <!-- endSnippet -->
 
 
@@ -242,13 +248,13 @@ public class WithRegex
     /// 123|456|789 results in "***|456|789"
     /// </summary>
     [LogReplaced(RegexWithVerticalBars, "***|$2|$3")]
-    public string RegexReplaceFirst { get; set; }
+    public string? RegexReplaceFirst { get; set; }
 
     /// <summary>
     /// 123|456|789 results in "123|***|789"
     /// </summary>
     [LogReplaced(RegexWithVerticalBars, "$1|***|$3")]
-    public string RegexReplaceSecond { get; set; }
+    public string? RegexReplaceSecond { get; set; }
 }
 ```
 <sup><a href='/test/Destructurama.Attributed.Tests/Snippets.cs#L6-L25' title='Snippet source file'>snippet source</a> | <a href='#snippet-withregex' title='Start of snippet'>anchor</a></sup>
