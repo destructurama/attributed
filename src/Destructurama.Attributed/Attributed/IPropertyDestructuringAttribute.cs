@@ -13,6 +13,7 @@
 // limitations under the License.
 
 using System;
+using System.Diagnostics.CodeAnalysis;
 using Serilog.Core;
 using Serilog.Events;
 
@@ -31,6 +32,6 @@ namespace Destructurama.Attributed
         /// <param name="propertyValueFactory">The current <see cref="ILogEventPropertyValueFactory"/>.</param>
         /// <param name="property">The <see cref="LogEventProperty"/> to use as a replacement.</param>
         /// <returns><code>true</code>If a replacement <see cref="LogEventProperty"/> has been derived.</returns>
-        bool TryCreateLogEventProperty(string name, object value, ILogEventPropertyValueFactory propertyValueFactory, out LogEventProperty property);
+        bool TryCreateLogEventProperty(string name, object? value, ILogEventPropertyValueFactory propertyValueFactory, [NotNullWhen(true)] out LogEventProperty? property);
     }
 }

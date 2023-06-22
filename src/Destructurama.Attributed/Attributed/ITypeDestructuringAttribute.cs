@@ -29,6 +29,6 @@ namespace Destructurama.Attributed
         /// <param name="value">The value of the property.</param>
         /// <param name="propertyValueFactory">The current <see cref="ILogEventPropertyValueFactory"/>.</param>
         /// <returns>The new <see cref="LogEventPropertyValue"/> to use when logging the property.</returns>
-        LogEventPropertyValue CreateLogEventPropertyValue(object value, ILogEventPropertyValueFactory propertyValueFactory);
+        LogEventPropertyValue CreateLogEventPropertyValue(object? value, ILogEventPropertyValueFactory propertyValueFactory);
     }
 }

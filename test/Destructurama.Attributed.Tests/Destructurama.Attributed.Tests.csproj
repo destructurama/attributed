@@ -4,11 +4,11 @@
   </PropertyGroup>
 
   <ItemGroup>
-    <PackageReference Include="MarkdownSnippets.MsBuild" Version="24.2.2" PrivateAssets="all" />
-    <PackageReference Include="Microsoft.NET.Test.Sdk" Version="17.0.0" />
-    <PackageReference Include="NUnit" Version="3.13.2" />
-    <PackageReference Include="NUnit3TestAdapter" Version="4.1.0" />
-    <PackageReference Include="Serilog" Version="2.10.0" />
+    <PackageReference Include="MarkdownSnippets.MsBuild" Version="24.5.1" PrivateAssets="all" />
+    <PackageReference Include="Microsoft.NET.Test.Sdk" Version="17.6.2" />
+    <PackageReference Include="NUnit" Version="3.13.3" />
+    <PackageReference Include="NUnit3TestAdapter" Version="4.5.0" />
+    <PackageReference Include="Serilog" Version="3.0.1" />
     <ProjectReference Include="..\..\src\Destructurama.Attributed\Destructurama.Attributed.csproj" />
   </ItemGroup>
 

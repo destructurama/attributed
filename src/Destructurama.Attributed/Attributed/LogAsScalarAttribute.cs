@@ -39,13 +39,11 @@ namespace Destructurama.Attributed
         }
 
         /// <inheritdoc/>
-        public LogEventPropertyValue CreateLogEventPropertyValue(object value, ILogEventPropertyValueFactory propertyValueFactory)
-        {
-            return new ScalarValue(_isMutable ? value?.ToString() : value);
-        }
+        public LogEventPropertyValue CreateLogEventPropertyValue(object? value, ILogEventPropertyValueFactory propertyValueFactory) =>
+            new ScalarValue(_isMutable ? value?.ToString() : value);
 
         /// <inheritdoc/>
-        public bool TryCreateLogEventProperty(string name, object value, ILogEventPropertyValueFactory propertyValueFactory, out LogEventProperty property)
+        public bool TryCreateLogEventProperty(string name, object? value, ILogEventPropertyValueFactory propertyValueFactory, out LogEventProperty property)
         {
             property = new(name, CreateLogEventPropertyValue(value, propertyValueFactory));
             return true;

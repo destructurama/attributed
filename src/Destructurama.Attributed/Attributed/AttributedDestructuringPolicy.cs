@@ -15,6 +15,7 @@
 using System;
 using System.Collections.Concurrent;
 using System.Collections.Generic;
+using System.Diagnostics.CodeAnalysis;
 using System.Linq;
 using System.Reflection;
 using Destructurama.Util;
@@ -28,7 +29,7 @@ namespace Destructurama.Attributed
     {
         readonly static ConcurrentDictionary<Type, CacheEntry> _cache = new();
 
-        public bool TryDestructure(object value, ILogEventPropertyValueFactory propertyValueFactory, out LogEventPropertyValue result)
+        public bool TryDestructure(object value, ILogEventPropertyValueFactory propertyValueFactory, [NotNullWhen(true)] out LogEventPropertyValue? result)
         {
             var cached = _cache.GetOrAdd(value.GetType(), CreateCacheEntry);
             result = cached.DestructureFunc(value, propertyValueFactory);
