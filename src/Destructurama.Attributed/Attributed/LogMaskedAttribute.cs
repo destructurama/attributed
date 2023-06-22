@@ -46,10 +46,7 @@ namespace Destructurama.Attributed
         /// </summary>
         public bool PreserveLength { get; set; }
 
-        private bool IsDefaultMask()
-        {
-            return Text == DefaultMask;
-        }
+        private bool IsDefaultMask() => Text == DefaultMask;
 
         private object FormatMaskedValue(string val)
         {
