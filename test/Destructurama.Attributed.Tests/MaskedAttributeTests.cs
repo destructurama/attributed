@@ -29,6 +29,12 @@ namespace Destructurama.Attributed.Tests
         public string? DefaultMaskedPreserved { get; set; }
 
         /// <summary>
+        /// "" results in "***"
+        /// </summary>
+        [LogMasked]
+        public string? DefaultMaskedNotPreservedOnEmptyString { get; set; }
+
+        /// <summary>
         ///  123456789 results in "#"
         /// </summary>
         [LogMasked(Text = "_REMOVED_")]
@@ -205,6 +211,33 @@ namespace Destructurama.Attributed.Tests
 
             Assert.IsTrue(props.ContainsKey("DefaultMaskedPreserved"));
             Assert.AreEqual("*********", props["DefaultMaskedPreserved"].LiteralValue());
+        }
+
+        [Test]
+        public void LogMaskedAttribute_Replaces_Value_With_DefaultStars_Mask_And_Not_Preserve_Length_On_Empty_String()
+        {
+            // [LogMasked]
+            // "" -> "***"
+
+            LogEvent evt = null!;
+
+            var log = new LoggerConfiguration()
+                .Destructure.UsingAttributes()
+                .WriteTo.Sink(new DelegatingSink(e => evt = e))
+                .CreateLogger();
+
+            var customized = new CustomizedMaskedLogs
+            {
+                DefaultMaskedNotPreservedOnEmptyString = ""
+            };
+
+            log.Information("Here is {@Customized}", customized);
+
+            var sv = (StructureValue)evt.Properties["Customized"];
+            var props = sv.Properties.ToDictionary(p => p.Name, p => p.Value);
+
+            Assert.IsTrue(props.ContainsKey("DefaultMaskedNotPreservedOnEmptyString"));
+            Assert.AreEqual("***", props["DefaultMaskedNotPreservedOnEmptyString"].LiteralValue());
         }
 
         [Test]

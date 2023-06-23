@@ -51,7 +51,7 @@ namespace Destructurama.Attributed
         private object FormatMaskedValue(string val)
         {
             if (string.IsNullOrEmpty(val))
-                return val;
+                return PreserveLength ? val : Text;
 
             if (ShowFirst == 0 && ShowLast == 0)
             {
