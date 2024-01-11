@@ -14,25 +14,25 @@ namespace Destructurama.Attributed.Tests
         /// 123|456|789 results in "***|456|789"
         /// </summary>
         [LogReplaced(RegexWithVerticalBars, "***|$2|$3")]
-        public string RegexReplaceFirst { get; set; }
+        public string? RegexReplaceFirst { get; set; }
 
         /// <summary>
         /// 123|456|789 results in "123|***|789"
         /// </summary>
         [LogReplaced(RegexWithVerticalBars, "$1|***|$3")]
-        public string RegexReplaceSecond { get; set; }
+        public string? RegexReplaceSecond { get; set; }
 
         /// <summary>
         /// 123|456|789 results in "123|456|***"
         /// </summary>
         [LogReplaced(RegexWithVerticalBars, "$1|$2|***")]
-        public string RegexReplaceThird { get; set; }
+        public string? RegexReplaceThird { get; set; }
 
         /// <summary>
         /// 123|456|789 results in "***|456|****"
         /// </summary>
         [LogReplaced(RegexWithVerticalBars, "***|$2|****")]
-        public string RegexReplaceFirstThird { get; set; }
+        public string? RegexReplaceFirstThird { get; set; }
     }
 
     [TestFixture]
@@ -44,7 +44,7 @@ namespace Destructurama.Attributed.Tests
             // [LogReplaced(@"([a-zA-Z0-9]+)\|([a-zA-Z0-9]+)\|([a-zA-Z0-9]+)", "***|$2|$3")]
             // 123|456|789 -> "***|456|789"
 
-            LogEvent evt = null;
+            LogEvent evt = null!;
 
             var log = new LoggerConfiguration()
                 .Destructure.UsingAttributes()
@@ -71,7 +71,7 @@ namespace Destructurama.Attributed.Tests
             // [LogReplaced(@"([a-zA-Z0-9]+)\|([a-zA-Z0-9]+)\|([a-zA-Z0-9]+)", "$1|***|$3")]
             // 123|456|789 -> "123|***|789"
 
-            LogEvent evt = null;
+            LogEvent evt = null!;
 
             var log = new LoggerConfiguration()
                 .Destructure.UsingAttributes()
@@ -98,7 +98,7 @@ namespace Destructurama.Attributed.Tests
             // [LogReplaced(@"([a-zA-Z0-9]+)\|([a-zA-Z0-9]+)\|([a-zA-Z0-9]+)", "$1|$2|***")]
             // 123|456|789 -> "123|456|***"
 
-            LogEvent evt = null;
+            LogEvent evt = null!;
 
             var log = new LoggerConfiguration()
                 .Destructure.UsingAttributes()
@@ -125,7 +125,7 @@ namespace Destructurama.Attributed.Tests
             // [LogReplaced(@"([a-zA-Z0-9]+)\|([a-zA-Z0-9]+)\|([a-zA-Z0-9]+)", "***|$2|****")]
             // 123|456|789 -> "***|456|****"
 
-            LogEvent evt = null;
+            LogEvent evt = null!;
 
             var log = new LoggerConfiguration()
                 .Destructure.UsingAttributes()
@@ -152,7 +152,7 @@ namespace Destructurama.Attributed.Tests
             // [LogReplaced(@"([a-zA-Z0-9]+)\|([a-zA-Z0-9]+)\|([a-zA-Z0-9]+)", "***|$2|$3")]
             // 123|456|789 -> "***|456|789"
 
-            LogEvent evt = null;
+            LogEvent evt = null!;
 
             var log = new LoggerConfiguration()
                 .Destructure.UsingAttributes()
@@ -177,5 +177,3 @@ namespace Destructurama.Attributed.Tests
         }
     }
 }
-
-

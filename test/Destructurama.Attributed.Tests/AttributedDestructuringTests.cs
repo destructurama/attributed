@@ -1,4 +1,4 @@
-﻿using System.Linq;
+using System.Linq;
 using Destructurama.Attributed.Tests.Support;
 using NUnit.Framework;
 using Serilog;
@@ -6,45 +6,13 @@ using Serilog.Events;
 
 namespace Destructurama.Attributed.Tests
 {
-    [LogAsScalar]
-    public class ImmutableScalar { }
-
-    [LogAsScalar(isMutable: true)]
-    public class MutableScalar { }
-
-    public class NotAScalar { }
-
-    public class Customized
-    {
-        // ReSharper disable UnusedAutoPropertyAccessor.Global
-        public ImmutableScalar ImmutableScalar { get; set; }
-        public MutableScalar MutableScalar { get; set; }
-        public NotAScalar NotAScalar { get; set; }
-
-        [NotLogged]
-        public string Ignored { get; set; }
-
-        [LogAsScalar]
-        public NotAScalar ScalarAnyway { get; set; }
-
-        public UserAuthData AuthData { get; set; }
-    }
-
-    public class UserAuthData
-    {
-        public string Username { get; set; }
-
-        [NotLogged]
-        public string Password { get; set; }
-    }
-
-[TestFixture]
+    [TestFixture]
     public class AttributedDestructuringTests
     {
         [Test]
         public void AttributesAreConsultedWhenDestructuring()
         {
-            LogEvent evt = null;
+            LogEvent evt = null!;
 
             var log = new LoggerConfiguration()
                 .Destructure.UsingAttributes()
@@ -53,12 +21,12 @@ namespace Destructurama.Attributed.Tests
 
             var customized = new Customized
             {
-                ImmutableScalar = new ImmutableScalar(),
-                MutableScalar = new MutableScalar(),
-                NotAScalar = new NotAScalar(),
+                ImmutableScalar = new(),
+                MutableScalar = new(),
+                NotAScalar = new(),
                 Ignored = "Hello, there",
-                ScalarAnyway = new NotAScalar(),
-                AuthData = new UserAuthData
+                ScalarAnyway = new(),
+                AuthData = new()
                 {
                     Username = "This is a username",
                     Password = "This is a password"
@@ -80,5 +48,41 @@ namespace Destructurama.Attributed.Tests
             Assert.That(str.Contains("This is a username"));
             Assert.False(str.Contains("This is a password"));
         }
+
+        [LogAsScalar]
+        public class ImmutableScalar
+        {
+        }
+
+        [LogAsScalar(isMutable: true)]
+        public class MutableScalar
+        {
+        }
+
+        public class NotAScalar
+        {
+        }
+
+        public class Customized
+        {
+            // ReSharper disable UnusedAutoPropertyAccessor.Global
+            public ImmutableScalar? ImmutableScalar { get; set; }
+            public MutableScalar? MutableScalar { get; set; }
+            public NotAScalar? NotAScalar { get; set; }
+
+            [NotLogged] public string? Ignored { get; set; }
+
+            [LogAsScalar] public NotAScalar? ScalarAnyway { get; set; }
+
+            public UserAuthData? AuthData { get; set; }
+        }
+
+        public class UserAuthData
+        {
+            public string? Username { get; set; }
+
+            [NotLogged] public string? Password { get; set; }
+        }
+
     }
 }
