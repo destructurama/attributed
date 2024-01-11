@@ -14,9 +14,6 @@
 
 using System;
 using System.Collections.Concurrent;
-#if NETSTANDARD1_1
-using System.Reflection;
-#endif
 
 namespace Destructurama.Attributed
 {
@@ -53,11 +50,7 @@ namespace Destructurama.Attributed
             if (value != null)
             {
 
-#if NETSTANDARD1_1
-                if (type.GetTypeInfo().IsValueType)
-#else
                 if (type.IsValueType)
-#endif
                 {
                     if (!_cache.TryGetValue(type, out CachedValue cachedValue))
                     {

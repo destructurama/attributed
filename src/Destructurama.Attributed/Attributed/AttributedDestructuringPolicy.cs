@@ -1,4 +1,4 @@
-﻿// Copyright 2015-2018 Destructurama Contributors, Serilog Contributors
+// Copyright 2015-2018 Destructurama Contributors, Serilog Contributors
 //
 // Licensed under the Apache License, Version 2.0 (the "License");
 // you may not use this file except in compliance with the License.
@@ -77,11 +77,7 @@ namespace Destructurama.Attributed
 
             if (_options.IgnoreNullProperties && !optionalIgnoreAttributes.Any() && !destructuringAttributes.Any())
             {
-#if NETSTANDARD1_1
-                if (ti.ImplementedInterfaces.Any(x => x == typeof(IEnumerable)))
-#else
                 if (typeof(IEnumerable).IsAssignableFrom(type))
-#endif
                     return CacheEntry.Ignore;
             }
 
