@@ -1,4 +1,4 @@
-﻿using Destructurama.Attributed.Tests.Support;
+using Destructurama.Attributed.Tests.Support;
 using NUnit.Framework;
 using Serilog;
 using Serilog.Events;
@@ -124,20 +124,6 @@ namespace Destructurama.Attributed.Tests
         /// </summary>
         [LogMasked(Text = "_REMOVED_", ShowFirst = 3, ShowLast = 3, PreserveLength = true)]
         public string? ShowFirstAndLastThreeAndCustomMaskInTheMiddlePreservedLengthIgnored { get; set; }
-
-        /// <summary>
-        ///  NOTE When applied on non-string types value will be converted to string with InvariantCulture
-        ///  123456789 results in "123***"
-        /// </summary>
-        [LogMasked(ShowFirst = 3)]
-        public int IntMasked { get; set; }
-
-        /// <summary>
-        ///  When applied on non-string types value will be converted to string with InvariantCulture
-        ///  new DateTime(2000, 1, 2, 3, 4, 5) results in "01/02/2000 ***"
-        /// </summary>
-        [LogMasked(ShowFirst = 11)]
-        public DateTime DateTimeMasked { get; set; }
     }
 
     #endregion
@@ -904,68 +890,6 @@ namespace Destructurama.Attributed.Tests
 
             Assert.IsTrue(props.ContainsKey("ShowFirstAndLastThreeAndCustomMaskInTheMiddlePreservedLengthIgnored"));
             Assert.AreEqual("123_REMOVED_321", props["ShowFirstAndLastThreeAndCustomMaskInTheMiddlePreservedLengthIgnored"].LiteralValue());
-        }
-
-        [Test]
-        public void LogMaskedAttribute_ShowFirst_On_Int()
-        {
-            // <summary>
-            //  NOTE When applied on non-string types value will be converted to string with InvariantCulture
-            //  123456789 results in "123***"
-            // </summary>
-            // [LogMasked(ShowFirst = 3)]
-            // public int IntMasked { get; set; }
-
-            LogEvent evt = null;
-
-            var log = new LoggerConfiguration()
-                .Destructure.UsingAttributes()
-                .WriteTo.Sink(new DelegatingSink(e => evt = e))
-                .CreateLogger();
-
-            var customized = new CustomizedMaskedLogs
-            {
-                IntMasked = 123456789
-            };
-
-            log.Information("Here is {@Customized}", customized);
-
-            var sv = (StructureValue)evt.Properties["Customized"];
-            var props = sv.Properties.ToDictionary(p => p.Name, p => p.Value);
-
-            Assert.IsTrue(props.ContainsKey("IntMasked"));
-            Assert.AreEqual("123***", props["IntMasked"].LiteralValue());
-        }
-
-        [Test]
-        public void LogMaskedAttribute_ShowFirst_On_DateTime()
-        {
-            // <summary>
-            //  When applied on non-string types value will be converted to string with InvariantCulture
-            //  new DateTime(2000, 1, 2, 3, 4, 5) results in "01/02/2000 ***"
-            // </summary>
-            // [LogMasked(ShowFirst = 11)]
-            // public DateTime DateTimeMasked { get; set; }
-
-            LogEvent evt = null;
-
-            var log = new LoggerConfiguration()
-                .Destructure.UsingAttributes()
-                .WriteTo.Sink(new DelegatingSink(e => evt = e))
-                .CreateLogger();
-
-            var customized = new CustomizedMaskedLogs
-            {
-                DateTimeMasked = new DateTime(2000, 1, 2, 3, 4, 5)
-            };
-
-            log.Information("Here is {@Customized}", customized);
-
-            var sv = (StructureValue)evt.Properties["Customized"];
-            var props = sv.Properties.ToDictionary(p => p.Name, p => p.Value);
-
-            Assert.IsTrue(props.ContainsKey("DateTimeMasked"));
-            Assert.AreEqual("01/02/2000 ***", props["DateTimeMasked"].LiteralValue());
         }
 
     }

@@ -1,4 +1,4 @@
-﻿// Copyright 2020 Destructurama Contributors, Serilog Contributors
+// Copyright 2020 Destructurama Contributors, Serilog Contributors
 // 
 // Licensed under the Apache License, Version 2.0 (the "License");
 // you may not use this file except in compliance with the License.
@@ -25,7 +25,7 @@ namespace Destructurama.Attributed
         public abstract bool IsDefaultValue(object value);
     }
 
-    class CachedValue<T> : CachedValue
+    class CachedValue<T> : CachedValue where T: notnull
     {
         T Value { get; set; }
 
@@ -46,9 +46,9 @@ namespace Destructurama.Attributed
     [AttributeUsage(AttributeTargets.Property)]
     public class NotLoggedIfDefaultAttribute : Attribute, IPropertyOptionalIgnoreAttribute
     {
-        readonly static ConcurrentDictionary<Type, CachedValue> _cache = new ConcurrentDictionary<Type, CachedValue>();
+        readonly static ConcurrentDictionary<Type, CachedValue> _cache = new();
 
-        public bool ShouldPropertyBeIgnored(string name, object value, Type type)
+        bool IPropertyOptionalIgnoreAttribute.ShouldPropertyBeIgnored(string name, object? value, Type type)
         {
             if (value != null)
             {

@@ -1,4 +1,4 @@
-﻿using Destructurama.Attributed.Tests.Support;
+using Destructurama.Attributed.Tests.Support;
 using NUnit.Framework;
 using Serilog;
 using Serilog.Events;
@@ -33,7 +33,7 @@ namespace Destructurama.Attributed.Tests
         class NotLoggedIfDefaultCustomizedDefaultLogs
         {
             [NotLoggedIfDefault]
-            public string String { get; set; }
+            public string? String { get; set; }
 
             [NotLoggedIfDefault]
             public int Integer { get; set; }
@@ -42,10 +42,10 @@ namespace Destructurama.Attributed.Tests
             public int? NullableInteger { get; set; }
 
             [NotLoggedIfDefault]
-            public object Object { get; set; }
+            public object? Object { get; set; }
 
             [NotLoggedIfDefault]
-            public object IntegerAsObject { get; set; }
+            public object? IntegerAsObject { get; set; }
 
             [NotLoggedIfDefault]
             public DateTime DateTime { get; set; }
@@ -55,13 +55,13 @@ namespace Destructurama.Attributed.Tests
 
             public NotLoggedIfDefaultStructWithAttributes StructWithAttributes { get; set; }
 
-            public string StringLogged { get; set; }
+            public string? StringLogged { get; set; }
 
             public int IntegerLogged { get; set; }
 
             public int? NullableIntegerLogged { get; set; }
 
-            public object ObjectLogged { get; set; }
+            public object? ObjectLogged { get; set; }
 
             public DateTime DateTimeLogged { get; set; }
 
@@ -73,7 +73,7 @@ namespace Destructurama.Attributed.Tests
         [Test]
         public void NotLoggedIfDefault_Uninitialized()
         {
-            LogEvent evt = null;
+            LogEvent? evt = null;
 
             var log = new LoggerConfiguration()
                 .Destructure.UsingAttributes()
@@ -84,7 +84,7 @@ namespace Destructurama.Attributed.Tests
 
             log.Information("Here is {@Customized}", customized);
 
-            var sv = (StructureValue)evt.Properties["Customized"];
+            var sv = (StructureValue)evt!.Properties["Customized"];
             var props = sv.Properties.ToDictionary(p => p.Name, p => p.Value);
 
             Assert.IsFalse(props.ContainsKey("String"));
@@ -125,7 +125,7 @@ namespace Destructurama.Attributed.Tests
         [Test]
         public void NotLoggedIfDefault_Initialized()
         {
-            LogEvent evt = null;
+            LogEvent? evt = null;
 
             var log = new LoggerConfiguration()
                 .Destructure.UsingAttributes()
@@ -159,7 +159,7 @@ namespace Destructurama.Attributed.Tests
 
             log.Information("Here is {@Customized}", customized);
 
-            var sv = (StructureValue)evt.Properties["Customized"];
+            var sv = (StructureValue)evt!.Properties["Customized"];
             var props = sv.Properties.ToDictionary(p => p.Name, p => p.Value);
 
             Assert.IsTrue(props.ContainsKey("String"));

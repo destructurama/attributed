@@ -1,4 +1,4 @@
-﻿// Copyright 2020 Destructurama Contributors, Serilog Contributors
+// Copyright 2020 Destructurama Contributors, Serilog Contributors
 // 
 // Licensed under the Apache License, Version 2.0 (the "License");
 // you may not use this file except in compliance with the License.
@@ -17,14 +17,14 @@ using System;
 namespace Destructurama.Attributed
 {
     /// <summary>
-    /// Specified that a property with default value for its type should not be included when destructuring an object for logging.
+    /// Specified that a property with null value should not be included when destructuring an object for logging.
     /// </summary>
     [AttributeUsage(AttributeTargets.Property)]
     public class NotLoggedIfNullAttribute : Attribute, IPropertyOptionalIgnoreAttribute
     {
-        public static readonly NotLoggedIfNullAttribute Instance = new NotLoggedIfNullAttribute();
+        internal static readonly IPropertyOptionalIgnoreAttribute Instance = new NotLoggedIfNullAttribute();
 
-        public bool ShouldPropertyBeIgnored(string name, object value, Type type)
+        bool IPropertyOptionalIgnoreAttribute.ShouldPropertyBeIgnored(string name, object? value, Type type)
             => value == null;
     }
 }

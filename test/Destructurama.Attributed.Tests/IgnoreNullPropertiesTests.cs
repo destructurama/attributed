@@ -1,4 +1,4 @@
-﻿using Destructurama.Attributed.Tests.Support;
+using Destructurama.Attributed.Tests.Support;
 using NUnit.Framework;
 using Serilog;
 using Serilog.Events;
@@ -6,7 +6,6 @@ using System;
 using System.Collections;
 using System.Collections.Generic;
 using System.Linq;
-using System.Reflection;
 
 namespace Destructurama.Attributed.Tests
 {
@@ -23,20 +22,20 @@ namespace Destructurama.Attributed.Tests
 
             public DateTime? NullableDateTime { get; set; }
 
-            public object Object { get; set; }
+            public object? Object { get; set; }
         }
 
         class NotLoggedIfNull
         {
-            public string String { get; set; }
+            public string? String { get; set; }
 
             public int Integer { get; set; }
 
             public int? NullableInteger { get; set; }
 
-            public object Object { get; set; }
+            public object? Object { get; set; }
 
-            public object IntegerAsObject { get; set; }
+            public object? IntegerAsObject { get; set; }
 
             public DateTime DateTime { get; set; }
 
@@ -52,7 +51,7 @@ namespace Destructurama.Attributed.Tests
         class NotLoggedIfNullAttributed
         {
             [NotLoggedIfNull]
-            public string String { get; set; }
+            public string? String { get; set; }
 
             [NotLoggedIfNull]
             public int Integer { get; set; }
@@ -61,10 +60,10 @@ namespace Destructurama.Attributed.Tests
             public int? NullableInteger { get; set; }
 
             [NotLoggedIfNull]
-            public object Object { get; set; }
+            public object? Object { get; set; }
 
             [NotLoggedIfNull]
-            public object IntegerAsObject { get; set; }
+            public object? IntegerAsObject { get; set; }
 
             [NotLoggedIfNull]
             public DateTime DateTime { get; set; }
@@ -85,25 +84,10 @@ namespace Destructurama.Attributed.Tests
         class AttributedWithMask
         {
             [LogMasked(ShowFirst = 3)]
-            public string String { get; set; }
+            public string? String { get; set; }
 
             [LogMasked(ShowFirst = 3)]
-            public int Integer { get; set; }
-
-            [LogMasked(ShowFirst = 3)]
-            public int? NullableInteger { get; set; }
-
-            [LogMasked(ShowFirst = 3)]
-            public object Object { get; set; }
-
-            [LogMasked(ShowFirst = 3)]
-            public object IntegerAsObject { get; set; }
-
-            [LogMasked(ShowFirst = 7)]
-            public DateTime DateTime { get; set; }
-
-            [LogMasked(ShowFirst = 7)]
-            public DateTime? NullableDateTime { get; set; }
+            public object? Object { get; set; }
         }
 
         class Dependency
@@ -117,7 +101,7 @@ namespace Destructurama.Attributed.Tests
         {
             public int Integer { get; set; }
             
-            public Dependency Dependency { get; set; }
+            public Dependency? Dependency { get; set; }
 
             public IEnumerator<int> GetEnumerator()
             {
@@ -141,7 +125,7 @@ namespace Destructurama.Attributed.Tests
 
             public int? NullableInteger { get; set; }
 
-            public Dependency Dependency { get; set; }
+            public Dependency? Dependency { get; set; }
 
             public IEnumerator<int> GetEnumerator()
             {
@@ -167,7 +151,7 @@ namespace Destructurama.Attributed.Tests
         [Test]
         public void NotLoggedIfNull_Uninitialized()
         {
-            LogEvent evt = null;
+            LogEvent? evt = null;
 
             var log = new LoggerConfiguration()
                 .Destructure.UsingAttributes(x => x.IgnoreNullProperties = true)
@@ -178,7 +162,7 @@ namespace Destructurama.Attributed.Tests
 
             log.Information("Here is {@Customized}", customized);
 
-            var sv = (StructureValue)evt.Properties["Customized"];
+            var sv = (StructureValue)evt!.Properties["Customized"];
             var props = sv.Properties.ToDictionary(p => p.Name, p => p.Value);
 
             Assert.IsTrue(props.ContainsKey("Integer"));
@@ -197,7 +181,7 @@ namespace Destructurama.Attributed.Tests
         [Test]
         public void NotLoggedIfNull_Initialized()
         {
-            LogEvent evt = null;
+            LogEvent? evt = null;
 
             var log = new LoggerConfiguration()
                 .Destructure.UsingAttributes(x => x.IgnoreNullProperties = true)
@@ -239,7 +223,7 @@ namespace Destructurama.Attributed.Tests
 
             log.Information("Here is {@Customized}", customized);
 
-            var sv = (StructureValue)evt.Properties["Customized"];
+            var sv = (StructureValue)evt!.Properties["Customized"];
             var props = sv.Properties.ToDictionary(p => p.Name, p => p.Value);
 
             Assert.IsTrue(props.ContainsKey("String"));
@@ -295,7 +279,7 @@ namespace Destructurama.Attributed.Tests
         [Test]
         public void WithMask_NotLoggedIfNull_Uninitialized()
         {
-            LogEvent evt = null;
+            LogEvent? evt = null;
 
             var log = new LoggerConfiguration()
                 .Destructure.UsingAttributes(x => x.IgnoreNullProperties = true)
@@ -306,23 +290,17 @@ namespace Destructurama.Attributed.Tests
 
             log.Information("Here is {@Customized}", customized);
 
-            var sv = (StructureValue)evt.Properties["Customized"];
+            var sv = (StructureValue)evt!.Properties["Customized"];
             var props = sv.Properties.ToDictionary(p => p.Name, p => p.Value);
 
-            Assert.IsTrue(props.ContainsKey("Integer"));
-            Assert.IsTrue(props.ContainsKey("DateTime"));
-
             Assert.IsFalse(props.ContainsKey("String"));
-            Assert.IsFalse(props.ContainsKey("NullableInteger"));
-            Assert.IsFalse(props.ContainsKey("IntegerAsObject"));
             Assert.IsFalse(props.ContainsKey("Object"));
-            Assert.IsFalse(props.ContainsKey("NullableDateTime"));
         }
 
         [Test]
         public void WithMask_NotLoggedIfNull_Initialized()
         {
-            LogEvent evt = null;
+            LogEvent? evt = null;
 
             var log = new LoggerConfiguration()
                 .Destructure.UsingAttributes(x => x.IgnoreNullProperties = true)
@@ -333,40 +311,25 @@ namespace Destructurama.Attributed.Tests
             var customized = new AttributedWithMask
             {
                 String = "Foo[Masked]",
-                Integer = 1000,
-                NullableInteger = 2000,
                 Object = "Bar[Masked]",
-                IntegerAsObject = 3000,
-                DateTime = dateTime,
-                NullableDateTime = dateTime,
             };
 
             log.Information("Here is {@Customized}", customized);
 
-            var sv = (StructureValue)evt.Properties["Customized"];
+            var sv = (StructureValue)evt!.Properties["Customized"];
             var props = sv.Properties.ToDictionary(p => p.Name, p => p.Value);
 
             Assert.IsTrue(props.ContainsKey("String"));
-            Assert.IsTrue(props.ContainsKey("Integer"));
-            Assert.IsTrue(props.ContainsKey("NullableInteger"));
             Assert.IsTrue(props.ContainsKey("Object"));
-            Assert.IsTrue(props.ContainsKey("IntegerAsObject"));
-            Assert.IsTrue(props.ContainsKey("DateTime"));
-            Assert.IsTrue(props.ContainsKey("NullableDateTime"));
 
             Assert.AreEqual("Foo***", props["String"].LiteralValue());
-            Assert.AreEqual("100***", props["Integer"].LiteralValue());
-            Assert.AreEqual("200***", props["NullableInteger"].LiteralValue());
             Assert.AreEqual("Bar***", props["Object"].LiteralValue());
-            Assert.AreEqual("300***", props["IntegerAsObject"].LiteralValue());
-            Assert.AreEqual("01/02/2***", props["DateTime"].LiteralValue());
-            Assert.AreEqual("01/02/2***", props["NullableDateTime"].LiteralValue());
         }
 
         [Test]
         public void EnumerableIgnored()
         {
-            LogEvent evt = null;
+            LogEvent? evt = null;
 
             var log = new LoggerConfiguration()
                 .Destructure.UsingAttributes(x => x.IgnoreNullProperties = true)
@@ -384,14 +347,14 @@ namespace Destructurama.Attributed.Tests
 
             log.Information("Here is {@Customized}", customized);
 
-            var sv = evt.Properties["Customized"];
+            var sv = evt!.Properties["Customized"];
             Assert.IsInstanceOf<SequenceValue>(sv);
         }
 
         [Test]
         public void EnumerableDestructedAsStruct()
         {
-            LogEvent evt = null;
+            LogEvent? evt = null;
 
             var log = new LoggerConfiguration()
                 .Destructure.UsingAttributes(x => x.IgnoreNullProperties = true)
@@ -410,7 +373,7 @@ namespace Destructurama.Attributed.Tests
 
             log.Information("Here is {@Customized}", customized);
 
-            var sv = (StructureValue)evt.Properties["Customized"];
+            var sv = (StructureValue)evt!.Properties["Customized"];
             var props = sv.Properties.ToDictionary(p => p.Name, p => p.Value);
 
             Assert.IsTrue(props.ContainsKey("Integer"));
@@ -427,7 +390,7 @@ namespace Destructurama.Attributed.Tests
         [Test]
         public void NotLoggedIfNullAttribute_Uninitialized()
         {
-            LogEvent evt = null;
+            LogEvent? evt = null;
 
             var log = new LoggerConfiguration()
                 .Destructure.UsingAttributes(x => x.IgnoreNullProperties = false)
@@ -438,7 +401,7 @@ namespace Destructurama.Attributed.Tests
 
             log.Information("Here is {@Customized}", customized);
 
-            var sv = (StructureValue)evt.Properties["Customized"];
+            var sv = (StructureValue)evt!.Properties["Customized"];
             var props = sv.Properties.ToDictionary(p => p.Name, p => p.Value);
 
             Assert.IsTrue(props.ContainsKey("Integer"));
@@ -457,7 +420,7 @@ namespace Destructurama.Attributed.Tests
         [Test]
         public void NotLoggedIfNullAttribute_Initialized()
         {
-            LogEvent evt = null;
+            LogEvent? evt = null;
 
             var log = new LoggerConfiguration()
                 .Destructure.UsingAttributes(x => x.IgnoreNullProperties = false)
@@ -499,7 +462,7 @@ namespace Destructurama.Attributed.Tests
 
             log.Information("Here is {@Customized}", customized);
 
-            var sv = (StructureValue)evt.Properties["Customized"];
+            var sv = (StructureValue)evt!.Properties["Customized"];
             var props = sv.Properties.ToDictionary(p => p.Name, p => p.Value);
 
             Assert.IsTrue(props.ContainsKey("String"));

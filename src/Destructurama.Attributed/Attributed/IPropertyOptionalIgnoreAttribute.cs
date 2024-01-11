@@ -1,4 +1,4 @@
-﻿// Copyright 2020 Destructurama Contributors, Serilog Contributors
+// Copyright 2020 Destructurama Contributors, Serilog Contributors
 // 
 // Licensed under the Apache License, Version 2.0 (the "License");
 // you may not use this file except in compliance with the License.
@@ -16,8 +16,18 @@ using System;
 
 namespace Destructurama.Attributed
 {
+    /// <summary>
+    /// Base interfaces for all <see cref="Attribute"/>s that determine should a property be ignored.
+    /// </summary>
     public interface IPropertyOptionalIgnoreAttribute
     {
-        bool ShouldPropertyBeIgnored(string name, object value, Type type);
+        /// <summary>
+        /// Determine should a property be ignored
+        /// </summary>
+        /// <param name="name">The current property name</param>
+        /// <param name="value">The current property value</param>
+        /// <param name="type">The current property type</param>
+        /// <returns></returns>
+        bool ShouldPropertyBeIgnored(string name, object? value, Type type);
     }
 }

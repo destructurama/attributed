@@ -166,6 +166,12 @@ public class CustomizedMaskedLogs
     public string? DefaultMaskedPreserved { get; set; }
 
     /// <summary>
+    /// "" results in "***"
+    /// </summary>
+    [LogMasked]
+    public string? DefaultMaskedNotPreservedOnEmptyString { get; set; }
+
+    /// <summary>
     ///  123456789 results in "#"
     /// </summary>
     [LogMasked(Text = "_REMOVED_")]
@@ -254,24 +260,9 @@ public class CustomizedMaskedLogs
     /// </summary>
     [LogMasked(Text = "_REMOVED_", ShowFirst = 3, ShowLast = 3, PreserveLength = true)]
     public string? ShowFirstAndLastThreeAndCustomMaskInTheMiddlePreservedLengthIgnored { get; set; }
-
-    /// <summary>
-    ///  NOTE When applied on non-string types value will be converted to string with InvariantCulture
-    ///  123456789 results in "123***"
-    /// </summary>
-    [LogMasked(ShowFirst=3)]
-    public int IntMasked { get; set; }
-
-    /// <summary>
-    ///  When applied on non-string types value will be converted to string with InvariantCulture
-    ///  new DateTime(2000, 1, 2, 3, 4, 5) results in "01/02/2000 ***"
-    /// </summary>
-    [LogMasked(ShowFirst=11)]
-    public DateTime DateTimeMasked { get; set; }
-
 }
 ```
-<sup><a href='/test/Destructurama.Attributed.Tests/MaskedAttributeTests.cs#L9-L122' title='Snippet source file'>snippet source</a> | <a href='#snippet-customizedmaskedlogs' title='Start of snippet'>anchor</a></sup>
+<sup><a href='/test/Destructurama.Attributed.Tests/MaskedAttributeTests.cs#L10-L129' title='Snippet source file'>snippet source</a> | <a href='#snippet-customizedmaskedlogs' title='Start of snippet'>anchor</a></sup>
 <!-- endSnippet -->
 
 
