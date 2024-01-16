@@ -1,7 +1,7 @@
 namespace Destructurama.Attributed
 {
     /// <summary>
-    /// Global destucturing options
+    /// Global destructuring options.
     /// </summary>
     public class AttributedDestructuringPolicyOptions
     {
