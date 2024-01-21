@@ -1,4 +1,4 @@
-﻿// Copyright 2015 Destructurama Contributors, Serilog Contributors
+// Copyright 2015 Destructurama Contributors, Serilog Contributors
 //
 // Licensed under the Apache License, Version 2.0 (the "License");
 // you may not use this file except in compliance with the License.
@@ -17,7 +17,7 @@ using Serilog.Events;
 
 namespace Destructurama.Util;
 
-struct CacheEntry
+internal struct CacheEntry
 {
     public CacheEntry(Func<object, ILogEventPropertyValueFactory, LogEventPropertyValue> destructureFunc)
     {
@@ -25,7 +25,7 @@ struct CacheEntry
         DestructureFunc = destructureFunc ?? throw new ArgumentNullException(nameof(destructureFunc));
     }
 
-    CacheEntry(bool canDestructure, Func<object, ILogEventPropertyValueFactory, LogEventPropertyValue?> destructureFunc)
+    private CacheEntry(bool canDestructure, Func<object, ILogEventPropertyValueFactory, LogEventPropertyValue?> destructureFunc)
     {
         CanDestructure = canDestructure;
         DestructureFunc = destructureFunc ?? throw new ArgumentNullException(nameof(destructureFunc));

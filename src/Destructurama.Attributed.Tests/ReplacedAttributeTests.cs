@@ -7,7 +7,7 @@ namespace Destructurama.Attributed.Tests;
 
 public class CustomizedRegexLogs
 {
-    const string RegexWithVerticalBars = @"([a-zA-Z0-9]+)\|([a-zA-Z0-9]+)\|([a-zA-Z0-9]+)";
+    private const string RegexWithVerticalBars = @"([a-zA-Z0-9]+)\|([a-zA-Z0-9]+)\|([a-zA-Z0-9]+)";
 
     /// <summary>
     /// 123|456|789 results in "***|456|789"

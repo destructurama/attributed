@@ -1,4 +1,4 @@
-﻿// Copyright 2015 Destructurama Contributors, Serilog Contributors
+// Copyright 2015 Destructurama Contributors, Serilog Contributors
 //
 // Licensed under the Apache License, Version 2.0 (the "License");
 // you may not use this file except in compliance with the License.
@@ -16,7 +16,7 @@ using System.Reflection;
 
 namespace Destructurama.Util;
 
-static class GetablePropertyFinder
+internal static class GetablePropertyFinder
 {
     public static IEnumerable<PropertyInfo> GetPropertiesRecursive(this Type type)
     {

@@ -1,8 +1,8 @@
+using System.Collections;
 using Destructurama.Attributed.Tests.Support;
 using NUnit.Framework;
 using Serilog;
 using Serilog.Events;
-using System.Collections;
 
 namespace Destructurama.Attributed.Tests;
 

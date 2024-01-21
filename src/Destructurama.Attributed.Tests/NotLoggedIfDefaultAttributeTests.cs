@@ -8,14 +8,14 @@ namespace Destructurama.Attributed.Tests;
 [TestFixture]
 public class NotLoggedIfDefaultAttributeTests
 {
-    struct NotLoggedIfDefaultStruct
+    private struct NotLoggedIfDefaultStruct
     {
         public int Integer { get; set; }
 
         public DateTime DateTime { get; set; }
     }
 
-    struct NotLoggedIfDefaultStructWithAttributes
+    private struct NotLoggedIfDefaultStructWithAttributes
     {
         [NotLoggedIfDefault]
         public int Integer { get; set; }
@@ -28,7 +28,7 @@ public class NotLoggedIfDefaultAttributeTests
         public DateTime DateTimeLogged { get; set; }
     }
 
-    class NotLoggedIfDefaultCustomizedDefaultLogs
+    private class NotLoggedIfDefaultCustomizedDefaultLogs
     {
         [NotLoggedIfDefault]
         public string? String { get; set; }

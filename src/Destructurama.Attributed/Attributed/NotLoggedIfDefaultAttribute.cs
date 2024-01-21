@@ -1,11 +1,11 @@
 // Copyright 2020 Destructurama Contributors, Serilog Contributors
-// 
+//
 // Licensed under the Apache License, Version 2.0 (the "License");
 // you may not use this file except in compliance with the License.
 // You may obtain a copy of the License at
-// 
+//
 //     http://www.apache.org/licenses/LICENSE-2.0
-// 
+//
 // Unless required by applicable law or agreed to in writing, software
 // distributed under the License is distributed on an "AS IS" BASIS,
 // WITHOUT WARRANTIES OR CONDITIONS OF ANY KIND, either express or implied.
@@ -16,14 +16,14 @@ using System.Collections.Concurrent;
 
 namespace Destructurama.Attributed;
 
-abstract class CachedValue
+internal abstract class CachedValue
 {
     public abstract bool IsDefaultValue(object value);
 }
 
-class CachedValue<T> : CachedValue where T: notnull
+internal class CachedValue<T> : CachedValue where T : notnull
 {
-    T Value { get; set; }
+    private T Value { get; set; }
 
     public CachedValue(T value)
     {
@@ -42,7 +42,7 @@ class CachedValue<T> : CachedValue where T: notnull
 [AttributeUsage(AttributeTargets.Property)]
 public class NotLoggedIfDefaultAttribute : Attribute, IPropertyOptionalIgnoreAttribute
 {
-    readonly static ConcurrentDictionary<Type, CachedValue> _cache = new();
+    private static readonly ConcurrentDictionary<Type, CachedValue> _cache = new();
 
     bool IPropertyOptionalIgnoreAttribute.ShouldPropertyBeIgnored(string name, object? value, Type type)
     {

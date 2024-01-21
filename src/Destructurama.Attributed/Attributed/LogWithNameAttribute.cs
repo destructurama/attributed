@@ -1,4 +1,4 @@
-﻿// Copyright 2015-2018 Destructurama Contributors, Serilog Contributors
+// Copyright 2015-2018 Destructurama Contributors, Serilog Contributors
 //
 // Licensed under the Apache License, Version 2.0 (the "License");
 // you may not use this file except in compliance with the License.
@@ -12,9 +12,9 @@
 // See the License for the specific language governing permissions and
 // limitations under the License.
 
+using System.Diagnostics.CodeAnalysis;
 using Serilog.Core;
 using Serilog.Events;
-using System.Diagnostics.CodeAnalysis;
 
 namespace Destructurama.Attributed;
 
@@ -24,7 +24,7 @@ namespace Destructurama.Attributed;
 [AttributeUsage(AttributeTargets.Property)]
 public class LogWithNameAttribute : Attribute, IPropertyDestructuringAttribute
 {
-    private string _newName;
+    private readonly string _newName;
 
     /// <summary>
     /// Construct a <see cref="LogWithNameAttribute"/>.

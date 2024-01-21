@@ -23,9 +23,9 @@ using Serilog.Events;
 
 namespace Destructurama.Attributed;
 
-class AttributedDestructuringPolicy : IDestructuringPolicy
+internal class AttributedDestructuringPolicy : IDestructuringPolicy
 {
-    readonly static ConcurrentDictionary<Type, CacheEntry> _cache = new();
+    private static readonly ConcurrentDictionary<Type, CacheEntry> _cache = new();
     private readonly AttributedDestructuringPolicyOptions _options;
 
     public AttributedDestructuringPolicy()
@@ -54,8 +54,8 @@ class AttributedDestructuringPolicy : IDestructuringPolicy
             return new((o, f) => classDestructurer.CreateLogEventPropertyValue(o, f));
 
         var properties = type.GetPropertiesRecursive().ToList();
-        if (!_options.IgnoreNullProperties 
-            && properties.All(pi => 
+        if (!_options.IgnoreNullProperties
+            && properties.All(pi =>
                 pi.GetCustomAttribute<IPropertyDestructuringAttribute>() == null
                 && pi.GetCustomAttribute<IPropertyOptionalIgnoreAttribute>() == null))
         {
@@ -82,11 +82,11 @@ class AttributedDestructuringPolicy : IDestructuringPolicy
     }
 
     private LogEventPropertyValue MakeStructure(
-        object o, 
-        IEnumerable<PropertyInfo> loggedProperties, 
-        IDictionary<PropertyInfo, IPropertyOptionalIgnoreAttribute> optionalIgnoreAttributes, 
-        IDictionary<PropertyInfo, IPropertyDestructuringAttribute> destructuringAttributes, 
-        ILogEventPropertyValueFactory propertyValueFactory, 
+        object o,
+        IEnumerable<PropertyInfo> loggedProperties,
+        IDictionary<PropertyInfo, IPropertyOptionalIgnoreAttribute> optionalIgnoreAttributes,
+        IDictionary<PropertyInfo, IPropertyDestructuringAttribute> destructuringAttributes,
+        ILogEventPropertyValueFactory propertyValueFactory,
         Type type)
     {
         var structureProperties = new List<LogEventProperty>();
@@ -120,7 +120,7 @@ class AttributedDestructuringPolicy : IDestructuringPolicy
         return new StructureValue(structureProperties, type.Name);
     }
 
-    static object SafeGetPropValue(object o, PropertyInfo pi)
+    private static object SafeGetPropValue(object o, PropertyInfo pi)
     {
         try
         {

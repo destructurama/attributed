@@ -1,4 +1,4 @@
-﻿// Copyright 2015 Destructurama Contributors, Serilog Contributors
+// Copyright 2015 Destructurama Contributors, Serilog Contributors
 //
 // Licensed under the Apache License, Version 2.0 (the "License");
 // you may not use this file except in compliance with the License.
@@ -24,7 +24,7 @@ namespace Destructurama.Attributed;
 [AttributeUsage(AttributeTargets.Class | AttributeTargets.Property)]
 public class LogAsScalarAttribute : Attribute, ITypeDestructuringAttribute, IPropertyDestructuringAttribute
 {
-    readonly bool _isMutable;
+    private readonly bool _isMutable;
 
     /// <summary>
     /// Construct a <see cref="LogAsScalarAttribute"/>.

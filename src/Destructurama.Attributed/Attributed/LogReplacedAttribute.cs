@@ -1,4 +1,4 @@
-﻿// Copyright 2015-2020 Destructurama Contributors, Serilog Contributors
+// Copyright 2015-2020 Destructurama Contributors, Serilog Contributors
 //
 // Licensed under the Apache License, Version 2.0 (the "License");
 // you may not use this file except in compliance with the License.
@@ -25,8 +25,8 @@ namespace Destructurama.Attributed;
 [AttributeUsage(AttributeTargets.Property)]
 public class LogReplacedAttribute : Attribute, IPropertyDestructuringAttribute
 {
-    readonly string _pattern;
-    readonly string _replacement;
+    private readonly string _pattern;
+    private readonly string _replacement;
 
     /// <summary>
     /// The RegexOptions that will be applied. Defaults to <see cref="RegexOptions.None"/>
