@@ -7,30 +7,30 @@ namespace Destructurama.Attributed.Tests;
 
 public class CustomizedRegexLogs
 {
-    private const string RegexWithVerticalBars = @"([a-zA-Z0-9]+)\|([a-zA-Z0-9]+)\|([a-zA-Z0-9]+)";
+    private const string REGEX_WITH_VERTICAL_BARS = @"([a-zA-Z0-9]+)\|([a-zA-Z0-9]+)\|([a-zA-Z0-9]+)";
 
     /// <summary>
     /// 123|456|789 results in "***|456|789"
     /// </summary>
-    [LogReplaced(RegexWithVerticalBars, "***|$2|$3")]
+    [LogReplaced(REGEX_WITH_VERTICAL_BARS, "***|$2|$3")]
     public string? RegexReplaceFirst { get; set; }
 
     /// <summary>
     /// 123|456|789 results in "123|***|789"
     /// </summary>
-    [LogReplaced(RegexWithVerticalBars, "$1|***|$3")]
+    [LogReplaced(REGEX_WITH_VERTICAL_BARS, "$1|***|$3")]
     public string? RegexReplaceSecond { get; set; }
 
     /// <summary>
     /// 123|456|789 results in "123|456|***"
     /// </summary>
-    [LogReplaced(RegexWithVerticalBars, "$1|$2|***")]
+    [LogReplaced(REGEX_WITH_VERTICAL_BARS, "$1|$2|***")]
     public string? RegexReplaceThird { get; set; }
 
     /// <summary>
     /// 123|456|789 results in "***|456|****"
     /// </summary>
-    [LogReplaced(RegexWithVerticalBars, "***|$2|****")]
+    [LogReplaced(REGEX_WITH_VERTICAL_BARS, "***|$2|****")]
     public string? RegexReplaceFirstThird { get; set; }
 }
 
