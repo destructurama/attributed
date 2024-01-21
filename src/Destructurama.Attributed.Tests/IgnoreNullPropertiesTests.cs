@@ -2,10 +2,7 @@ using Destructurama.Attributed.Tests.Support;
 using NUnit.Framework;
 using Serilog;
 using Serilog.Events;
-using System;
 using System.Collections;
-using System.Collections.Generic;
-using System.Linq;
 
 namespace Destructurama.Attributed.Tests
 {
@@ -100,7 +97,7 @@ namespace Destructurama.Attributed.Tests
         class CustomEnumerableDestructionIgnored : IEnumerable<int>
         {
             public int Integer { get; set; }
-            
+
             public Dependency? Dependency { get; set; }
 
             public IEnumerator<int> GetEnumerator()

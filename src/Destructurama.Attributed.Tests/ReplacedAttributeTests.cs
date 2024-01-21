@@ -2,7 +2,6 @@
 using NUnit.Framework;
 using Serilog;
 using Serilog.Events;
-using System.Linq;
 
 namespace Destructurama.Attributed.Tests
 {

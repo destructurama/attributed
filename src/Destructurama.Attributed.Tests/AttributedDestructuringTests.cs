@@ -1,4 +1,3 @@
-using System.Linq;
 using Destructurama.Attributed.Tests.Support;
 using NUnit.Framework;
 using Serilog;

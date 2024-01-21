@@ -14,7 +14,6 @@
 
 using Serilog.Core;
 using Serilog.Events;
-using System;
 using System.Diagnostics.CodeAnalysis;
 
 namespace Destructurama.Attributed

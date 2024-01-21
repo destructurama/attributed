@@ -15,7 +15,6 @@
 using Destructurama.Attributed;
 using Serilog;
 using Serilog.Configuration;
-using System;
 using Serilog.Core;
 using System.Runtime.CompilerServices;
 
