@@ -12,17 +12,16 @@
 // See the License for the specific language governing permissions and
 // limitations under the License.
 
-namespace Destructurama.Attributed
-{
-    /// <summary>
-    /// Specified that a property with null value should not be included when destructuring an object for logging.
-    /// </summary>
-    [AttributeUsage(AttributeTargets.Property)]
-    public class NotLoggedIfNullAttribute : Attribute, IPropertyOptionalIgnoreAttribute
-    {
-        internal static readonly IPropertyOptionalIgnoreAttribute Instance = new NotLoggedIfNullAttribute();
+namespace Destructurama.Attributed;
 
-        bool IPropertyOptionalIgnoreAttribute.ShouldPropertyBeIgnored(string name, object? value, Type type)
-            => value == null;
-    }
+/// <summary>
+/// Specified that a property with null value should not be included when destructuring an object for logging.
+/// </summary>
+[AttributeUsage(AttributeTargets.Property)]
+public class NotLoggedIfNullAttribute : Attribute, IPropertyOptionalIgnoreAttribute
+{
+    internal static readonly IPropertyOptionalIgnoreAttribute Instance = new NotLoggedIfNullAttribute();
+
+    bool IPropertyOptionalIgnoreAttribute.ShouldPropertyBeIgnored(string name, object? value, Type type)
+        => value == null;
 }

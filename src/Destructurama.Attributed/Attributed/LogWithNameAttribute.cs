@@ -16,47 +16,46 @@ using Serilog.Core;
 using Serilog.Events;
 using System.Diagnostics.CodeAnalysis;
 
-namespace Destructurama.Attributed
+namespace Destructurama.Attributed;
+
+/// <summary>
+/// Apply to a property to use a custom name when that property is logged.
+/// </summary>
+[AttributeUsage(AttributeTargets.Property)]
+public class LogWithNameAttribute : Attribute, IPropertyDestructuringAttribute
 {
+    private string _newName;
+
     /// <summary>
-    /// Apply to a property to use a custom name when that property is logged.
+    /// Construct a <see cref="LogWithNameAttribute"/>.
     /// </summary>
-    [AttributeUsage(AttributeTargets.Property)]
-    public class LogWithNameAttribute : Attribute, IPropertyDestructuringAttribute
+    /// <param name="newName">The new name to use when logging the target property.</param>
+    public LogWithNameAttribute(string newName)
     {
-        private string _newName;
+        _newName = newName;
+    }
 
-        /// <summary>
-        /// Construct a <see cref="LogWithNameAttribute"/>.
-        /// </summary>
-        /// <param name="newName">The new name to use when logging the target property.</param>
-        public LogWithNameAttribute(string newName)
+    /// <inheritdoc/>
+    public bool TryCreateLogEventProperty(string name, object? value, ILogEventPropertyValueFactory propertyValueFactory, [NotNullWhen(true)] out LogEventProperty? property)
+    {
+        var propValue = propertyValueFactory.CreatePropertyValue(value);
+
+        LogEventPropertyValue? logEventPropVal = propValue switch
         {
-            _newName = newName;
+            ScalarValue scalar => new ScalarValue(scalar.Value),
+            DictionaryValue dictionary => new DictionaryValue(dictionary.Elements),
+            SequenceValue sequence => new SequenceValue(sequence.Elements),
+            StructureValue structure => new StructureValue(structure.Properties),
+            _ => null
+        };
+
+        if (logEventPropVal is null)
+        {
+            property = null;
+            return false;
         }
 
-        /// <inheritdoc/>
-        public bool TryCreateLogEventProperty(string name, object? value, ILogEventPropertyValueFactory propertyValueFactory, [NotNullWhen(true)] out LogEventProperty? property)
-        {
-            var propValue = propertyValueFactory.CreatePropertyValue(value);
-
-            LogEventPropertyValue? logEventPropVal = propValue switch
-            {
-                ScalarValue scalar => new ScalarValue(scalar.Value),
-                DictionaryValue dictionary => new DictionaryValue(dictionary.Elements),
-                SequenceValue sequence => new SequenceValue(sequence.Elements),
-                StructureValue structure => new StructureValue(structure.Properties),
-                _ => null
-            };
-
-            if (logEventPropVal is null)
-            {
-                property = null;
-                return false;
-            }
-
-            property = new LogEventProperty(_newName, logEventPropVal);
-            return true;
-        }
+        property = new LogEventProperty(_newName, logEventPropVal);
+        return true;
     }
 }

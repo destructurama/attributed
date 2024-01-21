@@ -14,14 +14,13 @@
 
 using System.Reflection;
 
-namespace Destructurama.Util
-{
-    static class AttributeFinder
-    {
-        public static T GetCustomAttribute<T>(this TypeInfo typeInfo) =>
-            typeInfo.GetCustomAttributes().OfType<T>().FirstOrDefault();
+namespace Destructurama.Util;
 
-        public static T GetCustomAttribute<T>(this PropertyInfo propertyInfo) =>
-            propertyInfo.GetCustomAttributes().OfType<T>().FirstOrDefault();
-    }
+static class AttributeFinder
+{
+    public static T GetCustomAttribute<T>(this TypeInfo typeInfo) =>
+        typeInfo.GetCustomAttributes().OfType<T>().FirstOrDefault();
+
+    public static T GetCustomAttribute<T>(this PropertyInfo propertyInfo) =>
+        propertyInfo.GetCustomAttributes().OfType<T>().FirstOrDefault();
 }

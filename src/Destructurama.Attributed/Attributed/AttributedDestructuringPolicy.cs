@@ -21,121 +21,120 @@ using Serilog.Core;
 using Serilog.Debugging;
 using Serilog.Events;
 
-namespace Destructurama.Attributed
+namespace Destructurama.Attributed;
+
+class AttributedDestructuringPolicy : IDestructuringPolicy
 {
-    class AttributedDestructuringPolicy : IDestructuringPolicy
+    readonly static ConcurrentDictionary<Type, CacheEntry> _cache = new();
+    private readonly AttributedDestructuringPolicyOptions _options;
+
+    public AttributedDestructuringPolicy()
     {
-        readonly static ConcurrentDictionary<Type, CacheEntry> _cache = new();
-        private readonly AttributedDestructuringPolicyOptions _options;
+        _options = new AttributedDestructuringPolicyOptions();
+    }
 
-        public AttributedDestructuringPolicy()
+    public AttributedDestructuringPolicy(Action<AttributedDestructuringPolicyOptions> configure)
+        : this()
+    {
+        configure?.Invoke(_options);
+    }
+
+    public bool TryDestructure(object value, ILogEventPropertyValueFactory propertyValueFactory, [NotNullWhen(true)] out LogEventPropertyValue? result)
+    {
+        var cached = _cache.GetOrAdd(value.GetType(), CreateCacheEntry);
+        result = cached.DestructureFunc(value, propertyValueFactory);
+        return cached.CanDestructure;
+    }
+
+    private CacheEntry CreateCacheEntry(Type type)
+    {
+        var ti = type.GetTypeInfo();
+        var classDestructurer = ti.GetCustomAttribute<ITypeDestructuringAttribute>();
+        if (classDestructurer != null)
+            return new((o, f) => classDestructurer.CreateLogEventPropertyValue(o, f));
+
+        var properties = type.GetPropertiesRecursive().ToList();
+        if (!_options.IgnoreNullProperties 
+            && properties.All(pi => 
+                pi.GetCustomAttribute<IPropertyDestructuringAttribute>() == null
+                && pi.GetCustomAttribute<IPropertyOptionalIgnoreAttribute>() == null))
         {
-            _options = new AttributedDestructuringPolicyOptions();
+            return CacheEntry.Ignore;
         }
 
-        public AttributedDestructuringPolicy(Action<AttributedDestructuringPolicyOptions> configure)
-            : this()
-        {
-            configure?.Invoke(_options);
-        }
+        var optionalIgnoreAttributes = properties
+            .Select(pi => new { pi, Attribute = pi.GetCustomAttribute<IPropertyOptionalIgnoreAttribute>() })
+            .Where(o => o.Attribute != null)
+            .ToDictionary(o => o.pi, o => o.Attribute);
 
-        public bool TryDestructure(object value, ILogEventPropertyValueFactory propertyValueFactory, [NotNullWhen(true)] out LogEventPropertyValue? result)
-        {
-            var cached = _cache.GetOrAdd(value.GetType(), CreateCacheEntry);
-            result = cached.DestructureFunc(value, propertyValueFactory);
-            return cached.CanDestructure;
-        }
+        var destructuringAttributes = properties
+            .Select(pi => new { pi, Attribute = pi.GetCustomAttribute<IPropertyDestructuringAttribute>() })
+            .Where(o => o.Attribute != null)
+            .ToDictionary(o => o.pi, o => o.Attribute);
 
-        private CacheEntry CreateCacheEntry(Type type)
+        if (_options.IgnoreNullProperties && !optionalIgnoreAttributes.Any() && !destructuringAttributes.Any())
         {
-            var ti = type.GetTypeInfo();
-            var classDestructurer = ti.GetCustomAttribute<ITypeDestructuringAttribute>();
-            if (classDestructurer != null)
-                return new((o, f) => classDestructurer.CreateLogEventPropertyValue(o, f));
-
-            var properties = type.GetPropertiesRecursive().ToList();
-            if (!_options.IgnoreNullProperties 
-                && properties.All(pi => 
-                    pi.GetCustomAttribute<IPropertyDestructuringAttribute>() == null
-                    && pi.GetCustomAttribute<IPropertyOptionalIgnoreAttribute>() == null))
-            {
+            if (typeof(IEnumerable).IsAssignableFrom(type))
                 return CacheEntry.Ignore;
-            }
-
-            var optionalIgnoreAttributes = properties
-                .Select(pi => new { pi, Attribute = pi.GetCustomAttribute<IPropertyOptionalIgnoreAttribute>() })
-                .Where(o => o.Attribute != null)
-                .ToDictionary(o => o.pi, o => o.Attribute);
-
-            var destructuringAttributes = properties
-                .Select(pi => new { pi, Attribute = pi.GetCustomAttribute<IPropertyDestructuringAttribute>() })
-                .Where(o => o.Attribute != null)
-                .ToDictionary(o => o.pi, o => o.Attribute);
-
-            if (_options.IgnoreNullProperties && !optionalIgnoreAttributes.Any() && !destructuringAttributes.Any())
-            {
-                if (typeof(IEnumerable).IsAssignableFrom(type))
-                    return CacheEntry.Ignore;
-            }
-
-            return new CacheEntry((o, f) => MakeStructure(o, properties, optionalIgnoreAttributes, destructuringAttributes, f, type));
         }
 
-        private LogEventPropertyValue MakeStructure(
-            object o, 
-            IEnumerable<PropertyInfo> loggedProperties, 
-            IDictionary<PropertyInfo, IPropertyOptionalIgnoreAttribute> optionalIgnoreAttributes, 
-            IDictionary<PropertyInfo, IPropertyDestructuringAttribute> destructuringAttributes, 
-            ILogEventPropertyValueFactory propertyValueFactory, 
-            Type type)
+        return new CacheEntry((o, f) => MakeStructure(o, properties, optionalIgnoreAttributes, destructuringAttributes, f, type));
+    }
+
+    private LogEventPropertyValue MakeStructure(
+        object o, 
+        IEnumerable<PropertyInfo> loggedProperties, 
+        IDictionary<PropertyInfo, IPropertyOptionalIgnoreAttribute> optionalIgnoreAttributes, 
+        IDictionary<PropertyInfo, IPropertyDestructuringAttribute> destructuringAttributes, 
+        ILogEventPropertyValueFactory propertyValueFactory, 
+        Type type)
+    {
+        var structureProperties = new List<LogEventProperty>();
+        foreach (var pi in loggedProperties)
         {
-            var structureProperties = new List<LogEventProperty>();
-            foreach (var pi in loggedProperties)
+            var propValue = SafeGetPropValue(o, pi);
+
+            if (optionalIgnoreAttributes.TryGetValue(pi, out var optionalIgnoreAttribute))
             {
-                var propValue = SafeGetPropValue(o, pi);
-
-                if (optionalIgnoreAttributes.TryGetValue(pi, out var optionalIgnoreAttribute))
-                {
-                    if (optionalIgnoreAttribute.ShouldPropertyBeIgnored(pi.Name, propValue, pi.PropertyType))
-                        continue;
-                }
-
-                if (_options.IgnoreNullProperties)
-                {
-                    if (NotLoggedIfNullAttribute.Instance.ShouldPropertyBeIgnored(pi.Name, propValue, pi.PropertyType))
-                        continue;
-                }
-
-                if (destructuringAttributes.TryGetValue(pi, out var destructuringAttribute))
-                {
-                    if (destructuringAttribute.TryCreateLogEventProperty(pi.Name, propValue, propertyValueFactory, out var property))
-                        structureProperties.Add(property);
-                }
-                else
-                {
-                    structureProperties.Add(new(pi.Name, propertyValueFactory.CreatePropertyValue(propValue, true)));
-                }
+                if (optionalIgnoreAttribute.ShouldPropertyBeIgnored(pi.Name, propValue, pi.PropertyType))
+                    continue;
             }
 
-            return new StructureValue(structureProperties, type.Name);
+            if (_options.IgnoreNullProperties)
+            {
+                if (NotLoggedIfNullAttribute.Instance.ShouldPropertyBeIgnored(pi.Name, propValue, pi.PropertyType))
+                    continue;
+            }
+
+            if (destructuringAttributes.TryGetValue(pi, out var destructuringAttribute))
+            {
+                if (destructuringAttribute.TryCreateLogEventProperty(pi.Name, propValue, propertyValueFactory, out var property))
+                    structureProperties.Add(property);
+            }
+            else
+            {
+                structureProperties.Add(new(pi.Name, propertyValueFactory.CreatePropertyValue(propValue, true)));
+            }
         }
 
-        static object SafeGetPropValue(object o, PropertyInfo pi)
+        return new StructureValue(structureProperties, type.Name);
+    }
+
+    static object SafeGetPropValue(object o, PropertyInfo pi)
+    {
+        try
         {
-            try
-            {
-                return pi.GetValue(o);
-            }
-            catch (TargetInvocationException ex)
-            {
-                SelfLog.WriteLine("The property accessor {0} threw exception {1}", pi, ex);
-                return $"The property accessor threw an exception: {ex.InnerException!.GetType().Name}";
-            }
+            return pi.GetValue(o);
         }
-
-        internal static void Clear()
+        catch (TargetInvocationException ex)
         {
-            _cache.Clear();
+            SelfLog.WriteLine("The property accessor {0} threw exception {1}", pi, ex);
+            return $"The property accessor threw an exception: {ex.InnerException!.GetType().Name}";
         }
+    }
+
+    internal static void Clear()
+    {
+        _cache.Clear();
     }
 }

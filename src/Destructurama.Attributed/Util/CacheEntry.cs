@@ -15,26 +15,25 @@
 using Serilog.Core;
 using Serilog.Events;
 
-namespace Destructurama.Util
+namespace Destructurama.Util;
+
+struct CacheEntry
 {
-    struct CacheEntry
+    public CacheEntry(Func<object, ILogEventPropertyValueFactory, LogEventPropertyValue> destructureFunc)
     {
-        public CacheEntry(Func<object, ILogEventPropertyValueFactory, LogEventPropertyValue> destructureFunc)
-        {
-            CanDestructure = true;
-            DestructureFunc = destructureFunc ?? throw new ArgumentNullException(nameof(destructureFunc));
-        }
-
-        CacheEntry(bool canDestructure, Func<object, ILogEventPropertyValueFactory, LogEventPropertyValue?> destructureFunc)
-        {
-            CanDestructure = canDestructure;
-            DestructureFunc = destructureFunc ?? throw new ArgumentNullException(nameof(destructureFunc));
-        }
-
-        public bool CanDestructure { get; }
-
-        public Func<object, ILogEventPropertyValueFactory, LogEventPropertyValue?> DestructureFunc { get; }
-
-        public static CacheEntry Ignore { get; } = new(false, (_, _) => null);
+        CanDestructure = true;
+        DestructureFunc = destructureFunc ?? throw new ArgumentNullException(nameof(destructureFunc));
     }
+
+    CacheEntry(bool canDestructure, Func<object, ILogEventPropertyValueFactory, LogEventPropertyValue?> destructureFunc)
+    {
+        CanDestructure = canDestructure;
+        DestructureFunc = destructureFunc ?? throw new ArgumentNullException(nameof(destructureFunc));
+    }
+
+    public bool CanDestructure { get; }
+
+    public Func<object, ILogEventPropertyValueFactory, LogEventPropertyValue?> DestructureFunc { get; }
+
+    public static CacheEntry Ignore { get; } = new(false, (_, _) => null);
 }

@@ -3,42 +3,41 @@ using NUnit.Framework;
 using Serilog;
 using Serilog.Events;
 
-namespace Destructurama.Attributed.Tests
+namespace Destructurama.Attributed.Tests;
+
+[TestFixture]
+public class LogWithNameAttributedTests
 {
-    [TestFixture]
-    public class LogWithNameAttributedTests
+
+    [Test]
+    public void AttributesAreConsultedWhenDestructuring()
     {
+        LogEvent evt = null!;
 
-        [Test]
-        public void AttributesAreConsultedWhenDestructuring()
+        var log = new LoggerConfiguration()
+            .Destructure.UsingAttributes()
+            .WriteTo.Sink(new DelegatingSink(e => evt = e))
+            .CreateLogger();
+
+        var personalData = new PersonalData
         {
-            LogEvent evt = null!;
+            Name = "John Doe"
+        };
 
-            var log = new LoggerConfiguration()
-                .Destructure.UsingAttributes()
-                .WriteTo.Sink(new DelegatingSink(e => evt = e))
-                .CreateLogger();
+        log.Information("Here is {@PersonData}", personalData);
 
-            var personalData = new PersonalData
-            {
-                Name = "John Doe"
-            };
+        var sv = (StructureValue)evt.Properties["PersonData"];
+        var props = sv.Properties.ToDictionary(p => p.Name, p => p.Value);
 
-            log.Information("Here is {@PersonData}", personalData);
-
-            var sv = (StructureValue)evt.Properties["PersonData"];
-            var props = sv.Properties.ToDictionary(p => p.Name, p => p.Value);
-
-            var literalValue = props["FullName"].LiteralValue();
-            Assert.AreEqual("John Doe", literalValue);
-        }
-
-        #region LogWithName
-        public class PersonalData
-        {
-            [LogWithName("FullName")]
-            public string? Name { get; set; }
-        }
-        #endregion
+        var literalValue = props["FullName"].LiteralValue();
+        Assert.AreEqual("John Doe", literalValue);
     }
+
+    #region LogWithName
+    public class PersonalData
+    {
+        [LogWithName("FullName")]
+        public string? Name { get; set; }
+    }
+    #endregion
 }

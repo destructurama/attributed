@@ -17,57 +17,56 @@ using System.Text.RegularExpressions;
 using Serilog.Core;
 using Serilog.Events;
 
-namespace Destructurama.Attributed
+namespace Destructurama.Attributed;
+
+/// <summary>
+/// Apply to a property to use a replace the current value.
+/// </summary>
+[AttributeUsage(AttributeTargets.Property)]
+public class LogReplacedAttribute : Attribute, IPropertyDestructuringAttribute
 {
+    readonly string _pattern;
+    readonly string _replacement;
+
     /// <summary>
-    /// Apply to a property to use a replace the current value.
+    /// The RegexOptions that will be applied. Defaults to <see cref="RegexOptions.None"/>
     /// </summary>
-    [AttributeUsage(AttributeTargets.Property)]
-    public class LogReplacedAttribute : Attribute, IPropertyDestructuringAttribute
+    public RegexOptions Options { get; set; }
+
+    /// <summary>
+    /// A time-out interval to evaluate regular expression. Defaults to <see cref="Regex.InfiniteMatchTimeout"/>
+    /// </summary>
+    public TimeSpan Timeout { get; set; } = Regex.InfiniteMatchTimeout;
+
+    /// <summary>
+    /// Construct a <see cref="LogWithNameAttribute"/>.
+    /// </summary>
+    /// <param name="pattern">The pattern that should be applied on value.</param>
+    /// <param name="replacement">The pattern that should be applied on value.</param>
+    public LogReplacedAttribute(string pattern, string replacement)
     {
-        readonly string _pattern;
-        readonly string _replacement;
+        _pattern = pattern;
+        _replacement = replacement;
+    }
 
-        /// <summary>
-        /// The RegexOptions that will be applied. Defaults to <see cref="RegexOptions.None"/>
-        /// </summary>
-        public RegexOptions Options { get; set; }
-
-        /// <summary>
-        /// A time-out interval to evaluate regular expression. Defaults to <see cref="Regex.InfiniteMatchTimeout"/>
-        /// </summary>
-        public TimeSpan Timeout { get; set; } = Regex.InfiniteMatchTimeout;
-
-        /// <summary>
-        /// Construct a <see cref="LogWithNameAttribute"/>.
-        /// </summary>
-        /// <param name="pattern">The pattern that should be applied on value.</param>
-        /// <param name="replacement">The pattern that should be applied on value.</param>
-        public LogReplacedAttribute(string pattern, string replacement)
+    /// <inheritdoc/>
+    public bool TryCreateLogEventProperty(string name, object? value, ILogEventPropertyValueFactory propertyValueFactory, [NotNullWhen(true)] out LogEventProperty? property)
+    {
+        if (value == null)
         {
-            _pattern = pattern;
-            _replacement = replacement;
+            property = new(name, new ScalarValue(value));
+            return true;
         }
 
-        /// <inheritdoc/>
-        public bool TryCreateLogEventProperty(string name, object? value, ILogEventPropertyValueFactory propertyValueFactory, [NotNullWhen(true)] out LogEventProperty? property)
+        if (value is string s)
         {
-            if (value == null)
-            {
-                property = new(name, new ScalarValue(value));
-                return true;
-            }
+            var replacement = Regex.Replace(s, _pattern, _replacement, Options, Timeout);
 
-            if (value is string s)
-            {
-                var replacement = Regex.Replace(s, _pattern, _replacement, Options, Timeout);
-
-                property = new(name, new ScalarValue(replacement));
-                return true;
-            }
-
-            property = null;
-            return false;
+            property = new(name, new ScalarValue(replacement));
+            return true;
         }
+
+        property = null;
+        return false;
     }
 }

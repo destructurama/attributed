@@ -3,891 +3,890 @@ using NUnit.Framework;
 using Serilog;
 using Serilog.Events;
 
-namespace Destructurama.Attributed.Tests
+namespace Destructurama.Attributed.Tests;
+
+#region CustomizedMaskedLogs
+
+public class CustomizedMaskedLogs
 {
-    #region CustomizedMaskedLogs
+    /// <summary>
+    /// 123456789 results in "***"
+    /// </summary>
+    [LogMasked]
+    public string? DefaultMasked { get; set; }
 
-    public class CustomizedMaskedLogs
+    /// <summary>
+    /// [123456789,123456789,123456789] results in [***,***,***]
+    /// </summary>
+    [LogMasked]
+    public string[]? DefaultMaskedArray { get; set; }
+
+    /// <summary>
+    /// 123456789 results in "*********"
+    /// </summary>
+    [LogMasked(PreserveLength = true)]
+    public string? DefaultMaskedPreserved { get; set; }
+
+    /// <summary>
+    /// "" results in "***"
+    /// </summary>
+    [LogMasked]
+    public string? DefaultMaskedNotPreservedOnEmptyString { get; set; }
+
+    /// <summary>
+    ///  123456789 results in "#"
+    /// </summary>
+    [LogMasked(Text = "_REMOVED_")]
+    public string? CustomMasked { get; set; }
+
+    /// <summary>
+    ///  123456789 results in "#"
+    /// </summary>
+    [LogMasked(Text = "")]
+    public string? CustomMaskedWithEmptyString { get; set; }
+
+    /// <summary>
+    ///  123456789 results in "#########"
+    /// </summary>
+    [LogMasked(Text = "#", PreserveLength = true)]
+    public string? CustomMaskedPreservedLength { get; set; }
+
+    /// <summary>
+    ///  123456789 results in "123******"
+    /// </summary>
+    [LogMasked(ShowFirst = 3)]
+    public string? ShowFirstThreeThenDefaultMasked { get; set; }
+
+    /// <summary>
+    /// 123456789 results in "123******"
+    /// </summary>
+    [LogMasked(ShowFirst = 3, PreserveLength = true)]
+    public string? ShowFirstThreeThenDefaultMaskedPreservedLength { get; set; }
+
+    /// <summary>
+    /// 123456789 results in "***789"
+    /// </summary>
+    [LogMasked(ShowLast = 3)]
+    public string? ShowLastThreeThenDefaultMasked { get; set; }
+
+    /// <summary>
+    /// 123456789 results in "******789"
+    /// </summary>
+    [LogMasked(ShowLast = 3, PreserveLength = true)]
+    public string? ShowLastThreeThenDefaultMaskedPreservedLength { get; set; }
+
+    /// <summary>
+    ///  123456789 results in "123REMOVED"
+    /// </summary>
+    [LogMasked(Text = "_REMOVED_", ShowFirst = 3)]
+    public string? ShowFirstThreeThenCustomMask { get; set; }
+
+    /// <summary>
+    ///  123456789 results in "123_REMOVED_"
+    /// </summary>
+    [LogMasked(Text = "_REMOVED_", ShowFirst = 3, PreserveLength = true)]
+    public string? ShowFirstThreeThenCustomMaskPreservedLengthIgnored { get; set; }
+
+    /// <summary>
+    ///  123456789 results in "_REMOVED_789"
+    /// </summary>
+    [LogMasked(Text = "_REMOVED_", ShowLast = 3)]
+    public string? ShowLastThreeThenCustomMask { get; set; }
+
+    /// <summary>
+    ///  123456789 results in "_REMOVED_789"
+    /// </summary>
+    [LogMasked(Text = "_REMOVED_", ShowLast = 3, PreserveLength = true)]
+    public string? ShowLastThreeThenCustomMaskPreservedLengthIgnored { get; set; }
+
+    /// <summary>
+    /// 123456789 results in "123***789"
+    /// </summary>
+    [LogMasked(ShowFirst = 3, ShowLast = 3)]
+    public string? ShowFirstAndLastThreeAndDefaultMaskInTheMiddle { get; set; }
+
+    /// <summary>
+    /// 123456789 results in "123***789"
+    /// </summary>
+    [LogMasked(ShowFirst = 3, ShowLast = 3, PreserveLength = true)]
+    public string? ShowFirstAndLastThreeAndDefaultMaskInTheMiddlePreservedLength { get; set; }
+
+    /// <summary>
+    ///  123456789 results in "123_REMOVED_789"
+    /// </summary>
+    [LogMasked(Text = "_REMOVED_", ShowFirst = 3, ShowLast = 3)]
+    public string? ShowFirstAndLastThreeAndCustomMaskInTheMiddle { get; set; }
+
+    /// <summary>
+    ///  123456789 results in "123_REMOVED_789". PreserveLength is ignored"
+    /// </summary>
+    [LogMasked(Text = "_REMOVED_", ShowFirst = 3, ShowLast = 3, PreserveLength = true)]
+    public string? ShowFirstAndLastThreeAndCustomMaskInTheMiddlePreservedLengthIgnored { get; set; }
+}
+
+#endregion
+
+[TestFixture]
+public class MaskedAttributeTests
+{
+    [Test]
+    public void LogMaskedAttribute_Replaces_Value_With_DefaultStars_Mask()
     {
-        /// <summary>
-        /// 123456789 results in "***"
-        /// </summary>
-        [LogMasked]
-        public string? DefaultMasked { get; set; }
+        // [LogMasked]
+        // 123456789 -> "***"
 
-        /// <summary>
-        /// [123456789,123456789,123456789] results in [***,***,***]
-        /// </summary>
-        [LogMasked]
-        public string[]? DefaultMaskedArray { get; set; }
+        LogEvent evt = null!;
 
-        /// <summary>
-        /// 123456789 results in "*********"
-        /// </summary>
-        [LogMasked(PreserveLength = true)]
-        public string? DefaultMaskedPreserved { get; set; }
+        var log = new LoggerConfiguration()
+            .Destructure.UsingAttributes()
+            .WriteTo.Sink(new DelegatingSink(e => evt = e))
+            .CreateLogger();
 
-        /// <summary>
-        /// "" results in "***"
-        /// </summary>
-        [LogMasked]
-        public string? DefaultMaskedNotPreservedOnEmptyString { get; set; }
+        var customized = new CustomizedMaskedLogs
+        {
+            DefaultMasked = "123456789"
+        };
 
-        /// <summary>
-        ///  123456789 results in "#"
-        /// </summary>
-        [LogMasked(Text = "_REMOVED_")]
-        public string? CustomMasked { get; set; }
+        log.Information("Here is {@Customized}", customized);
 
-        /// <summary>
-        ///  123456789 results in "#"
-        /// </summary>
-        [LogMasked(Text = "")]
-        public string? CustomMaskedWithEmptyString { get; set; }
+        var sv = (StructureValue)evt.Properties["Customized"];
+        var props = sv.Properties.ToDictionary(p => p.Name, p => p.Value);
 
-        /// <summary>
-        ///  123456789 results in "#########"
-        /// </summary>
-        [LogMasked(Text = "#", PreserveLength = true)]
-        public string? CustomMaskedPreservedLength { get; set; }
-
-        /// <summary>
-        ///  123456789 results in "123******"
-        /// </summary>
-        [LogMasked(ShowFirst = 3)]
-        public string? ShowFirstThreeThenDefaultMasked { get; set; }
-
-        /// <summary>
-        /// 123456789 results in "123******"
-        /// </summary>
-        [LogMasked(ShowFirst = 3, PreserveLength = true)]
-        public string? ShowFirstThreeThenDefaultMaskedPreservedLength { get; set; }
-
-        /// <summary>
-        /// 123456789 results in "***789"
-        /// </summary>
-        [LogMasked(ShowLast = 3)]
-        public string? ShowLastThreeThenDefaultMasked { get; set; }
-
-        /// <summary>
-        /// 123456789 results in "******789"
-        /// </summary>
-        [LogMasked(ShowLast = 3, PreserveLength = true)]
-        public string? ShowLastThreeThenDefaultMaskedPreservedLength { get; set; }
-
-        /// <summary>
-        ///  123456789 results in "123REMOVED"
-        /// </summary>
-        [LogMasked(Text = "_REMOVED_", ShowFirst = 3)]
-        public string? ShowFirstThreeThenCustomMask { get; set; }
-
-        /// <summary>
-        ///  123456789 results in "123_REMOVED_"
-        /// </summary>
-        [LogMasked(Text = "_REMOVED_", ShowFirst = 3, PreserveLength = true)]
-        public string? ShowFirstThreeThenCustomMaskPreservedLengthIgnored { get; set; }
-
-        /// <summary>
-        ///  123456789 results in "_REMOVED_789"
-        /// </summary>
-        [LogMasked(Text = "_REMOVED_", ShowLast = 3)]
-        public string? ShowLastThreeThenCustomMask { get; set; }
-
-        /// <summary>
-        ///  123456789 results in "_REMOVED_789"
-        /// </summary>
-        [LogMasked(Text = "_REMOVED_", ShowLast = 3, PreserveLength = true)]
-        public string? ShowLastThreeThenCustomMaskPreservedLengthIgnored { get; set; }
-
-        /// <summary>
-        /// 123456789 results in "123***789"
-        /// </summary>
-        [LogMasked(ShowFirst = 3, ShowLast = 3)]
-        public string? ShowFirstAndLastThreeAndDefaultMaskInTheMiddle { get; set; }
-
-        /// <summary>
-        /// 123456789 results in "123***789"
-        /// </summary>
-        [LogMasked(ShowFirst = 3, ShowLast = 3, PreserveLength = true)]
-        public string? ShowFirstAndLastThreeAndDefaultMaskInTheMiddlePreservedLength { get; set; }
-
-        /// <summary>
-        ///  123456789 results in "123_REMOVED_789"
-        /// </summary>
-        [LogMasked(Text = "_REMOVED_", ShowFirst = 3, ShowLast = 3)]
-        public string? ShowFirstAndLastThreeAndCustomMaskInTheMiddle { get; set; }
-
-        /// <summary>
-        ///  123456789 results in "123_REMOVED_789". PreserveLength is ignored"
-        /// </summary>
-        [LogMasked(Text = "_REMOVED_", ShowFirst = 3, ShowLast = 3, PreserveLength = true)]
-        public string? ShowFirstAndLastThreeAndCustomMaskInTheMiddlePreservedLengthIgnored { get; set; }
+        Assert.IsTrue(props.ContainsKey("DefaultMasked"));
+        Assert.AreEqual("***", props["DefaultMasked"].LiteralValue());
     }
 
-    #endregion
-
-    [TestFixture]
-    public class MaskedAttributeTests
+    [Test]
+    public void LogMaskedAttribute_Replaces_Array_Value_With_DefaultStars_Mask()
     {
-        [Test]
-        public void LogMaskedAttribute_Replaces_Value_With_DefaultStars_Mask()
+        // [LogMasked]
+        // [123456789,123456789,123456789] results in [***,***,***]
+
+        LogEvent evt = null!;
+
+        var log = new LoggerConfiguration()
+            .Destructure.UsingAttributes()
+            .WriteTo.Sink(new DelegatingSink(e => evt = e))
+            .CreateLogger();
+
+        var customized = new CustomizedMaskedLogs
         {
-            // [LogMasked]
-            // 123456789 -> "***"
+            DefaultMaskedArray = new[] { "123456789", "123456789", "123456789" }
+        };
 
-            LogEvent evt = null!;
+        log.Information("Here is {@Customized}", customized);
 
-            var log = new LoggerConfiguration()
-                .Destructure.UsingAttributes()
-                .WriteTo.Sink(new DelegatingSink(e => evt = e))
-                .CreateLogger();
+        var sv = (StructureValue)evt.Properties["Customized"];
+        var props = sv.Properties.ToDictionary(p => p.Name, p => p.Value);
 
-            var customized = new CustomizedMaskedLogs
-            {
-                DefaultMasked = "123456789"
-            };
+        Assert.IsTrue(props.ContainsKey("DefaultMaskedArray"));
+        var seq = props["DefaultMaskedArray"] as SequenceValue;
+        foreach (var elem in seq!.Elements)
+            Assert.AreEqual("***", elem.LiteralValue());
+    }
 
-            log.Information("Here is {@Customized}", customized);
+    [Test]
+    public void LogMaskedAttribute_Replaces_Value_With_DefaultStars_Mask_And_PreservedLength()
+    {
+        // [LogMasked]
+        // 123456789 -> "*********"
 
-            var sv = (StructureValue)evt.Properties["Customized"];
-            var props = sv.Properties.ToDictionary(p => p.Name, p => p.Value);
+        LogEvent evt = null!;
 
-            Assert.IsTrue(props.ContainsKey("DefaultMasked"));
-            Assert.AreEqual("***", props["DefaultMasked"].LiteralValue());
-        }
+        var log = new LoggerConfiguration()
+            .Destructure.UsingAttributes()
+            .WriteTo.Sink(new DelegatingSink(e => evt = e))
+            .CreateLogger();
 
-        [Test]
-        public void LogMaskedAttribute_Replaces_Array_Value_With_DefaultStars_Mask()
+        var customized = new CustomizedMaskedLogs
         {
-            // [LogMasked]
-            // [123456789,123456789,123456789] results in [***,***,***]
+            DefaultMaskedPreserved = "123456789"
+        };
 
-            LogEvent evt = null!;
+        log.Information("Here is {@Customized}", customized);
 
-            var log = new LoggerConfiguration()
-                .Destructure.UsingAttributes()
-                .WriteTo.Sink(new DelegatingSink(e => evt = e))
-                .CreateLogger();
+        var sv = (StructureValue)evt.Properties["Customized"];
+        var props = sv.Properties.ToDictionary(p => p.Name, p => p.Value);
 
-            var customized = new CustomizedMaskedLogs
-            {
-                DefaultMaskedArray = new[] { "123456789", "123456789", "123456789" }
-            };
+        Assert.IsTrue(props.ContainsKey("DefaultMaskedPreserved"));
+        Assert.AreEqual("*********", props["DefaultMaskedPreserved"].LiteralValue());
+    }
 
-            log.Information("Here is {@Customized}", customized);
+    [Test]
+    public void LogMaskedAttribute_Replaces_Value_With_DefaultStars_Mask_And_Not_Preserve_Length_On_Empty_String()
+    {
+        // [LogMasked]
+        // "" -> "***"
 
-            var sv = (StructureValue)evt.Properties["Customized"];
-            var props = sv.Properties.ToDictionary(p => p.Name, p => p.Value);
+        LogEvent evt = null!;
 
-            Assert.IsTrue(props.ContainsKey("DefaultMaskedArray"));
-            var seq = props["DefaultMaskedArray"] as SequenceValue;
-            foreach (var elem in seq!.Elements)
-                Assert.AreEqual("***", elem.LiteralValue());
-        }
+        var log = new LoggerConfiguration()
+            .Destructure.UsingAttributes()
+            .WriteTo.Sink(new DelegatingSink(e => evt = e))
+            .CreateLogger();
 
-        [Test]
-        public void LogMaskedAttribute_Replaces_Value_With_DefaultStars_Mask_And_PreservedLength()
+        var customized = new CustomizedMaskedLogs
         {
-            // [LogMasked]
-            // 123456789 -> "*********"
+            DefaultMaskedNotPreservedOnEmptyString = ""
+        };
 
-            LogEvent evt = null!;
+        log.Information("Here is {@Customized}", customized);
 
-            var log = new LoggerConfiguration()
-                .Destructure.UsingAttributes()
-                .WriteTo.Sink(new DelegatingSink(e => evt = e))
-                .CreateLogger();
+        var sv = (StructureValue)evt.Properties["Customized"];
+        var props = sv.Properties.ToDictionary(p => p.Name, p => p.Value);
 
-            var customized = new CustomizedMaskedLogs
-            {
-                DefaultMaskedPreserved = "123456789"
-            };
+        Assert.IsTrue(props.ContainsKey("DefaultMaskedNotPreservedOnEmptyString"));
+        Assert.AreEqual("***", props["DefaultMaskedNotPreservedOnEmptyString"].LiteralValue());
+    }
 
-            log.Information("Here is {@Customized}", customized);
+    [Test]
+    public void LogMaskedAttribute_Replaces_Value_With_Provided_Mask()
+    {
+        //  [LogMasked(Text = "#")]
+        //   123456789 -> "_REMOVED_"
 
-            var sv = (StructureValue)evt.Properties["Customized"];
-            var props = sv.Properties.ToDictionary(p => p.Name, p => p.Value);
+        LogEvent evt = null!;
 
-            Assert.IsTrue(props.ContainsKey("DefaultMaskedPreserved"));
-            Assert.AreEqual("*********", props["DefaultMaskedPreserved"].LiteralValue());
-        }
+        var log = new LoggerConfiguration()
+            .Destructure.UsingAttributes()
+            .WriteTo.Sink(new DelegatingSink(e => evt = e))
+            .CreateLogger();
 
-        [Test]
-        public void LogMaskedAttribute_Replaces_Value_With_DefaultStars_Mask_And_Not_Preserve_Length_On_Empty_String()
+        var customized = new CustomizedMaskedLogs
         {
-            // [LogMasked]
-            // "" -> "***"
+            CustomMasked = "123456789"
+        };
 
-            LogEvent evt = null!;
+        log.Information("Here is {@Customized}", customized);
 
-            var log = new LoggerConfiguration()
-                .Destructure.UsingAttributes()
-                .WriteTo.Sink(new DelegatingSink(e => evt = e))
-                .CreateLogger();
+        var sv = (StructureValue)evt.Properties["Customized"];
+        var props = sv.Properties.ToDictionary(p => p.Name, p => p.Value);
 
-            var customized = new CustomizedMaskedLogs
-            {
-                DefaultMaskedNotPreservedOnEmptyString = ""
-            };
+        Assert.IsTrue(props.ContainsKey("CustomMasked"));
+        Assert.AreEqual("_REMOVED_", props["CustomMasked"].LiteralValue());
+    }
 
-            log.Information("Here is {@Customized}", customized);
+    [Test]
+    public void LogMaskedAttribute_Replaces_Value_With_Provided_Empty_Mask()
+    {
+        //  [LogMasked(Text = "#")]
+        //   123456789 -> "_REMOVED_"
 
-            var sv = (StructureValue)evt.Properties["Customized"];
-            var props = sv.Properties.ToDictionary(p => p.Name, p => p.Value);
+        LogEvent evt = null!;
 
-            Assert.IsTrue(props.ContainsKey("DefaultMaskedNotPreservedOnEmptyString"));
-            Assert.AreEqual("***", props["DefaultMaskedNotPreservedOnEmptyString"].LiteralValue());
-        }
+        var log = new LoggerConfiguration()
+            .Destructure.UsingAttributes()
+            .WriteTo.Sink(new DelegatingSink(e => evt = e))
+            .CreateLogger();
 
-        [Test]
-        public void LogMaskedAttribute_Replaces_Value_With_Provided_Mask()
+        var customized = new CustomizedMaskedLogs
         {
-            //  [LogMasked(Text = "#")]
-            //   123456789 -> "_REMOVED_"
+            CustomMaskedWithEmptyString = "123456789"
+        };
 
-            LogEvent evt = null!;
+        log.Information("Here is {@Customized}", customized);
 
-            var log = new LoggerConfiguration()
-                .Destructure.UsingAttributes()
-                .WriteTo.Sink(new DelegatingSink(e => evt = e))
-                .CreateLogger();
+        var sv = (StructureValue)evt.Properties["Customized"];
+        var props = sv.Properties.ToDictionary(p => p.Name, p => p.Value);
 
-            var customized = new CustomizedMaskedLogs
-            {
-                CustomMasked = "123456789"
-            };
+        Assert.IsTrue(props.ContainsKey("CustomMasked"));
+        Assert.AreEqual("", props["CustomMaskedWithEmptyString"].LiteralValue());
+    }
 
-            log.Information("Here is {@Customized}", customized);
+    [Test]
+    public void LogMaskedAttribute_Replaces_Value_With_Provided_Mask_And_PreservedLength()
+    {
+        //  [LogMasked(Text = "#")]
+        //   123456789 -> "#########"
 
-            var sv = (StructureValue)evt.Properties["Customized"];
-            var props = sv.Properties.ToDictionary(p => p.Name, p => p.Value);
+        LogEvent evt = null!;
 
-            Assert.IsTrue(props.ContainsKey("CustomMasked"));
-            Assert.AreEqual("_REMOVED_", props["CustomMasked"].LiteralValue());
-        }
+        var log = new LoggerConfiguration()
+            .Destructure.UsingAttributes()
+            .WriteTo.Sink(new DelegatingSink(e => evt = e))
+            .CreateLogger();
 
-        [Test]
-        public void LogMaskedAttribute_Replaces_Value_With_Provided_Empty_Mask()
+        var customized = new CustomizedMaskedLogs
         {
-            //  [LogMasked(Text = "#")]
-            //   123456789 -> "_REMOVED_"
+            CustomMaskedPreservedLength = "123456789"
+        };
 
-            LogEvent evt = null!;
+        log.Information("Here is {@Customized}", customized);
 
-            var log = new LoggerConfiguration()
-                .Destructure.UsingAttributes()
-                .WriteTo.Sink(new DelegatingSink(e => evt = e))
-                .CreateLogger();
+        var sv = (StructureValue)evt.Properties["Customized"];
+        var props = sv.Properties.ToDictionary(p => p.Name, p => p.Value);
 
-            var customized = new CustomizedMaskedLogs
-            {
-                CustomMaskedWithEmptyString = "123456789"
-            };
+        Assert.IsTrue(props.ContainsKey("CustomMaskedPreservedLength"));
+        Assert.AreEqual("#########", props["CustomMaskedPreservedLength"].LiteralValue());
+    }
 
-            log.Information("Here is {@Customized}", customized);
+    [Test]
+    public void LogMaskedAttribute_Shows_First_NChars_Then_Replaces_All_With_Custom_Mask()
+    {
+        // [LogMasked(Text = "REMOVED", ShowFirst = 3)]
+        // -> "123_REMOVED_"
 
-            var sv = (StructureValue)evt.Properties["Customized"];
-            var props = sv.Properties.ToDictionary(p => p.Name, p => p.Value);
+        LogEvent evt = null!;
 
-            Assert.IsTrue(props.ContainsKey("CustomMasked"));
-            Assert.AreEqual("", props["CustomMaskedWithEmptyString"].LiteralValue());
-        }
+        var log = new LoggerConfiguration()
+            .Destructure.UsingAttributes()
+            .WriteTo.Sink(new DelegatingSink(e => evt = e))
+            .CreateLogger();
 
-        [Test]
-        public void LogMaskedAttribute_Replaces_Value_With_Provided_Mask_And_PreservedLength()
+        var customized = new CustomizedMaskedLogs
         {
-            //  [LogMasked(Text = "#")]
-            //   123456789 -> "#########"
+            ShowFirstThreeThenCustomMask = "123456789"
+        };
 
-            LogEvent evt = null!;
+        log.Information("Here is {@Customized}", customized);
 
-            var log = new LoggerConfiguration()
-                .Destructure.UsingAttributes()
-                .WriteTo.Sink(new DelegatingSink(e => evt = e))
-                .CreateLogger();
+        var sv = (StructureValue)evt.Properties["Customized"];
+        var props = sv.Properties.ToDictionary(p => p.Name, p => p.Value);
 
-            var customized = new CustomizedMaskedLogs
-            {
-                CustomMaskedPreservedLength = "123456789"
-            };
+        Assert.IsTrue(props.ContainsKey("ShowFirstThreeThenCustomMask"));
+        Assert.AreEqual("123_REMOVED_", props["ShowFirstThreeThenCustomMask"].LiteralValue());
+    }
 
-            log.Information("Here is {@Customized}", customized);
+    [Test]
+    public void LogMaskedAttribute_Shows_First_NChars_Then_Replaces_All_With_Custom_Mask_PreservedLength_Ignored()
+    {
+        // [LogMasked(Text = "REMOVED", ShowFirst = 3,PreserveLength = true)]
+        // -> "123_REMOVED_"
 
-            var sv = (StructureValue)evt.Properties["Customized"];
-            var props = sv.Properties.ToDictionary(p => p.Name, p => p.Value);
+        LogEvent evt = null!;
 
-            Assert.IsTrue(props.ContainsKey("CustomMaskedPreservedLength"));
-            Assert.AreEqual("#########", props["CustomMaskedPreservedLength"].LiteralValue());
-        }
+        var log = new LoggerConfiguration()
+            .Destructure.UsingAttributes()
+            .WriteTo.Sink(new DelegatingSink(e => evt = e))
+            .CreateLogger();
 
-        [Test]
-        public void LogMaskedAttribute_Shows_First_NChars_Then_Replaces_All_With_Custom_Mask()
+        var customized = new CustomizedMaskedLogs
         {
-            // [LogMasked(Text = "REMOVED", ShowFirst = 3)]
-            // -> "123_REMOVED_"
+            ShowFirstThreeThenCustomMaskPreservedLengthIgnored = "123456789"
+        };
 
-            LogEvent evt = null!;
+        log.Information("Here is {@Customized}", customized);
 
-            var log = new LoggerConfiguration()
-                .Destructure.UsingAttributes()
-                .WriteTo.Sink(new DelegatingSink(e => evt = e))
-                .CreateLogger();
+        var sv = (StructureValue)evt.Properties["Customized"];
+        var props = sv.Properties.ToDictionary(p => p.Name, p => p.Value);
 
-            var customized = new CustomizedMaskedLogs
-            {
-                ShowFirstThreeThenCustomMask = "123456789"
-            };
+        Assert.IsTrue(props.ContainsKey("ShowFirstThreeThenCustomMaskPreservedLengthIgnored"));
+        Assert.AreEqual("123_REMOVED_", props["ShowFirstThreeThenCustomMaskPreservedLengthIgnored"].LiteralValue());
+    }
 
-            log.Information("Here is {@Customized}", customized);
+    [Test]
+    public void LogMaskedAttribute_Shows_First_NChars_And_Last_NChars_Replaces_Value_With_Default_StarMask()
+    {
+        // [LogMasked(ShowFirst = 3, ShowLast = 3)]
+        // -> "123***321"
 
-            var sv = (StructureValue)evt.Properties["Customized"];
-            var props = sv.Properties.ToDictionary(p => p.Name, p => p.Value);
+        LogEvent evt = null!;
 
-            Assert.IsTrue(props.ContainsKey("ShowFirstThreeThenCustomMask"));
-            Assert.AreEqual("123_REMOVED_", props["ShowFirstThreeThenCustomMask"].LiteralValue());
-        }
+        var log = new LoggerConfiguration()
+            .Destructure.UsingAttributes()
+            .WriteTo.Sink(new DelegatingSink(e => evt = e))
+            .CreateLogger();
 
-        [Test]
-        public void LogMaskedAttribute_Shows_First_NChars_Then_Replaces_All_With_Custom_Mask_PreservedLength_Ignored()
+        var customized = new CustomizedMaskedLogs
         {
-            // [LogMasked(Text = "REMOVED", ShowFirst = 3,PreserveLength = true)]
-            // -> "123_REMOVED_"
+            ShowFirstAndLastThreeAndDefaultMaskInTheMiddle = "12345678987654321"
+        };
 
-            LogEvent evt = null!;
+        log.Information("Here is {@Customized}", customized);
 
-            var log = new LoggerConfiguration()
-                .Destructure.UsingAttributes()
-                .WriteTo.Sink(new DelegatingSink(e => evt = e))
-                .CreateLogger();
+        var sv = (StructureValue)evt.Properties["Customized"];
+        var props = sv.Properties.ToDictionary(p => p.Name, p => p.Value);
 
-            var customized = new CustomizedMaskedLogs
-            {
-                ShowFirstThreeThenCustomMaskPreservedLengthIgnored = "123456789"
-            };
+        Assert.IsTrue(props.ContainsKey("ShowFirstAndLastThreeAndDefaultMaskInTheMiddle"));
+        Assert.AreEqual("123***321", props["ShowFirstAndLastThreeAndDefaultMaskInTheMiddle"].LiteralValue());
+    }
 
-            log.Information("Here is {@Customized}", customized);
+    [Test]
+    public void LogMaskedAttribute_Shows_First_NChars_And_Last_NChars_Replaces_Value_With_Default_StarMask_PreserveLength()
+    {
+        // [LogMasked(ShowFirst = 3, ShowLast = 3)]
+        // -> "123***********321"
 
-            var sv = (StructureValue)evt.Properties["Customized"];
-            var props = sv.Properties.ToDictionary(p => p.Name, p => p.Value);
+        LogEvent evt = null!;
 
-            Assert.IsTrue(props.ContainsKey("ShowFirstThreeThenCustomMaskPreservedLengthIgnored"));
-            Assert.AreEqual("123_REMOVED_", props["ShowFirstThreeThenCustomMaskPreservedLengthIgnored"].LiteralValue());
-        }
+        var log = new LoggerConfiguration()
+            .Destructure.UsingAttributes()
+            .WriteTo.Sink(new DelegatingSink(e => evt = e))
+            .CreateLogger();
 
-        [Test]
-        public void LogMaskedAttribute_Shows_First_NChars_And_Last_NChars_Replaces_Value_With_Default_StarMask()
+        var customized = new CustomizedMaskedLogs
         {
-            // [LogMasked(ShowFirst = 3, ShowLast = 3)]
-            // -> "123***321"
+            ShowFirstAndLastThreeAndDefaultMaskInTheMiddlePreservedLength = "12345678987654321"
+        };
 
-            LogEvent evt = null!;
+        log.Information("Here is {@Customized}", customized);
 
-            var log = new LoggerConfiguration()
-                .Destructure.UsingAttributes()
-                .WriteTo.Sink(new DelegatingSink(e => evt = e))
-                .CreateLogger();
+        var sv = (StructureValue)evt.Properties["Customized"];
+        var props = sv.Properties.ToDictionary(p => p.Name, p => p.Value);
 
-            var customized = new CustomizedMaskedLogs
-            {
-                ShowFirstAndLastThreeAndDefaultMaskInTheMiddle = "12345678987654321"
-            };
+        Assert.IsTrue(props.ContainsKey("ShowFirstAndLastThreeAndDefaultMaskInTheMiddlePreservedLength"));
+        Assert.AreEqual("123***********321", props["ShowFirstAndLastThreeAndDefaultMaskInTheMiddlePreservedLength"].LiteralValue());
+    }
 
-            log.Information("Here is {@Customized}", customized);
+    [Test]
+    public void LogMaskedAttribute_Shows_First_NChars_And_Last_NChars_Replaces_Value_With_Default_StarMask_Single_PreserveLength()
+    {
+        // [LogMasked(ShowFirst = 3, ShowLast = 3)]
+        // -> "123*456"
 
-            var sv = (StructureValue)evt.Properties["Customized"];
-            var props = sv.Properties.ToDictionary(p => p.Name, p => p.Value);
+        LogEvent evt = null!;
 
-            Assert.IsTrue(props.ContainsKey("ShowFirstAndLastThreeAndDefaultMaskInTheMiddle"));
-            Assert.AreEqual("123***321", props["ShowFirstAndLastThreeAndDefaultMaskInTheMiddle"].LiteralValue());
-        }
+        var log = new LoggerConfiguration()
+            .Destructure.UsingAttributes()
+            .WriteTo.Sink(new DelegatingSink(e => evt = e))
+            .CreateLogger();
 
-        [Test]
-        public void LogMaskedAttribute_Shows_First_NChars_And_Last_NChars_Replaces_Value_With_Default_StarMask_PreserveLength()
+        var customized = new CustomizedMaskedLogs
         {
-            // [LogMasked(ShowFirst = 3, ShowLast = 3)]
-            // -> "123***********321"
+            ShowFirstAndLastThreeAndDefaultMaskInTheMiddlePreservedLength = "123x456"
+        };
 
-            LogEvent evt = null!;
+        log.Information("Here is {@Customized}", customized);
 
-            var log = new LoggerConfiguration()
-                .Destructure.UsingAttributes()
-                .WriteTo.Sink(new DelegatingSink(e => evt = e))
-                .CreateLogger();
+        var sv = (StructureValue)evt.Properties["Customized"];
+        var props = sv.Properties.ToDictionary(p => p.Name, p => p.Value);
 
-            var customized = new CustomizedMaskedLogs
-            {
-                ShowFirstAndLastThreeAndDefaultMaskInTheMiddlePreservedLength = "12345678987654321"
-            };
+        Assert.IsTrue(props.ContainsKey("ShowFirstAndLastThreeAndDefaultMaskInTheMiddlePreservedLength"));
+        Assert.AreEqual("123*456", props["ShowFirstAndLastThreeAndDefaultMaskInTheMiddlePreservedLength"].LiteralValue());
+    }
 
-            log.Information("Here is {@Customized}", customized);
+    [Test]
+    public void LogMaskedAttribute_Shows_First_NChars_And_Last_NChars_Then_Replaces_All_Other_Chars_With_Custom_Mask()
+    {
+        // [LogMasked(Text = "REMOVED", ShowFirst = 3, ShowLast = 3)]
+        // 12345678987654321 -> 123_REMOVED_321
 
-            var sv = (StructureValue)evt.Properties["Customized"];
-            var props = sv.Properties.ToDictionary(p => p.Name, p => p.Value);
+        LogEvent evt = null!;
 
-            Assert.IsTrue(props.ContainsKey("ShowFirstAndLastThreeAndDefaultMaskInTheMiddlePreservedLength"));
-            Assert.AreEqual("123***********321", props["ShowFirstAndLastThreeAndDefaultMaskInTheMiddlePreservedLength"].LiteralValue());
-        }
+        var log = new LoggerConfiguration()
+            .Destructure.UsingAttributes()
+            .WriteTo.Sink(new DelegatingSink(e => evt = e))
+            .CreateLogger();
 
-        [Test]
-        public void LogMaskedAttribute_Shows_First_NChars_And_Last_NChars_Replaces_Value_With_Default_StarMask_Single_PreserveLength()
+        var customized = new CustomizedMaskedLogs
         {
-            // [LogMasked(ShowFirst = 3, ShowLast = 3)]
-            // -> "123*456"
+            ShowFirstAndLastThreeAndCustomMaskInTheMiddle = "12345678987654321"
+        };
 
-            LogEvent evt = null!;
+        log.Information("Here is {@Customized}", customized);
 
-            var log = new LoggerConfiguration()
-                .Destructure.UsingAttributes()
-                .WriteTo.Sink(new DelegatingSink(e => evt = e))
-                .CreateLogger();
+        var sv = (StructureValue)evt.Properties["Customized"];
+        var props = sv.Properties.ToDictionary(p => p.Name, p => p.Value);
 
-            var customized = new CustomizedMaskedLogs
-            {
-                ShowFirstAndLastThreeAndDefaultMaskInTheMiddlePreservedLength = "123x456"
-            };
+        Assert.IsTrue(props.ContainsKey("ShowFirstAndLastThreeAndCustomMaskInTheMiddle"));
+        Assert.AreEqual("123_REMOVED_321", props["ShowFirstAndLastThreeAndCustomMaskInTheMiddle"].LiteralValue());
+    }
 
-            log.Information("Here is {@Customized}", customized);
+    [Test]
+    public void LogMaskedAttribute_Shows_First_NChars_And_Last_NChars_Then_Replaces_All_Other_Chars_With_Custom_Mask_And_PreservedLength()
+    {
+        // [LogMasked(Text = "#", ShowFirst = 3, ShowLast = 3)]
+        // 12345678987654321 -> "123_REMOVED_321"
 
-            var sv = (StructureValue)evt.Properties["Customized"];
-            var props = sv.Properties.ToDictionary(p => p.Name, p => p.Value);
+        LogEvent evt = null!;
 
-            Assert.IsTrue(props.ContainsKey("ShowFirstAndLastThreeAndDefaultMaskInTheMiddlePreservedLength"));
-            Assert.AreEqual("123*456", props["ShowFirstAndLastThreeAndDefaultMaskInTheMiddlePreservedLength"].LiteralValue());
-        }
+        var log = new LoggerConfiguration()
+            .Destructure.UsingAttributes()
+            .WriteTo.Sink(new DelegatingSink(e => evt = e))
+            .CreateLogger();
 
-        [Test]
-        public void LogMaskedAttribute_Shows_First_NChars_And_Last_NChars_Then_Replaces_All_Other_Chars_With_Custom_Mask()
+        var customized = new CustomizedMaskedLogs
         {
-            // [LogMasked(Text = "REMOVED", ShowFirst = 3, ShowLast = 3)]
-            // 12345678987654321 -> 123_REMOVED_321
+            ShowFirstAndLastThreeAndCustomMaskInTheMiddle = "12345678987654321"
+        };
 
-            LogEvent evt = null!;
+        log.Information("Here is {@Customized}", customized);
 
-            var log = new LoggerConfiguration()
-                .Destructure.UsingAttributes()
-                .WriteTo.Sink(new DelegatingSink(e => evt = e))
-                .CreateLogger();
+        var sv = (StructureValue)evt.Properties["Customized"];
+        var props = sv.Properties.ToDictionary(p => p.Name, p => p.Value);
 
-            var customized = new CustomizedMaskedLogs
-            {
-                ShowFirstAndLastThreeAndCustomMaskInTheMiddle = "12345678987654321"
-            };
+        Assert.IsTrue(props.ContainsKey("ShowFirstAndLastThreeAndCustomMaskInTheMiddle"));
+        Assert.AreEqual("123_REMOVED_321", props["ShowFirstAndLastThreeAndCustomMaskInTheMiddle"].LiteralValue());
+    }
 
-            log.Information("Here is {@Customized}", customized);
+    [Test]
+    public void LogMaskedAttribute_Shows_First_NChars_And_Last_NChars_Then_Replaces_All_Other_Chars_With_Custom_Mask_And_PreservedLength_Even_When_Input_Length_Is_Less_Than_ShowFirst()
+    {
+        // [LogMasked(Text = "#", ShowFirst = 3, ShowLast = 3)]
+        // 12 -> "12"
 
-            var sv = (StructureValue)evt.Properties["Customized"];
-            var props = sv.Properties.ToDictionary(p => p.Name, p => p.Value);
+        LogEvent evt = null!;
 
-            Assert.IsTrue(props.ContainsKey("ShowFirstAndLastThreeAndCustomMaskInTheMiddle"));
-            Assert.AreEqual("123_REMOVED_321", props["ShowFirstAndLastThreeAndCustomMaskInTheMiddle"].LiteralValue());
-        }
+        var log = new LoggerConfiguration()
+            .Destructure.UsingAttributes()
+            .WriteTo.Sink(new DelegatingSink(e => evt = e))
+            .CreateLogger();
 
-        [Test]
-        public void LogMaskedAttribute_Shows_First_NChars_And_Last_NChars_Then_Replaces_All_Other_Chars_With_Custom_Mask_And_PreservedLength()
+        var customized = new CustomizedMaskedLogs
         {
-            // [LogMasked(Text = "#", ShowFirst = 3, ShowLast = 3)]
-            // 12345678987654321 -> "123_REMOVED_321"
+            ShowFirstAndLastThreeAndCustomMaskInTheMiddle = "12"
+        };
 
-            LogEvent evt = null!;
+        log.Information("Here is {@Customized}", customized);
 
-            var log = new LoggerConfiguration()
-                .Destructure.UsingAttributes()
-                .WriteTo.Sink(new DelegatingSink(e => evt = e))
-                .CreateLogger();
+        var sv = (StructureValue)evt.Properties["Customized"];
+        var props = sv.Properties.ToDictionary(p => p.Name, p => p.Value);
 
-            var customized = new CustomizedMaskedLogs
-            {
-                ShowFirstAndLastThreeAndCustomMaskInTheMiddle = "12345678987654321"
-            };
+        Assert.IsTrue(props.ContainsKey("ShowFirstAndLastThreeAndCustomMaskInTheMiddle"));
+        Assert.AreEqual("12", props["ShowFirstAndLastThreeAndCustomMaskInTheMiddle"].LiteralValue());
+    }
 
-            log.Information("Here is {@Customized}", customized);
+    [Test]
+    public void LogMaskedAttribute_Shows_First_NChars_And_Last_NChars_Then_Replaces_All_Other_Chars_With_Custom_Mask_And_PreservedLength_Even_When_Input_Length_Is_Less_Than_ShowFirst_Plus_ShowLast()
+    {
+        // [LogMasked(Text = "#", ShowFirst = 3, ShowLast = 3)]
+        // 1234 -> "1234"
 
-            var sv = (StructureValue)evt.Properties["Customized"];
-            var props = sv.Properties.ToDictionary(p => p.Name, p => p.Value);
+        LogEvent evt = null!;
 
-            Assert.IsTrue(props.ContainsKey("ShowFirstAndLastThreeAndCustomMaskInTheMiddle"));
-            Assert.AreEqual("123_REMOVED_321", props["ShowFirstAndLastThreeAndCustomMaskInTheMiddle"].LiteralValue());
-        }
+        var log = new LoggerConfiguration()
+            .Destructure.UsingAttributes()
+            .WriteTo.Sink(new DelegatingSink(e => evt = e))
+            .CreateLogger();
 
-        [Test]
-        public void LogMaskedAttribute_Shows_First_NChars_And_Last_NChars_Then_Replaces_All_Other_Chars_With_Custom_Mask_And_PreservedLength_Even_When_Input_Length_Is_Less_Than_ShowFirst()
+        var customized = new CustomizedMaskedLogs
         {
-            // [LogMasked(Text = "#", ShowFirst = 3, ShowLast = 3)]
-            // 12 -> "12"
+            ShowFirstAndLastThreeAndCustomMaskInTheMiddle = "1234"
+        };
 
-            LogEvent evt = null!;
+        log.Information("Here is {@Customized}", customized);
 
-            var log = new LoggerConfiguration()
-                .Destructure.UsingAttributes()
-                .WriteTo.Sink(new DelegatingSink(e => evt = e))
-                .CreateLogger();
+        var sv = (StructureValue)evt.Properties["Customized"];
+        var props = sv.Properties.ToDictionary(p => p.Name, p => p.Value);
 
-            var customized = new CustomizedMaskedLogs
-            {
-                ShowFirstAndLastThreeAndCustomMaskInTheMiddle = "12"
-            };
+        Assert.IsTrue(props.ContainsKey("ShowFirstAndLastThreeAndCustomMaskInTheMiddle"));
+        Assert.AreEqual("1234", props["ShowFirstAndLastThreeAndCustomMaskInTheMiddle"].LiteralValue());
+    }
 
-            log.Information("Here is {@Customized}", customized);
+    [Test]
+    public void LogMaskedAttribute_Shows_First_NChars_Then_Replaces_All_Other_Chars_With_Default_StarMask()
+    {
+        //  [LogMasked(ShowLast = 3)]
+        //  123456789 -> "123***"
 
-            var sv = (StructureValue)evt.Properties["Customized"];
-            var props = sv.Properties.ToDictionary(p => p.Name, p => p.Value);
+        LogEvent evt = null!;
 
-            Assert.IsTrue(props.ContainsKey("ShowFirstAndLastThreeAndCustomMaskInTheMiddle"));
-            Assert.AreEqual("12", props["ShowFirstAndLastThreeAndCustomMaskInTheMiddle"].LiteralValue());
-        }
+        var log = new LoggerConfiguration()
+            .Destructure.UsingAttributes()
+            .WriteTo.Sink(new DelegatingSink(e => evt = e))
+            .CreateLogger();
 
-        [Test]
-        public void LogMaskedAttribute_Shows_First_NChars_And_Last_NChars_Then_Replaces_All_Other_Chars_With_Custom_Mask_And_PreservedLength_Even_When_Input_Length_Is_Less_Than_ShowFirst_Plus_ShowLast()
+        var customized = new CustomizedMaskedLogs
         {
-            // [LogMasked(Text = "#", ShowFirst = 3, ShowLast = 3)]
-            // 1234 -> "1234"
+            ShowFirstThreeThenDefaultMasked = "123456789"
+        };
 
-            LogEvent evt = null!;
+        log.Information("Here is {@Customized}", customized);
 
-            var log = new LoggerConfiguration()
-                .Destructure.UsingAttributes()
-                .WriteTo.Sink(new DelegatingSink(e => evt = e))
-                .CreateLogger();
+        var sv = (StructureValue)evt.Properties["Customized"];
+        var props = sv.Properties.ToDictionary(p => p.Name, p => p.Value);
 
-            var customized = new CustomizedMaskedLogs
-            {
-                ShowFirstAndLastThreeAndCustomMaskInTheMiddle = "1234"
-            };
+        Assert.IsTrue(props.ContainsKey("ShowFirstThreeThenDefaultMasked"));
+        Assert.AreEqual("123***", props["ShowFirstThreeThenDefaultMasked"].LiteralValue());
+    }
 
-            log.Information("Here is {@Customized}", customized);
+    [Test]
+    public void LogMaskedAttribute_Shows_Last_NChars_Then_Replaces_All_Other_Chars_With_Custom_Mask()
+    {
+        //  [LogMasked(Text = "_REMOVED_", ShowLast = 3)]
+        //  123456789 -> "_REMOVED_789"
 
-            var sv = (StructureValue)evt.Properties["Customized"];
-            var props = sv.Properties.ToDictionary(p => p.Name, p => p.Value);
+        LogEvent evt = null!;
 
-            Assert.IsTrue(props.ContainsKey("ShowFirstAndLastThreeAndCustomMaskInTheMiddle"));
-            Assert.AreEqual("1234", props["ShowFirstAndLastThreeAndCustomMaskInTheMiddle"].LiteralValue());
-        }
+        var log = new LoggerConfiguration()
+            .Destructure.UsingAttributes()
+            .WriteTo.Sink(new DelegatingSink(e => evt = e))
+            .CreateLogger();
 
-        [Test]
-        public void LogMaskedAttribute_Shows_First_NChars_Then_Replaces_All_Other_Chars_With_Default_StarMask()
+        var customized = new CustomizedMaskedLogs
         {
-            //  [LogMasked(ShowLast = 3)]
-            //  123456789 -> "123***"
+            ShowLastThreeThenCustomMask = "123456789"
+        };
 
-            LogEvent evt = null!;
+        log.Information("Here is {@Customized}", customized);
 
-            var log = new LoggerConfiguration()
-                .Destructure.UsingAttributes()
-                .WriteTo.Sink(new DelegatingSink(e => evt = e))
-                .CreateLogger();
+        var sv = (StructureValue)evt.Properties["Customized"];
+        var props = sv.Properties.ToDictionary(p => p.Name, p => p.Value);
 
-            var customized = new CustomizedMaskedLogs
-            {
-                ShowFirstThreeThenDefaultMasked = "123456789"
-            };
+        Assert.IsTrue(props.ContainsKey("ShowLastThreeThenCustomMask"));
+        Assert.AreEqual("_REMOVED_789", props["ShowLastThreeThenCustomMask"].LiteralValue());
+    }
 
-            log.Information("Here is {@Customized}", customized);
+    [Test]
+    public void LogMaskedAttribute_Shows_Last_NChars_Then_Replaces_All_Other_Chars_With_Custom_Mask_PreserveLength_Ignored()
+    {
+        //  [LogMasked(Text = "_REMOVED_", ShowLast = 3, PreserveLength = true)]
+        //  123456789 -> "_REMOVED_789"
 
-            var sv = (StructureValue)evt.Properties["Customized"];
-            var props = sv.Properties.ToDictionary(p => p.Name, p => p.Value);
+        LogEvent evt = null!;
 
-            Assert.IsTrue(props.ContainsKey("ShowFirstThreeThenDefaultMasked"));
-            Assert.AreEqual("123***", props["ShowFirstThreeThenDefaultMasked"].LiteralValue());
-        }
+        var log = new LoggerConfiguration()
+            .Destructure.UsingAttributes()
+            .WriteTo.Sink(new DelegatingSink(e => evt = e))
+            .CreateLogger();
 
-        [Test]
-        public void LogMaskedAttribute_Shows_Last_NChars_Then_Replaces_All_Other_Chars_With_Custom_Mask()
+        var customized = new CustomizedMaskedLogs
         {
-            //  [LogMasked(Text = "_REMOVED_", ShowLast = 3)]
-            //  123456789 -> "_REMOVED_789"
+            ShowLastThreeThenCustomMaskPreservedLengthIgnored = "123456789"
+        };
 
-            LogEvent evt = null!;
+        log.Information("Here is {@Customized}", customized);
 
-            var log = new LoggerConfiguration()
-                .Destructure.UsingAttributes()
-                .WriteTo.Sink(new DelegatingSink(e => evt = e))
-                .CreateLogger();
+        var sv = (StructureValue)evt.Properties["Customized"];
+        var props = sv.Properties.ToDictionary(p => p.Name, p => p.Value);
 
-            var customized = new CustomizedMaskedLogs
-            {
-                ShowLastThreeThenCustomMask = "123456789"
-            };
+        Assert.IsTrue(props.ContainsKey("ShowLastThreeThenCustomMaskPreservedLengthIgnored"));
+        Assert.AreEqual("_REMOVED_789", props["ShowLastThreeThenCustomMaskPreservedLengthIgnored"].LiteralValue());
+    }
 
-            log.Information("Here is {@Customized}", customized);
+    [Test]
+    public void LogMaskedAttribute_Shows_Last_NChars_Then_Replaces_All_Other_Chars_With_Default_StarMask()
+    {
+        //  [LogMasked(ShowLast = 3)]
+        //  123456789 -> "***789"
 
-            var sv = (StructureValue)evt.Properties["Customized"];
-            var props = sv.Properties.ToDictionary(p => p.Name, p => p.Value);
+        LogEvent evt = null!;
 
-            Assert.IsTrue(props.ContainsKey("ShowLastThreeThenCustomMask"));
-            Assert.AreEqual("_REMOVED_789", props["ShowLastThreeThenCustomMask"].LiteralValue());
-        }
+        var log = new LoggerConfiguration()
+            .Destructure.UsingAttributes()
+            .WriteTo.Sink(new DelegatingSink(e => evt = e))
+            .CreateLogger();
 
-        [Test]
-        public void LogMaskedAttribute_Shows_Last_NChars_Then_Replaces_All_Other_Chars_With_Custom_Mask_PreserveLength_Ignored()
+        var customized = new CustomizedMaskedLogs
         {
-            //  [LogMasked(Text = "_REMOVED_", ShowLast = 3, PreserveLength = true)]
-            //  123456789 -> "_REMOVED_789"
+            ShowLastThreeThenDefaultMasked = "123456789"
+        };
 
-            LogEvent evt = null!;
+        log.Information("Here is {@Customized}", customized);
 
-            var log = new LoggerConfiguration()
-                .Destructure.UsingAttributes()
-                .WriteTo.Sink(new DelegatingSink(e => evt = e))
-                .CreateLogger();
+        var sv = (StructureValue)evt.Properties["Customized"];
+        var props = sv.Properties.ToDictionary(p => p.Name, p => p.Value);
 
-            var customized = new CustomizedMaskedLogs
-            {
-                ShowLastThreeThenCustomMaskPreservedLengthIgnored = "123456789"
-            };
+        Assert.IsTrue(props.ContainsKey("ShowLastThreeThenDefaultMasked"));
+        Assert.AreEqual("***789", props["ShowLastThreeThenDefaultMasked"].LiteralValue());
+    }
 
-            log.Information("Here is {@Customized}", customized);
+    [Test]
+    public void LogMaskedAttribute_Shows_First_NChars_Then_Replaces_All_Other_Chars_With_Default_StarMask_And_PreservedLength()
+    {
+        //  [LogMasked(ShowFirst = 3,PreserveLength = true))]
+        // -> "123******"
 
-            var sv = (StructureValue)evt.Properties["Customized"];
-            var props = sv.Properties.ToDictionary(p => p.Name, p => p.Value);
+        LogEvent evt = null!;
 
-            Assert.IsTrue(props.ContainsKey("ShowLastThreeThenCustomMaskPreservedLengthIgnored"));
-            Assert.AreEqual("_REMOVED_789", props["ShowLastThreeThenCustomMaskPreservedLengthIgnored"].LiteralValue());
-        }
+        var log = new LoggerConfiguration()
+            .Destructure.UsingAttributes()
+            .WriteTo.Sink(new DelegatingSink(e => evt = e))
+            .CreateLogger();
 
-        [Test]
-        public void LogMaskedAttribute_Shows_Last_NChars_Then_Replaces_All_Other_Chars_With_Default_StarMask()
+        var customized = new CustomizedMaskedLogs
         {
-            //  [LogMasked(ShowLast = 3)]
-            //  123456789 -> "***789"
+            ShowFirstThreeThenDefaultMaskedPreservedLength = "123456789"
+        };
 
-            LogEvent evt = null!;
+        log.Information("Here is {@Customized}", customized);
 
-            var log = new LoggerConfiguration()
-                .Destructure.UsingAttributes()
-                .WriteTo.Sink(new DelegatingSink(e => evt = e))
-                .CreateLogger();
+        var sv = (StructureValue)evt.Properties["Customized"];
+        var props = sv.Properties.ToDictionary(p => p.Name, p => p.Value);
 
-            var customized = new CustomizedMaskedLogs
-            {
-                ShowLastThreeThenDefaultMasked = "123456789"
-            };
+        Assert.IsTrue(props.ContainsKey("ShowFirstThreeThenDefaultMaskedPreservedLength"));
+        Assert.AreEqual("123******", props["ShowFirstThreeThenDefaultMaskedPreservedLength"].LiteralValue());
+    }
 
-            log.Information("Here is {@Customized}", customized);
+    [Test]
+    public void LogMaskedAttribute_Shows_First_NChars_Then_Replaces_All_Other_Chars_With_Default_StarMask_And_PreservedLength_Even_For_An_Empty_Input()
+    {
+        //  [LogMasked(ShowFirst = 3,PreserveLength = true))]
+        // -> ""
 
-            var sv = (StructureValue)evt.Properties["Customized"];
-            var props = sv.Properties.ToDictionary(p => p.Name, p => p.Value);
+        LogEvent evt = null!;
 
-            Assert.IsTrue(props.ContainsKey("ShowLastThreeThenDefaultMasked"));
-            Assert.AreEqual("***789", props["ShowLastThreeThenDefaultMasked"].LiteralValue());
-        }
+        var log = new LoggerConfiguration()
+            .Destructure.UsingAttributes()
+            .WriteTo.Sink(new DelegatingSink(e => evt = e))
+            .CreateLogger();
 
-        [Test]
-        public void LogMaskedAttribute_Shows_First_NChars_Then_Replaces_All_Other_Chars_With_Default_StarMask_And_PreservedLength()
+        var customized = new CustomizedMaskedLogs
         {
-            //  [LogMasked(ShowFirst = 3,PreserveLength = true))]
-            // -> "123******"
+            ShowFirstThreeThenDefaultMaskedPreservedLength = ""
+        };
 
-            LogEvent evt = null!;
+        log.Information("Here is {@Customized}", customized);
 
-            var log = new LoggerConfiguration()
-                .Destructure.UsingAttributes()
-                .WriteTo.Sink(new DelegatingSink(e => evt = e))
-                .CreateLogger();
+        var sv = (StructureValue)evt.Properties["Customized"];
 
-            var customized = new CustomizedMaskedLogs
-            {
-                ShowFirstThreeThenDefaultMaskedPreservedLength = "123456789"
-            };
+        var props = sv.Properties.ToDictionary(p => p.Name, p => p.Value);
 
-            log.Information("Here is {@Customized}", customized);
+        Assert.IsTrue(props.ContainsKey("ShowFirstThreeThenDefaultMaskedPreservedLength"));
+        Assert.AreEqual("", props["ShowFirstThreeThenDefaultMaskedPreservedLength"].LiteralValue());
+    }
 
-            var sv = (StructureValue)evt.Properties["Customized"];
-            var props = sv.Properties.ToDictionary(p => p.Name, p => p.Value);
+    [Test]
+    public void LogMaskedAttribute_Shows_First_NChars_Then_Replaces_All_Other_Chars_With_Default_StarMask_And_PreservedLength_Even_For_An_Input_With_Same_Length_As_ShowFirst()
+    {
+        //  [LogMasked(ShowFirst = 3,PreserveLength = true))]
+        // -> "123"
 
-            Assert.IsTrue(props.ContainsKey("ShowFirstThreeThenDefaultMaskedPreservedLength"));
-            Assert.AreEqual("123******", props["ShowFirstThreeThenDefaultMaskedPreservedLength"].LiteralValue());
-        }
+        LogEvent evt = null!;
 
-        [Test]
-        public void LogMaskedAttribute_Shows_First_NChars_Then_Replaces_All_Other_Chars_With_Default_StarMask_And_PreservedLength_Even_For_An_Empty_Input()
+        var log = new LoggerConfiguration()
+            .Destructure.UsingAttributes()
+            .WriteTo.Sink(new DelegatingSink(e => evt = e))
+            .CreateLogger();
+
+        var customized = new CustomizedMaskedLogs
         {
-            //  [LogMasked(ShowFirst = 3,PreserveLength = true))]
-            // -> ""
+            ShowFirstThreeThenDefaultMaskedPreservedLength = "123"
+        };
 
-            LogEvent evt = null!;
+        log.Information("Here is {@Customized}", customized);
 
-            var log = new LoggerConfiguration()
-                .Destructure.UsingAttributes()
-                .WriteTo.Sink(new DelegatingSink(e => evt = e))
-                .CreateLogger();
+        var sv = (StructureValue)evt.Properties["Customized"];
 
-            var customized = new CustomizedMaskedLogs
-            {
-                ShowFirstThreeThenDefaultMaskedPreservedLength = ""
-            };
+        var props = sv.Properties.ToDictionary(p => p.Name, p => p.Value);
 
-            log.Information("Here is {@Customized}", customized);
+        Assert.IsTrue(props.ContainsKey("ShowFirstThreeThenDefaultMaskedPreservedLength"));
+        Assert.AreEqual("123", props["ShowFirstThreeThenDefaultMaskedPreservedLength"].LiteralValue());
+    }
 
-            var sv = (StructureValue)evt.Properties["Customized"];
+    [Test]
+    public void LogMaskedAttribute_Shows_First_NChars_Then_Replaces_All_Other_Chars_With_Default_StarMask_And_PreservedLength_Even_For_An_Input_Shorter_Than_ShowFirst()
+    {
+        //  [LogMasked(ShowFirst = 3,PreserveLength = true))]
+        // -> "12"
 
-            var props = sv.Properties.ToDictionary(p => p.Name, p => p.Value);
+        LogEvent evt = null!;
 
-            Assert.IsTrue(props.ContainsKey("ShowFirstThreeThenDefaultMaskedPreservedLength"));
-            Assert.AreEqual("", props["ShowFirstThreeThenDefaultMaskedPreservedLength"].LiteralValue());
-        }
+        var log = new LoggerConfiguration()
+            .Destructure.UsingAttributes()
+            .WriteTo.Sink(new DelegatingSink(e => evt = e))
+            .CreateLogger();
 
-        [Test]
-        public void LogMaskedAttribute_Shows_First_NChars_Then_Replaces_All_Other_Chars_With_Default_StarMask_And_PreservedLength_Even_For_An_Input_With_Same_Length_As_ShowFirst()
+        var customized = new CustomizedMaskedLogs
         {
-            //  [LogMasked(ShowFirst = 3,PreserveLength = true))]
-            // -> "123"
+            ShowFirstThreeThenDefaultMaskedPreservedLength = "12"
+        };
 
-            LogEvent evt = null!;
+        log.Information("Here is {@Customized}", customized);
 
-            var log = new LoggerConfiguration()
-                .Destructure.UsingAttributes()
-                .WriteTo.Sink(new DelegatingSink(e => evt = e))
-                .CreateLogger();
+        var sv = (StructureValue)evt.Properties["Customized"];
 
-            var customized = new CustomizedMaskedLogs
-            {
-                ShowFirstThreeThenDefaultMaskedPreservedLength = "123"
-            };
+        var props = sv.Properties.ToDictionary(p => p.Name, p => p.Value);
 
-            log.Information("Here is {@Customized}", customized);
+        Assert.IsTrue(props.ContainsKey("ShowFirstThreeThenDefaultMaskedPreservedLength"));
+        Assert.AreEqual("12", props["ShowFirstThreeThenDefaultMaskedPreservedLength"].LiteralValue());
+    }
 
-            var sv = (StructureValue)evt.Properties["Customized"];
+    [Test]
+    public void LogMaskedAttribute_Shows_Last_NChars_Then_Replaces_All_Other_Chars_With_Default_StarMask_And_PreservedLength()
+    {
+        //  [LogMasked(ShowLast = 3,PreserveLength = true))]
+        // -> "******789"
 
-            var props = sv.Properties.ToDictionary(p => p.Name, p => p.Value);
+        LogEvent evt = null!;
 
-            Assert.IsTrue(props.ContainsKey("ShowFirstThreeThenDefaultMaskedPreservedLength"));
-            Assert.AreEqual("123", props["ShowFirstThreeThenDefaultMaskedPreservedLength"].LiteralValue());
-        }
+        var log = new LoggerConfiguration()
+            .Destructure.UsingAttributes()
+            .WriteTo.Sink(new DelegatingSink(e => evt = e))
+            .CreateLogger();
 
-        [Test]
-        public void LogMaskedAttribute_Shows_First_NChars_Then_Replaces_All_Other_Chars_With_Default_StarMask_And_PreservedLength_Even_For_An_Input_Shorter_Than_ShowFirst()
+        var customized = new CustomizedMaskedLogs
         {
-            //  [LogMasked(ShowFirst = 3,PreserveLength = true))]
-            // -> "12"
+            ShowLastThreeThenDefaultMaskedPreservedLength = "123456789"
+        };
 
-            LogEvent evt = null!;
+        log.Information("Here is {@Customized}", customized);
 
-            var log = new LoggerConfiguration()
-                .Destructure.UsingAttributes()
-                .WriteTo.Sink(new DelegatingSink(e => evt = e))
-                .CreateLogger();
+        var sv = (StructureValue)evt.Properties["Customized"];
+        var props = sv.Properties.ToDictionary(p => p.Name, p => p.Value);
 
-            var customized = new CustomizedMaskedLogs
-            {
-                ShowFirstThreeThenDefaultMaskedPreservedLength = "12"
-            };
+        Assert.IsTrue(props.ContainsKey("ShowLastThreeThenDefaultMaskedPreservedLength"));
+        Assert.AreEqual("******789", props["ShowLastThreeThenDefaultMaskedPreservedLength"].LiteralValue());
+    }
 
-            log.Information("Here is {@Customized}", customized);
+    [Test]
+    public void LogMaskedAttribute_Shows_Last_NChars_Then_Replaces_All_Other_Chars_With_Default_StarMask_And_PreservedLength_Even_For_An_Input_With_Same_Length_As_ShowLast()
+    {
+        //  [LogMasked(ShowLast = 3,PreserveLength = true))]
+        // -> "123"
 
-            var sv = (StructureValue)evt.Properties["Customized"];
+        LogEvent evt = null!;
 
-            var props = sv.Properties.ToDictionary(p => p.Name, p => p.Value);
+        var log = new LoggerConfiguration()
+            .Destructure.UsingAttributes()
+            .WriteTo.Sink(new DelegatingSink(e => evt = e))
+            .CreateLogger();
 
-            Assert.IsTrue(props.ContainsKey("ShowFirstThreeThenDefaultMaskedPreservedLength"));
-            Assert.AreEqual("12", props["ShowFirstThreeThenDefaultMaskedPreservedLength"].LiteralValue());
-        }
-
-        [Test]
-        public void LogMaskedAttribute_Shows_Last_NChars_Then_Replaces_All_Other_Chars_With_Default_StarMask_And_PreservedLength()
+        var customized = new CustomizedMaskedLogs
         {
-            //  [LogMasked(ShowLast = 3,PreserveLength = true))]
-            // -> "******789"
+            ShowLastThreeThenDefaultMaskedPreservedLength = "123"
+        };
 
-            LogEvent evt = null!;
+        log.Information("Here is {@Customized}", customized);
 
-            var log = new LoggerConfiguration()
-                .Destructure.UsingAttributes()
-                .WriteTo.Sink(new DelegatingSink(e => evt = e))
-                .CreateLogger();
+        var sv = (StructureValue)evt.Properties["Customized"];
+        var props = sv.Properties.ToDictionary(p => p.Name, p => p.Value);
 
-            var customized = new CustomizedMaskedLogs
-            {
-                ShowLastThreeThenDefaultMaskedPreservedLength = "123456789"
-            };
+        Assert.IsTrue(props.ContainsKey("ShowLastThreeThenDefaultMaskedPreservedLength"));
+        Assert.AreEqual("123", props["ShowLastThreeThenDefaultMaskedPreservedLength"].LiteralValue());
+    }
 
-            log.Information("Here is {@Customized}", customized);
+    [Test]
+    public void LogMaskedAttribute_Shows_Last_NChars_Then_Replaces_All_Other_Chars_With_Default_StarMask_And_PreservedLength_Even_For_An_Input_Shorter_Than_ShowLast()
+    {
+        //  [LogMasked(ShowLast = 3,PreserveLength = true))]
+        // -> "12"
 
-            var sv = (StructureValue)evt.Properties["Customized"];
-            var props = sv.Properties.ToDictionary(p => p.Name, p => p.Value);
+        LogEvent evt = null!;
 
-            Assert.IsTrue(props.ContainsKey("ShowLastThreeThenDefaultMaskedPreservedLength"));
-            Assert.AreEqual("******789", props["ShowLastThreeThenDefaultMaskedPreservedLength"].LiteralValue());
-        }
+        var log = new LoggerConfiguration()
+            .Destructure.UsingAttributes()
+            .WriteTo.Sink(new DelegatingSink(e => evt = e))
+            .CreateLogger();
 
-        [Test]
-        public void LogMaskedAttribute_Shows_Last_NChars_Then_Replaces_All_Other_Chars_With_Default_StarMask_And_PreservedLength_Even_For_An_Input_With_Same_Length_As_ShowLast()
+        var customized = new CustomizedMaskedLogs
         {
-            //  [LogMasked(ShowLast = 3,PreserveLength = true))]
-            // -> "123"
+            ShowLastThreeThenDefaultMaskedPreservedLength = "12"
+        };
 
-            LogEvent evt = null!;
+        log.Information("Here is {@Customized}", customized);
 
-            var log = new LoggerConfiguration()
-                .Destructure.UsingAttributes()
-                .WriteTo.Sink(new DelegatingSink(e => evt = e))
-                .CreateLogger();
+        var sv = (StructureValue)evt.Properties["Customized"];
+        var props = sv.Properties.ToDictionary(p => p.Name, p => p.Value);
 
-            var customized = new CustomizedMaskedLogs
-            {
-                ShowLastThreeThenDefaultMaskedPreservedLength = "123"
-            };
+        Assert.IsTrue(props.ContainsKey("ShowLastThreeThenDefaultMaskedPreservedLength"));
+        Assert.AreEqual("12", props["ShowLastThreeThenDefaultMaskedPreservedLength"].LiteralValue());
+    }
 
-            log.Information("Here is {@Customized}", customized);
+    [Test]
+    public void LogMaskedAttribute_Shows_First_NChars_And_Last_NChars_Then_Replaces_All_Other_Chars_With_Custom_Mask_And_PreservedLength_That_Gives_Warning()
+    {
+        // [LogMasked(Text = "REMOVED", ShowFirst = 3, ShowLast = 3, PreserveLength = true)]
+        // 12345678987654321 -> 123_REMOVED_321
 
-            var sv = (StructureValue)evt.Properties["Customized"];
-            var props = sv.Properties.ToDictionary(p => p.Name, p => p.Value);
+        LogEvent evt = null!;
 
-            Assert.IsTrue(props.ContainsKey("ShowLastThreeThenDefaultMaskedPreservedLength"));
-            Assert.AreEqual("123", props["ShowLastThreeThenDefaultMaskedPreservedLength"].LiteralValue());
-        }
+        var log = new LoggerConfiguration()
+            .Destructure.UsingAttributes()
+            .WriteTo.Sink(new DelegatingSink(e => evt = e))
+            .CreateLogger();
 
-        [Test]
-        public void LogMaskedAttribute_Shows_Last_NChars_Then_Replaces_All_Other_Chars_With_Default_StarMask_And_PreservedLength_Even_For_An_Input_Shorter_Than_ShowLast()
+        var customized = new CustomizedMaskedLogs
         {
-            //  [LogMasked(ShowLast = 3,PreserveLength = true))]
-            // -> "12"
+            ShowFirstAndLastThreeAndCustomMaskInTheMiddlePreservedLengthIgnored = "12345678987654321"
+        };
 
-            LogEvent evt = null!;
+        log.Information("Here is {@Customized}", customized);
 
-            var log = new LoggerConfiguration()
-                .Destructure.UsingAttributes()
-                .WriteTo.Sink(new DelegatingSink(e => evt = e))
-                .CreateLogger();
+        var sv = (StructureValue)evt.Properties["Customized"];
+        var props = sv.Properties.ToDictionary(p => p.Name, p => p.Value);
 
-            var customized = new CustomizedMaskedLogs
-            {
-                ShowLastThreeThenDefaultMaskedPreservedLength = "12"
-            };
-
-            log.Information("Here is {@Customized}", customized);
-
-            var sv = (StructureValue)evt.Properties["Customized"];
-            var props = sv.Properties.ToDictionary(p => p.Name, p => p.Value);
-
-            Assert.IsTrue(props.ContainsKey("ShowLastThreeThenDefaultMaskedPreservedLength"));
-            Assert.AreEqual("12", props["ShowLastThreeThenDefaultMaskedPreservedLength"].LiteralValue());
-        }
-
-        [Test]
-        public void LogMaskedAttribute_Shows_First_NChars_And_Last_NChars_Then_Replaces_All_Other_Chars_With_Custom_Mask_And_PreservedLength_That_Gives_Warning()
-        {
-            // [LogMasked(Text = "REMOVED", ShowFirst = 3, ShowLast = 3, PreserveLength = true)]
-            // 12345678987654321 -> 123_REMOVED_321
-
-            LogEvent evt = null!;
-
-            var log = new LoggerConfiguration()
-                .Destructure.UsingAttributes()
-                .WriteTo.Sink(new DelegatingSink(e => evt = e))
-                .CreateLogger();
-
-            var customized = new CustomizedMaskedLogs
-            {
-                ShowFirstAndLastThreeAndCustomMaskInTheMiddlePreservedLengthIgnored = "12345678987654321"
-            };
-
-            log.Information("Here is {@Customized}", customized);
-
-            var sv = (StructureValue)evt.Properties["Customized"];
-            var props = sv.Properties.ToDictionary(p => p.Name, p => p.Value);
-
-            Assert.IsTrue(props.ContainsKey("ShowFirstAndLastThreeAndCustomMaskInTheMiddlePreservedLengthIgnored"));
-            Assert.AreEqual("123_REMOVED_321", props["ShowFirstAndLastThreeAndCustomMaskInTheMiddlePreservedLengthIgnored"].LiteralValue());
-        }
+        Assert.IsTrue(props.ContainsKey("ShowFirstAndLastThreeAndCustomMaskInTheMiddlePreservedLengthIgnored"));
+        Assert.AreEqual("123_REMOVED_321", props["ShowFirstAndLastThreeAndCustomMaskInTheMiddlePreservedLengthIgnored"].LiteralValue());
     }
 }
