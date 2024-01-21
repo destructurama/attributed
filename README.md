@@ -17,6 +17,8 @@ Install-Package Destructurama.Attributed
 Modify logger configuration:
 
 ```csharp
+using Destructurama;
+...
 var log = new LoggerConfiguration()
   .Destructure.UsingAttributes()
   ...
@@ -30,6 +32,8 @@ Apply the `LogWithName` attribute:
 <!-- snippet: LogWithName -->
 <a id='snippet-logwithname'></a>
 ```cs
+using Destructurama.Attributed;
+...
 public class PersonalData
 {
     [LogWithName("FullName")]
@@ -47,6 +51,8 @@ Apply the `NotLogged` attribute:
 <!-- snippet: LoginCommand -->
 <a id='snippet-logincommand'></a>
 ```cs
+using Destructurama.Attributed;
+...
 public class LoginCommand
 {
     public string? Username { get; set; }
@@ -92,6 +98,8 @@ Note that masking also works for properties of type `IEnumerable<string>` or der
 <!-- snippet: CustomizedMaskedLogs -->
 <a id='snippet-customizedmaskedlogs'></a>
 ```cs
+using Destructurama.Attributed;
+...
 public class CustomizedMaskedLogs
 {
     /// <summary>
