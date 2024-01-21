@@ -1,4 +1,4 @@
-﻿using Destructurama.Attributed.Tests.Support;
+using Destructurama.Attributed.Tests.Support;
 using NUnit.Framework;
 using Serilog;
 using Serilog.Events;
