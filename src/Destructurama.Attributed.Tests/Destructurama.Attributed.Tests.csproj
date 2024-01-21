@@ -1,7 +1,7 @@
 <Project Sdk="Microsoft.NET.Sdk">
 
   <PropertyGroup>
-    <TargetFrameworks>net48;net6.0;net7.0;net8.0</TargetFrameworks>
+    <TargetFrameworks>net6.0;net7.0;net8.0</TargetFrameworks>
     <TreatWarningsAsErrors>false</TreatWarningsAsErrors>
     <NoWarn>$(NoWarn);1591</NoWarn>
   </PropertyGroup>
@@ -11,6 +11,8 @@
     <PackageReference Include="NUnit" Version="3.13.3" />
     <PackageReference Include="NUnit3TestAdapter" Version="4.5.0" />
     <PackageReference Include="Serilog" Version="3.1.1" />
+    <PackageReference Include="Shouldly" Version="4.2.1" />
+    <PackageReference Include="PublicApiGenerator" Version="11.1.0" />
     <!--<PackageReference Include="MarkdownSnippets.MsBuild" Version="24.5.1" PrivateAssets="all" />-->
   </ItemGroup>
 

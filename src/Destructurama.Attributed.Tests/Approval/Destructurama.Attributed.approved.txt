@@ -1,0 +1,75 @@
+namespace Destructurama.Attributed
+{
+    public class AttributedDestructuringPolicyOptions
+    {
+        public AttributedDestructuringPolicyOptions() { }
+        public bool IgnoreNullProperties { get; set; }
+    }
+    public interface IPropertyDestructuringAttribute
+    {
+        bool TryCreateLogEventProperty(string name, object? value, Serilog.Core.ILogEventPropertyValueFactory propertyValueFactory, [System.Diagnostics.CodeAnalysis.NotNullWhen(true)] out Serilog.Events.LogEventProperty? property);
+    }
+    public interface IPropertyOptionalIgnoreAttribute
+    {
+        bool ShouldPropertyBeIgnored(string name, object? value, System.Type type);
+    }
+    public interface ITypeDestructuringAttribute
+    {
+        Serilog.Events.LogEventPropertyValue CreateLogEventPropertyValue(object? value, Serilog.Core.ILogEventPropertyValueFactory propertyValueFactory);
+    }
+    [System.AttributeUsage(System.AttributeTargets.Class | System.AttributeTargets.Property)]
+    public class LogAsScalarAttribute : System.Attribute, Destructurama.Attributed.IPropertyDestructuringAttribute, Destructurama.Attributed.ITypeDestructuringAttribute
+    {
+        public LogAsScalarAttribute(bool isMutable = false) { }
+        public Serilog.Events.LogEventPropertyValue CreateLogEventPropertyValue(object? value, Serilog.Core.ILogEventPropertyValueFactory propertyValueFactory) { }
+        public bool TryCreateLogEventProperty(string name, object? value, Serilog.Core.ILogEventPropertyValueFactory propertyValueFactory, out Serilog.Events.LogEventProperty property) { }
+    }
+    [System.AttributeUsage(System.AttributeTargets.Property)]
+    public class LogMaskedAttribute : System.Attribute, Destructurama.Attributed.IPropertyDestructuringAttribute
+    {
+        public LogMaskedAttribute() { }
+        public bool PreserveLength { get; set; }
+        public int ShowFirst { get; set; }
+        public int ShowLast { get; set; }
+        public string Text { get; set; }
+        public bool TryCreateLogEventProperty(string name, object? value, Serilog.Core.ILogEventPropertyValueFactory propertyValueFactory, out Serilog.Events.LogEventProperty property) { }
+    }
+    [System.AttributeUsage(System.AttributeTargets.Property)]
+    public class LogReplacedAttribute : System.Attribute, Destructurama.Attributed.IPropertyDestructuringAttribute
+    {
+        public LogReplacedAttribute(string pattern, string replacement) { }
+        public System.Text.RegularExpressions.RegexOptions Options { get; set; }
+        public System.TimeSpan Timeout { get; set; }
+        public bool TryCreateLogEventProperty(string name, object? value, Serilog.Core.ILogEventPropertyValueFactory propertyValueFactory, [System.Diagnostics.CodeAnalysis.NotNullWhen(true)] out Serilog.Events.LogEventProperty? property) { }
+    }
+    [System.AttributeUsage(System.AttributeTargets.Property)]
+    public class LogWithNameAttribute : System.Attribute, Destructurama.Attributed.IPropertyDestructuringAttribute
+    {
+        public LogWithNameAttribute(string newName) { }
+        public bool TryCreateLogEventProperty(string name, object? value, Serilog.Core.ILogEventPropertyValueFactory propertyValueFactory, [System.Diagnostics.CodeAnalysis.NotNullWhen(true)] out Serilog.Events.LogEventProperty? property) { }
+    }
+    [System.AttributeUsage(System.AttributeTargets.Property)]
+    public class NotLoggedAttribute : System.Attribute, Destructurama.Attributed.IPropertyDestructuringAttribute
+    {
+        public NotLoggedAttribute() { }
+        public bool TryCreateLogEventProperty(string name, object? value, Serilog.Core.ILogEventPropertyValueFactory propertyValueFactory, [System.Diagnostics.CodeAnalysis.NotNullWhen(true)] out Serilog.Events.LogEventProperty? property) { }
+    }
+    [System.AttributeUsage(System.AttributeTargets.Property)]
+    public class NotLoggedIfDefaultAttribute : System.Attribute, Destructurama.Attributed.IPropertyOptionalIgnoreAttribute
+    {
+        public NotLoggedIfDefaultAttribute() { }
+    }
+    [System.AttributeUsage(System.AttributeTargets.Property)]
+    public class NotLoggedIfNullAttribute : System.Attribute, Destructurama.Attributed.IPropertyOptionalIgnoreAttribute
+    {
+        public NotLoggedIfNullAttribute() { }
+    }
+}
+namespace Destructurama
+{
+    public static class LoggerConfigurationAppSettingsExtensions
+    {
+        public static Serilog.LoggerConfiguration UsingAttributes(this Serilog.Configuration.LoggerDestructuringConfiguration configuration) { }
+        public static Serilog.LoggerConfiguration UsingAttributes(this Serilog.Configuration.LoggerDestructuringConfiguration configuration, System.Action<Destructurama.Attributed.AttributedDestructuringPolicyOptions> configure) { }
+    }
+}
