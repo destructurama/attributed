@@ -69,7 +69,7 @@ log.Information("Logging in {@Command}", command);
 <sup><a href='/test/Destructurama.Attributed.Tests/Snippets.cs#L44-L47' title='Snippet source file'>snippet source</a> | <a href='#snippet-logcommand' title='Start of snippet'>anchor</a></sup>
 <!-- endSnippet -->
 
-#### Ignoring a property if it's the default value
+#### Ignoring a property if it has the default value
 
 Apply the `NotLoggedIfDefault` attribute:
 
