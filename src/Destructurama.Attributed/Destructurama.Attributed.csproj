@@ -1,25 +1,15 @@
-﻿<Project Sdk="Microsoft.NET.Sdk">
+<Project Sdk="Microsoft.NET.Sdk">
 
   <PropertyGroup>
     <TargetFramework>netstandard2.0</TargetFramework>
-    <VersionPrefix>3.1.0</VersionPrefix>
-    <RootNamespace>Destructurama</RootNamespace>
-    <GeneratePackageOnBuild>True</GeneratePackageOnBuild>
-    <Authors>Serilog Contributors</Authors>
     <Description>Use attributes to control how complex types are logged to Serilog.</Description>
-    <PackageProjectUrl>https://github.com/destructurama</PackageProjectUrl>
-    <PackageLicenseExpression>Apache-2.0</PackageLicenseExpression>
-    <PackageIcon>icon.png</PackageIcon>
-    <PackageTags>serilog;attributed</PackageTags>
-    <GenerateDocumentationFile>true</GenerateDocumentationFile>
-    <PublishRepositoryUrl>true</PublishRepositoryUrl>
+    <RootNamespace>Destructurama</RootNamespace>
+    <PolySharpIncludeRuntimeSupportedAttributes>true</PolySharpIncludeRuntimeSupportedAttributes>
   </PropertyGroup>
 
   <ItemGroup>
-    <PackageReference Include="Microsoft.SourceLink.GitHub" Version="1.0.0" PrivateAssets="All" Condition="$(Configuration) == 'Release'" />
     <PackageReference Include="Serilog" Version="[2.10.0,4.0.0)" />
-    <None Include="..\..\assets\icon.png" Pack="true" PackagePath="" />
-    <PackageReference Include="Polyfill" Version="1.23.0" PrivateAssets="all" />
+    <PackageReference Include="PolySharp" Version="1.14.1" PrivateAssets="All" />
   </ItemGroup>
 
 </Project>

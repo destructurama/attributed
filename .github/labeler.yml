@@ -1,0 +1,21 @@
+tests:
+- changed-files:
+  - any-glob-to-any-file: src/Destructurama.Attributed.Tests/**/*
+
+CI:
+- changed-files:
+  - any-glob-to-any-file:
+    - .github/workflows/**/*
+    - .github/dependabot.yml
+    - .github/codecov.yml
+    - .github/labeler.yml
+
+code style:
+- changed-files:
+  - any-glob-to-any-file:
+    - .editorconfig
+
+documentation:
+- changed-files:
+  - any-glob-to-any-file:
+    - README.md
