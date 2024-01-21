@@ -1,4 +1,4 @@
-﻿// Copyright 2015 Destructurama Contributors, Serilog Contributors
+// Copyright 2015 Destructurama Contributors, Serilog Contributors
 //
 // Licensed under the Apache License, Version 2.0 (the "License");
 // you may not use this file except in compliance with the License.
@@ -12,38 +12,34 @@
 // See the License for the specific language governing permissions and
 // limitations under the License.
 
-using System;
-using System.Collections.Generic;
-using System.Linq;
 using System.Reflection;
 
-namespace Destructurama.Util
+namespace Destructurama.Util;
+
+internal static class GetablePropertyFinder
 {
-    static class GetablePropertyFinder
+    public static IEnumerable<PropertyInfo> GetPropertiesRecursive(this Type type)
     {
-        public static IEnumerable<PropertyInfo> GetPropertiesRecursive(this Type type)
+        var seenNames = new HashSet<string>();
+
+        var currentTypeInfo = type.GetTypeInfo();
+
+        while (currentTypeInfo.AsType() != typeof(object))
         {
-            var seenNames = new HashSet<string>();
+            var unseenProperties = currentTypeInfo.DeclaredProperties
+                .Where(p => p.CanRead &&
+                            p.GetMethod.IsPublic &&
+                            !p.GetMethod.IsStatic &&
+                            (p.Name != "Item" || p.GetIndexParameters().Length == 0) &&
+                            !seenNames.Contains(p.Name));
 
-            var currentTypeInfo = type.GetTypeInfo();
-
-            while (currentTypeInfo.AsType() != typeof(object))
+            foreach (var propertyInfo in unseenProperties)
             {
-                var unseenProperties = currentTypeInfo.DeclaredProperties
-                    .Where(p => p.CanRead &&
-                                p.GetMethod.IsPublic &&
-                                !p.GetMethod.IsStatic &&
-                                (p.Name != "Item" || p.GetIndexParameters().Length == 0) &&
-                                !seenNames.Contains(p.Name));
-
-                foreach (var propertyInfo in unseenProperties)
-                {
-                    seenNames.Add(propertyInfo.Name);
-                    yield return propertyInfo;
-                }
-
-                currentTypeInfo = currentTypeInfo.BaseType.GetTypeInfo();
+                seenNames.Add(propertyInfo.Name);
+                yield return propertyInfo;
             }
+
+            currentTypeInfo = currentTypeInfo.BaseType.GetTypeInfo();
         }
     }
 }

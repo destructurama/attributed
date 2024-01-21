@@ -12,22 +12,19 @@
 // See the License for the specific language governing permissions and
 // limitations under the License.
 
-using System;
+namespace Destructurama.Attributed;
 
-namespace Destructurama.Attributed
+/// <summary>
+/// Base interfaces for all <see cref="Attribute"/>s that determine should a property be ignored.
+/// </summary>
+public interface IPropertyOptionalIgnoreAttribute
 {
     /// <summary>
-    /// Base interfaces for all <see cref="Attribute"/>s that determine should a property be ignored.
+    /// Determine should a property be ignored
     /// </summary>
-    public interface IPropertyOptionalIgnoreAttribute
-    {
-        /// <summary>
-        /// Determine should a property be ignored
-        /// </summary>
-        /// <param name="name">The current property name</param>
-        /// <param name="value">The current property value</param>
-        /// <param name="type">The current property type</param>
-        /// <returns></returns>
-        bool ShouldPropertyBeIgnored(string name, object? value, Type type);
-    }
+    /// <param name="name">The current property name</param>
+    /// <param name="value">The current property value</param>
+    /// <param name="type">The current property type</param>
+    /// <returns></returns>
+    bool ShouldPropertyBeIgnored(string name, object? value, Type type);
 }

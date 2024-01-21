@@ -1,4 +1,4 @@
-﻿// Copyright 2018 Destructurama Contributors, Serilog Contributors
+// Copyright 2018 Destructurama Contributors, Serilog Contributors
 //
 // Licensed under the Apache License, Version 2.0 (the "License");
 // you may not use this file except in compliance with the License.
@@ -12,23 +12,21 @@
 // See the License for the specific language governing permissions and
 // limitations under the License.
 
-using System;
 using Serilog.Core;
 using Serilog.Events;
 
-namespace Destructurama.Attributed
+namespace Destructurama.Attributed;
+
+/// <summary>
+/// Base interfaces for all <see cref="Attribute"/>s that override how a property type type is destructured.
+/// </summary>
+public interface ITypeDestructuringAttribute
 {
     /// <summary>
-    /// Base interfaces for all <see cref="Attribute"/>s that override how a property type type is destructured.
+    /// Attempt to create a replacement <see cref="LogEventProperty"/> for a property.
     /// </summary>
-    public interface ITypeDestructuringAttribute
-    {
-        /// <summary>
-        /// Attempt to create a replacement <see cref="LogEventProperty"/> for a property.
-        /// </summary>
-        /// <param name="value">The value of the property.</param>
-        /// <param name="propertyValueFactory">The current <see cref="ILogEventPropertyValueFactory"/>.</param>
-        /// <returns>The new <see cref="LogEventPropertyValue"/> to use when logging the property.</returns>
-        LogEventPropertyValue CreateLogEventPropertyValue(object? value, ILogEventPropertyValueFactory propertyValueFactory);
-    }
+    /// <param name="value">The value of the property.</param>
+    /// <param name="propertyValueFactory">The current <see cref="ILogEventPropertyValueFactory"/>.</param>
+    /// <returns>The new <see cref="LogEventPropertyValue"/> to use when logging the property.</returns>
+    LogEventPropertyValue CreateLogEventPropertyValue(object? value, ILogEventPropertyValueFactory propertyValueFactory);
 }

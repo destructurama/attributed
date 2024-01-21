@@ -1,4 +1,4 @@
-// Copyright 2018 Destructurama Contributors, Serilog Contributors
+// Copyright 2017 Serilog Contributors
 //
 // Licensed under the Apache License, Version 2.0 (the "License");
 // you may not use this file except in compliance with the License.
@@ -12,15 +12,14 @@
 // See the License for the specific language governing permissions and
 // limitations under the License.
 
-using System.Reflection;
+using BenchmarkDotNet.Configs;
+using BenchmarkDotNet.Diagnosers;
+using BenchmarkDotNet.Running;
+using Benchmarks;
 
-namespace Destructurama.Util;
+new AttributedBenchmarks().Setup();
+var config = ManualConfig
+  .Create(DefaultConfig.Instance)
+  .AddDiagnoser(MemoryDiagnoser.Default);
 
-internal static class AttributeFinder
-{
-    public static T GetCustomAttribute<T>(this TypeInfo typeInfo) =>
-        typeInfo.GetCustomAttributes().OfType<T>().FirstOrDefault();
-
-    public static T GetCustomAttribute<T>(this PropertyInfo propertyInfo) =>
-        propertyInfo.GetCustomAttributes().OfType<T>().FirstOrDefault();
-}
+BenchmarkSwitcher.FromAssembly(typeof(Program).Assembly).Run(args, config);

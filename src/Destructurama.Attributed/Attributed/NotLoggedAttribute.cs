@@ -1,4 +1,4 @@
-﻿// Copyright 2015 Destructurama Contributors, Serilog Contributors
+// Copyright 2015 Destructurama Contributors, Serilog Contributors
 //
 // Licensed under the Apache License, Version 2.0 (the "License");
 // you may not use this file except in compliance with the License.
@@ -12,24 +12,22 @@
 // See the License for the specific language governing permissions and
 // limitations under the License.
 
-using System;
 using System.Diagnostics.CodeAnalysis;
 using Serilog.Core;
 using Serilog.Events;
 
-namespace Destructurama.Attributed
+namespace Destructurama.Attributed;
+
+/// <summary>
+/// Specified that a property should not be included when destructuring an object for logging.
+/// </summary>
+[AttributeUsage(AttributeTargets.Property)]
+public class NotLoggedAttribute : Attribute, IPropertyDestructuringAttribute
 {
-    /// <summary>
-    /// Specified that a property should not be included when destructuring an object for logging.
-    /// </summary>
-    [AttributeUsage(AttributeTargets.Property)]
-    public class NotLoggedAttribute : Attribute, IPropertyDestructuringAttribute
+    /// <inheritdoc/>
+    public bool TryCreateLogEventProperty(string name, object? value, ILogEventPropertyValueFactory propertyValueFactory, [NotNullWhen(true)] out LogEventProperty? property)
     {
-        /// <inheritdoc/>
-        public bool TryCreateLogEventProperty(string name, object? value, ILogEventPropertyValueFactory propertyValueFactory, [NotNullWhen(true)] out LogEventProperty? property)
-        {
-            property = null;
-            return false;
-        }
+        property = null;
+        return false;
     }
 }

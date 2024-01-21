@@ -1,0 +1,39 @@
+# https://github.com/github/codeql
+# https://github.com/github/codeql-action
+name: CodeQL analysis
+
+on:
+  push:
+    branches: [master, dev]
+  pull_request:
+    branches: [master, dev]
+
+jobs:
+  analyze:
+    runs-on: ubuntu-latest
+
+    steps:
+    - name: Checkout source
+      uses: actions/checkout@v4
+
+    - name: Setup .NET SDK
+      uses: actions/setup-dotnet@v4
+      with:
+         dotnet-version: 8.0.x
+
+    - name: Initialize CodeQL
+      uses: github/codeql-action/init@v3
+      with:
+        queries: security-and-quality
+        languages: csharp
+
+    - name: Install dependencies
+      working-directory: src
+      run: dotnet restore
+
+    - name: Build solution
+      working-directory: src
+      run: dotnet build --no-restore
+
+    - name: Perform CodeQL Analysis
+      uses: github/codeql-action/analyze@v3

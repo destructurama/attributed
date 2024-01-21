@@ -1,0 +1,45 @@
+# https://github.com/benchmark-action/github-action-benchmark
+name: Continuous benchmarking
+on:
+  pull_request:
+    branches:
+      - master
+  push:
+    branches:
+      - master
+
+permissions:
+  contents: write
+  deployments: write
+
+jobs:
+  benchmark:
+    runs-on: ubuntu-latest
+    steps:
+      - uses: actions/checkout@v4
+
+      - name: Setup .NET SDK
+        uses: actions/setup-dotnet@v4
+        with:
+          dotnet-version: 8.0.x
+
+      - name: Run benchmarks
+        working-directory: src/Benchmarks
+        run: dotnet run -c Release --exporters json --filter '*'
+
+      - name: Combine benchmarks results
+        working-directory: src/Benchmarks
+        run: dotnet tool install -g dotnet-script && dotnet script combine-bechmarks.csx
+
+      - name: Store benchmarks results
+        uses: benchmark-action/github-action-benchmark@v1
+        with:
+          name: Benchmarks
+          tool: 'benchmarkdotnet'
+          output-file-path: src/Benchmarks/BenchmarkDotNet.Artifacts/results/Combined.Benchmarks.json
+          github-token: ${{ secrets.GITHUB_TOKEN }}
+          alert-threshold: '101%'
+          comment-on-alert: true
+      - name: Push benchmarks results
+        if: github.event_name != 'pull_request'
+        run: git push 'https://${{ github.repository_owner }}:${{ secrets.GITHUB_TOKEN }}@github.com/${{ github.repository }}.git' gh-pages:gh-pages
