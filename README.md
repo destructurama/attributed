@@ -75,6 +75,59 @@ log.Information("Logging in {@Command}", command);
 <sup><a href='/test/Destructurama.Attributed.Tests/Snippets.cs#L44-L47' title='Snippet source file'>snippet source</a> | <a href='#snippet-logcommand' title='Start of snippet'>anchor</a></sup>
 <!-- endSnippet -->
 
+#### Ignoring a property if it has the default value
+
+Apply the `NotLoggedIfDefault` attribute:
+
+```csharp
+public class LoginCommand
+{
+  public string Username { get; set; }
+
+  [NotLoggedIfDefault]
+  public string Password { get; set; }
+
+  [NotLoggedIfDefault]
+  public DateTime TimeStamp { get; set; }
+}
+```
+
+#### Ignoring a property if it has the null value
+
+Apply the `NotLoggedIfNull` attribute:
+
+```csharp
+public class LoginCommand
+{
+  /// <summary>
+  ///  `null` value results in removed property
+  /// </summary>
+  [NotLoggedIfNull]
+  public string Username { get; set; }
+
+  /// <summary>
+  ///  Can be applied with [LogMasked] or [LogReplaced] attributes
+  ///  `null` value results in removed property
+  ///  "123456789" results in "***"
+  /// </summary>
+  [NotLoggedIfNull] [LogMasked]
+  public string Password { get; set; }
+
+  /// <summary>
+  ///  Attribute has no effect on non-reference and non-nullable types
+  /// </summary>
+  [NotLoggedIfNull]
+  public int TimeStamp { get; set; }
+}
+```
+
+Ignore null properties can be globally applied during initialization without need to apply attributes:
+```csharp
+var log = new LoggerConfiguration()
+  .Destructure.UsingAttributes(x => x.IgnoreNullProperties = true)
+  ...
+```
+
 
 ## Treating types and properties as scalars
 
@@ -119,6 +172,12 @@ public class CustomizedMaskedLogs
     /// </summary>
     [LogMasked(PreserveLength = true)]
     public string? DefaultMaskedPreserved { get; set; }
+
+    /// <summary>
+    /// "" results in "***"
+    /// </summary>
+    [LogMasked]
+    public string? DefaultMaskedNotPreservedOnEmptyString { get; set; }
 
     /// <summary>
     ///  123456789 results in "#"
@@ -211,7 +270,7 @@ public class CustomizedMaskedLogs
     public string? ShowFirstAndLastThreeAndCustomMaskInTheMiddlePreservedLengthIgnored { get; set; }
 }
 ```
-<sup><a href='/test/Destructurama.Attributed.Tests/MaskedAttributeTests.cs#L9-L122' title='Snippet source file'>snippet source</a> | <a href='#snippet-customizedmaskedlogs' title='Start of snippet'>anchor</a></sup>
+<sup><a href='/test/Destructurama.Attributed.Tests/MaskedAttributeTests.cs#L10-L129' title='Snippet source file'>snippet source</a> | <a href='#snippet-customizedmaskedlogs' title='Start of snippet'>anchor</a></sup>
 <!-- endSnippet -->
 
 
