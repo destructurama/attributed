@@ -17,7 +17,7 @@ namespace Destructurama.Attributed
     {
         Serilog.Events.LogEventPropertyValue CreateLogEventPropertyValue(object? value, Serilog.Core.ILogEventPropertyValueFactory propertyValueFactory);
     }
-    [System.AttributeUsage(System.AttributeTargets.Class | System.AttributeTargets.Property)]
+    [System.AttributeUsage(System.AttributeTargets.Class | System.AttributeTargets.Struct | System.AttributeTargets.Property)]
     public class LogAsScalarAttribute : System.Attribute, Destructurama.Attributed.IPropertyDestructuringAttribute, Destructurama.Attributed.ITypeDestructuringAttribute
     {
         public LogAsScalarAttribute(bool isMutable = false) { }
