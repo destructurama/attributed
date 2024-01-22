@@ -1,3 +1,5 @@
+using Serilog.Events;
+
 namespace Destructurama.Attributed;
 
 /// <summary>
@@ -6,9 +8,9 @@ namespace Destructurama.Attributed;
 public class AttributedDestructuringPolicyOptions
 {
     /// <summary>
-    /// By setting IgnoreNullProperties to true no need to set [NotLoggedIfNull] for every logged property.
-    /// Custom types implementing IEnumerable, will be destructed as StructureValue and affected by IgnoreNullProperties 
-    /// only in case at least one property (or the type itself) has Destructurama attribute applied.
+    /// By setting this property to <see langword="true"/> no need to set <see cref="NotLoggedIfNullAttribute"/>
+    /// for every logged property. Custom types implementing IEnumerable, will be destructed as <see cref="StructureValue"/>
+    /// and affected by this property only in case at least one property (or the type itself) has Destructurama attribute applied.
     /// </summary>
     public bool IgnoreNullProperties { get; set; }
 }

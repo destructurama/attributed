@@ -51,7 +51,7 @@ internal class AttributedDestructuringPolicy : IDestructuringPolicy
         var ti = type.GetTypeInfo();
         var classDestructurer = ti.GetCustomAttribute<ITypeDestructuringAttribute>();
         if (classDestructurer != null)
-            return new((o, f) => classDestructurer.CreateLogEventPropertyValue(o, f));
+            return new(classDestructurer.CreateLogEventPropertyValue);
 
         var properties = type.GetPropertiesRecursive().ToList();
         if (!_options.IgnoreNullProperties
