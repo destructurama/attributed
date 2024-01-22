@@ -58,12 +58,14 @@ jobs:
         run: dotnet build --no-restore -c Debug
       - name: Test solution [Debug]
         working-directory: src
-        run: dotnet test --no-restore -p:CollectCoverage=true
+        run: dotnet test --no-restore -p:CollectCoverage=true -p:CoverletOutputFormat=opencover -p:CoverletOutput=../.coverage/
       - name: Upload coverage to codecov
         if: ${{ startsWith(matrix.os, 'ubuntu') }}
         uses: codecov/codecov-action@v3
+        env:
+          CODECOV_TOKEN: ${{ secrets.CODECOV_TOKEN }}
         with:
-          files: .coverage/Destructurama.ByIgnoring.Tests/coverage.net8.opencover.xml
+          files: src/.coverage/*.opencover.xml
 
   buildcheck:
     needs:

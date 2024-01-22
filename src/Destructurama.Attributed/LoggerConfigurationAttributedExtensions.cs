@@ -33,14 +33,14 @@ public static class LoggerConfigurationAppSettingsExtensions
     public static LoggerConfiguration UsingAttributes(this LoggerDestructuringConfiguration configuration) =>
         configuration.With<AttributedDestructuringPolicy>();
 
-
     /// <summary>
+    /// Adds a custom <see cref="IDestructuringPolicy"/> to enable manipulation of how objects
+    /// are logged to Serilog using attributes.
     /// </summary>
     /// <param name="configuration">The logger configuration to apply configuration to.</param>
-    /// <param name="configure">Configure Destructurama options</param>
+    /// <param name="configure">Delegate to configure Destructurama options.</param>
     /// <returns>An object allowing configuration to continue.</returns>
-    public static LoggerConfiguration UsingAttributes(this LoggerDestructuringConfiguration configuration,
-        Action<AttributedDestructuringPolicyOptions> configure)
+    public static LoggerConfiguration UsingAttributes(this LoggerDestructuringConfiguration configuration, Action<AttributedDestructuringPolicyOptions> configure)
     {
         var policy = new AttributedDestructuringPolicy(configure);
         return configuration.With(policy);

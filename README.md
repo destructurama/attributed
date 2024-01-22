@@ -2,7 +2,7 @@
 
 ![License](https://img.shields.io/github/license/destructurama/attributed)
 
-[![codecov](https://codecov.io/gh/destructurama/attributed/branch/master/graph/badge.svg?token=0ZRHIUEQM4)](https://codecov.io/gh/destructurama/attributed)
+[![codecov](https://codecov.io/gh/destructurama/attributed/graph/badge.svg?token=Ma2sUoqqb1)](https://codecov.io/gh/destructurama/attributed)
 [![Nuget](https://img.shields.io/nuget/dt/Destructurama.Attributed)](https://www.nuget.org/packages/Destructurama.Attributed)
 [![Nuget](https://img.shields.io/nuget/v/Destructurama.Attributed)](https://www.nuget.org/packages/Destructurama.Attributed)
 

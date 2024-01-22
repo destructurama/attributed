@@ -20,7 +20,7 @@ using Serilog.Events;
 namespace Destructurama.Attributed;
 
 /// <summary>
-/// Apply to a property to use a replace the current value.
+/// Apply to a property to replace the current value.
 /// </summary>
 [AttributeUsage(AttributeTargets.Property)]
 public class LogReplacedAttribute : Attribute, IPropertyDestructuringAttribute
@@ -29,7 +29,7 @@ public class LogReplacedAttribute : Attribute, IPropertyDestructuringAttribute
     private readonly string _replacement;
 
     /// <summary>
-    /// The RegexOptions that will be applied. Defaults to <see cref="RegexOptions.None"/>
+    /// The options that will be applied. Defaults to <see cref="RegexOptions.None"/>
     /// </summary>
     public RegexOptions Options { get; set; }
 

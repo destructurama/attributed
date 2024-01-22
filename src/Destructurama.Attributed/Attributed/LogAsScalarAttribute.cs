@@ -29,9 +29,11 @@ public class LogAsScalarAttribute : Attribute, ITypeDestructuringAttribute, IPro
     /// <summary>
     /// Construct a <see cref="LogAsScalarAttribute"/>.
     /// </summary>
-    /// <param name="isMutable">Whether the scalar value should be converted into a string before
-    /// being passed down the (asynchronous) logging pipeline. For mutable types, specify
-    /// <code>true</code>, otherwise leave as false.</param>
+    /// <param name="isMutable">
+    /// Whether the scalar value should be converted into a string before
+    /// being passed down the (asynchronous) logging pipeline. For mutable
+    /// types, specify <code>true</code>, otherwise leave as false.
+    /// </param>
     public LogAsScalarAttribute(bool isMutable = false)
     {
         _isMutable = isMutable;

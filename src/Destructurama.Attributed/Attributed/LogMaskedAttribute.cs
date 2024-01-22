@@ -29,14 +29,17 @@ public class LogMaskedAttribute : Attribute, IPropertyDestructuringAttribute
     /// If set, the property value will be set to this text.
     /// </summary>
     public string Text { get; set; } = DEFAULT_MASK;
+
     /// <summary>
     /// Shows the first x characters in the property value.
     /// </summary>
     public int ShowFirst { get; set; }
+
     /// <summary>
     /// Shows the last x characters in the property value.
     /// </summary>
     public int ShowLast { get; set; }
+
     /// <summary>
     /// If set, it will swap out each character with the default value. Note that this
     /// property will be ignored if <see cref="Text"/> has been set to custom value.
