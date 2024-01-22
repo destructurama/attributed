@@ -1,6 +1,7 @@
 tests:
 - changed-files:
-  - any-glob-to-any-file: src/Destructurama.Attributed.Tests/**/*
+  - any-glob-to-any-file:
+    - src/Destructurama.Attributed.Tests/**/*
 
 CI:
 - changed-files:
@@ -19,3 +20,8 @@ documentation:
 - changed-files:
   - any-glob-to-any-file:
     - README.md
+
+performance:
+- changed-files:
+  - any-glob-to-any-file:
+    - src/Benchmarks/**/*
