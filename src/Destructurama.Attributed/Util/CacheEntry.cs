@@ -22,13 +22,13 @@ internal struct CacheEntry
     public CacheEntry(Func<object, ILogEventPropertyValueFactory, LogEventPropertyValue> destructureFunc)
     {
         CanDestructure = true;
-        DestructureFunc = destructureFunc ?? throw new ArgumentNullException(nameof(destructureFunc));
+        DestructureFunc = destructureFunc;
     }
 
     private CacheEntry(bool canDestructure, Func<object, ILogEventPropertyValueFactory, LogEventPropertyValue?> destructureFunc)
     {
         CanDestructure = canDestructure;
-        DestructureFunc = destructureFunc ?? throw new ArgumentNullException(nameof(destructureFunc));
+        DestructureFunc = destructureFunc;
     }
 
     public bool CanDestructure { get; }
