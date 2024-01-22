@@ -48,7 +48,13 @@ public class LogMaskedAttribute : Attribute, IPropertyDestructuringAttribute
 
     private bool IsDefaultMask() => Text == DEFAULT_MASK;
 
-    private object FormatMaskedValue(string val)
+    /// <summary>
+    /// Gets masked string according to attribute options.
+    /// This method may be helpful to render string directly somewhere outside Serilog logging.
+    /// </summary>
+    /// <param name="val">Initial string.</param>
+    /// <returns>Masked string.</returns>
+    public object GetMaskedValue(string val)
     {
         if (string.IsNullOrEmpty(val))
             return PreserveLength ? val : Text;
@@ -119,8 +125,8 @@ public class LogMaskedAttribute : Attribute, IPropertyDestructuringAttribute
     {
         return value switch
         {
-            IEnumerable<string> strings => new SequenceValue(strings.Select(s => new ScalarValue(FormatMaskedValue(s)))),
-            string s => new ScalarValue(FormatMaskedValue(s)),
+            IEnumerable<string> strings => new SequenceValue(strings.Select(s => new ScalarValue(GetMaskedValue(s)))),
+            string s => new ScalarValue(GetMaskedValue(s)),
             _ => new ScalarValue(null)
         };
     }
