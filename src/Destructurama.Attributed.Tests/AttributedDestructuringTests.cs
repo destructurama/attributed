@@ -42,6 +42,8 @@ public class AttributedDestructuringTests
         Assert.IsInstanceOf<StructureValue>(props["NotAScalar"]);
         Assert.IsFalse(props.ContainsKey("Ignored"));
         Assert.IsInstanceOf<NotAScalar>(props["ScalarAnyway"].LiteralValue());
+        Assert.IsInstanceOf<Struct1>(props["Struct1"].LiteralValue());
+        Assert.IsInstanceOf<Struct2>(props["Struct2"].LiteralValue());
 
         var str = sv.ToString();
         Assert.That(str.Contains("This is a username"));
@@ -64,23 +66,42 @@ public class AttributedDestructuringTests
 
     public class Customized
     {
-        // ReSharper disable UnusedAutoPropertyAccessor.Global
         public ImmutableScalar? ImmutableScalar { get; set; }
         public MutableScalar? MutableScalar { get; set; }
         public NotAScalar? NotAScalar { get; set; }
 
-        [NotLogged] public string? Ignored { get; set; }
+        [NotLogged]
+        public string? Ignored { get; set; }
 
-        [LogAsScalar] public NotAScalar? ScalarAnyway { get; set; }
+        [LogAsScalar]
+        public NotAScalar? ScalarAnyway { get; set; }
 
         public UserAuthData? AuthData { get; set; }
+
+        [LogAsScalar]
+        public Struct1 Struct1 { get; set; }
+
+        public Struct2 Struct2 { get; set; }
     }
 
     public class UserAuthData
     {
         public string? Username { get; set; }
 
-        [NotLogged] public string? Password { get; set; }
+        [NotLogged]
+        public string? Password { get; set; }
     }
 
+    public struct Struct1
+    {
+        public int SomeProperty { get; set; }
+        public override string ToString() => "AAA";
+    }
+
+    [LogAsScalar]
+    public struct Struct2
+    {
+        public int SomeProperty { get; set; }
+        public override string ToString() => "BBB";
+    }
 }
