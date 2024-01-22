@@ -88,17 +88,20 @@ public class AttributedDestructuringTests
     {
         public string? Username { get; set; }
 
-        [NotLogged] public string? Password { get; set; }
+        [NotLogged]
+        public string? Password { get; set; }
     }
 
     public struct Struct1
     {
+        public int SomeProperty { get; set; }
         public override string ToString() => "AAA";
     }
 
     [LogAsScalar]
     public struct Struct2
     {
+        public int SomeProperty { get; set; }
         public override string ToString() => "BBB";
     }
 }
