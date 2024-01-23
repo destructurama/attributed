@@ -2,13 +2,13 @@ using Destructurama.Attributed.Tests.Support;
 using NUnit.Framework;
 using Serilog;
 using Serilog.Events;
+using Shouldly;
 
 namespace Destructurama.Attributed.Tests;
 
 [TestFixture]
 public class LogWithNameAttributedTests
 {
-
     [Test]
     public void AttributesAreConsultedWhenDestructuring()
     {
@@ -30,7 +30,7 @@ public class LogWithNameAttributedTests
         var props = sv.Properties.ToDictionary(p => p.Name, p => p.Value);
 
         var literalValue = props["FullName"].LiteralValue();
-        Assert.AreEqual("John Doe", literalValue);
+        literalValue.ShouldBe("John Doe");
     }
 
     #region LogWithName

@@ -2,6 +2,7 @@ using Destructurama.Attributed.Tests.Support;
 using NUnit.Framework;
 using Serilog;
 using Serilog.Events;
+using Shouldly;
 
 namespace Destructurama.Attributed.Tests;
 
@@ -60,8 +61,8 @@ public class ReplacedAttributeTests
         var sv = (StructureValue)evt.Properties["Customized"];
         var props = sv.Properties.ToDictionary(p => p.Name, p => p.Value);
 
-        Assert.IsTrue(props.ContainsKey("RegexReplaceFirst"));
-        Assert.AreEqual("***|456|789", props["RegexReplaceFirst"].LiteralValue());
+        props.ContainsKey("RegexReplaceFirst").ShouldBeTrue();
+        props["RegexReplaceFirst"].LiteralValue().ShouldBe("***|456|789");
     }
 
     [Test]
@@ -87,8 +88,8 @@ public class ReplacedAttributeTests
         var sv = (StructureValue)evt.Properties["Customized"];
         var props = sv.Properties.ToDictionary(p => p.Name, p => p.Value);
 
-        Assert.IsTrue(props.ContainsKey("RegexReplaceSecond"));
-        Assert.AreEqual("123|***|789", props["RegexReplaceSecond"].LiteralValue());
+        props.ContainsKey("RegexReplaceSecond").ShouldBeTrue();
+        props["RegexReplaceSecond"].LiteralValue().ShouldBe("123|***|789");
     }
 
     [Test]
@@ -114,8 +115,8 @@ public class ReplacedAttributeTests
         var sv = (StructureValue)evt.Properties["Customized"];
         var props = sv.Properties.ToDictionary(p => p.Name, p => p.Value);
 
-        Assert.IsTrue(props.ContainsKey("RegexReplaceThird"));
-        Assert.AreEqual("123|456|***", props["RegexReplaceThird"].LiteralValue());
+        props.ContainsKey("RegexReplaceThird").ShouldBeTrue();
+        props["RegexReplaceThird"].LiteralValue().ShouldBe("123|456|***");
     }
 
     [Test]
@@ -141,8 +142,8 @@ public class ReplacedAttributeTests
         var sv = (StructureValue)evt.Properties["Customized"];
         var props = sv.Properties.ToDictionary(p => p.Name, p => p.Value);
 
-        Assert.IsTrue(props.ContainsKey("RegexReplaceFirstThird"));
-        Assert.AreEqual("***|456|****", props["RegexReplaceFirstThird"].LiteralValue());
+        props.ContainsKey("RegexReplaceFirstThird").ShouldBeTrue();
+        props["RegexReplaceFirstThird"].LiteralValue().ShouldBe("***|456|****");
     }
 
     [Test]
@@ -169,9 +170,9 @@ public class ReplacedAttributeTests
         var sv = (StructureValue)evt.Properties["Customized"];
         var props = sv.Properties.ToDictionary(p => p.Name, p => p.Value);
 
-        Assert.IsTrue(props.ContainsKey("RegexReplaceFirst"));
-        Assert.AreEqual("***|456|789", props["RegexReplaceFirst"].LiteralValue());
-        Assert.IsTrue(props.ContainsKey("RegexReplaceThird"));
-        Assert.AreEqual("123|456|***", props["RegexReplaceThird"].LiteralValue());
+        props.ContainsKey("RegexReplaceFirst").ShouldBeTrue();
+        props["RegexReplaceFirst"].LiteralValue().ShouldBe("***|456|789");
+        props.ContainsKey("RegexReplaceThird").ShouldBeTrue();
+        props["RegexReplaceThird"].LiteralValue().ShouldBe("123|456|***");
     }
 }
