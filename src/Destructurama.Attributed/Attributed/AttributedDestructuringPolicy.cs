@@ -53,6 +53,8 @@ internal class AttributedDestructuringPolicy : IDestructuringPolicy
         if (classDestructurer != null)
             return new(classDestructurer.CreateLogEventPropertyValue);
 
+        // TODO: fetch ti.GetCustomAttribute<MetadataTypeAttribute>(); and bind to properties
+
         var properties = type.GetPropertiesRecursive().ToList();
         if (!_options.IgnoreNullProperties
             && properties.All(pi =>
