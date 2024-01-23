@@ -1,5 +1,5 @@
-﻿{
+{
   "$schema": "https://raw.githubusercontent.com/SimonCropp/MarkdownSnippets/master/schema.json",
-  "MaxWidth": 100,
+  "MaxWidth": 110,
   "Convention": "InPlaceOverwrite"
 }
