@@ -10,6 +10,28 @@ namespace Destructurama.Attributed.Tests;
 public class AttributedDestructuringTests
 {
     [Test]
+    public void Throwing_Accessor_Should_Be_Handled()
+    {
+        // Setup
+        LogEvent evt = null!;
+
+        var log = new LoggerConfiguration()
+            .Destructure.UsingAttributes()
+            .WriteTo.Sink(new DelegatingSink(e => evt = e))
+            .CreateLogger();
+        var obj = new ClassWithThrowingAccessor();
+
+        // Execute
+        log.Information("Here is {@Customized}", obj);
+
+        // Verify
+        var sv = (StructureValue)evt.Properties["Customized"];
+        sv.Properties.Count.ShouldBe(1);
+        sv.Properties[0].Name.ShouldBe("BadProperty");
+        sv.Properties[0].Value.ShouldBeOfType<ScalarValue>().Value.ShouldBe("***");
+    }
+
+    [Test]
     public void AttributesAreConsultedWhenDestructuring()
     {
         LogEvent evt = null!;
@@ -49,6 +71,12 @@ public class AttributedDestructuringTests
         var str = sv.ToString();
         str.Contains("This is a username").ShouldBeTrue();
         str.Contains("This is a password").ShouldBeFalse();
+    }
+
+    public class ClassWithThrowingAccessor
+    {
+        [LogMasked]
+        public string? BadProperty => throw new FormatException("oops");
     }
 
     [LogAsScalar]
