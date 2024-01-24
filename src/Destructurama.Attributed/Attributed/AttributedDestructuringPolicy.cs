@@ -71,11 +71,8 @@ internal class AttributedDestructuringPolicy : IDestructuringPolicy
             .Where(o => o.Attribute != null)
             .ToDictionary(o => o.pi, o => o.Attribute);
 
-        if (_options.IgnoreNullProperties && !optionalIgnoreAttributes.Any() && !destructuringAttributes.Any())
-        {
-            if (typeof(IEnumerable).IsAssignableFrom(type))
-                return CacheEntry.Ignore;
-        }
+        if (_options.IgnoreNullProperties && !optionalIgnoreAttributes.Any() && !destructuringAttributes.Any() && typeof(IEnumerable).IsAssignableFrom(type))
+            return CacheEntry.Ignore;
 
         return new CacheEntry((o, f) => MakeStructure(o, properties, optionalIgnoreAttributes, destructuringAttributes, f, type));
     }
@@ -93,17 +90,11 @@ internal class AttributedDestructuringPolicy : IDestructuringPolicy
         {
             var propValue = SafeGetPropValue(o, pi);
 
-            if (optionalIgnoreAttributes.TryGetValue(pi, out var optionalIgnoreAttribute))
-            {
-                if (optionalIgnoreAttribute.ShouldPropertyBeIgnored(pi.Name, propValue, pi.PropertyType))
-                    continue;
-            }
+            if (optionalIgnoreAttributes.TryGetValue(pi, out var optionalIgnoreAttribute) && optionalIgnoreAttribute.ShouldPropertyBeIgnored(pi.Name, propValue, pi.PropertyType))
+                continue;
 
-            if (_options.IgnoreNullProperties)
-            {
-                if (NotLoggedIfNullAttribute.Instance.ShouldPropertyBeIgnored(pi.Name, propValue, pi.PropertyType))
-                    continue;
-            }
+            if (_options.IgnoreNullProperties && NotLoggedIfNullAttribute.Instance.ShouldPropertyBeIgnored(pi.Name, propValue, pi.PropertyType))
+                continue;
 
             if (destructuringAttributes.TryGetValue(pi, out var destructuringAttribute))
             {
