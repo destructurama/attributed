@@ -15,6 +15,7 @@
 using System.Collections;
 using System.Collections.Concurrent;
 using System.Diagnostics.CodeAnalysis;
+using System.Linq.Expressions;
 using System.Reflection;
 using Destructurama.Util;
 using Serilog.Core;
@@ -53,10 +54,9 @@ internal class AttributedDestructuringPolicy : IDestructuringPolicy
             return new(classDestructurer.CreateLogEventPropertyValue);
 
         var properties = type.GetPropertiesRecursive().ToList();
-        if (!_options.IgnoreNullProperties
-            && properties.All(pi =>
-                pi.GetCustomAttribute<IPropertyDestructuringAttribute>() == null
-                && pi.GetCustomAttribute<IPropertyOptionalIgnoreAttribute>() == null))
+        if (!_options.IgnoreNullProperties && properties.All(pi =>
+            pi.GetCustomAttribute<IPropertyDestructuringAttribute>() == null
+            && pi.GetCustomAttribute<IPropertyOptionalIgnoreAttribute>() == null))
         {
             return CacheEntry.Ignore;
         }
@@ -77,21 +77,40 @@ internal class AttributedDestructuringPolicy : IDestructuringPolicy
                 return CacheEntry.Ignore;
         }
 
-        return new CacheEntry((o, f) => MakeStructure(o, properties, optionalIgnoreAttributes, destructuringAttributes, f, type));
+        var propertiesWithAccessors = properties.Select(p => (p, Compile(p))).ToList();
+        return new CacheEntry((o, f) => MakeStructure(o, propertiesWithAccessors, optionalIgnoreAttributes, destructuringAttributes, f, type));
+
+        static Func<object, object> Compile(PropertyInfo property)
+        {
+            var objParameterExpr = Expression.Parameter(typeof(object), "instance");
+            var instanceExpr = Expression.TypeAs(objParameterExpr, property.DeclaringType);
+            var propertyExpr = Expression.Property(instanceExpr, property);
+            var propertyObjExpr = Expression.Convert(propertyExpr, typeof(object));
+            return Expression.Lambda<Func<object, object>>(propertyObjExpr, objParameterExpr).Compile();
+        }
     }
 
     private LogEventPropertyValue MakeStructure(
         object o,
-        IEnumerable<PropertyInfo> loggedProperties,
-        IDictionary<PropertyInfo, IPropertyOptionalIgnoreAttribute> optionalIgnoreAttributes,
-        IDictionary<PropertyInfo, IPropertyDestructuringAttribute> destructuringAttributes,
+        List<(PropertyInfo Property, Func<object, object> Accessor)> loggedProperties,
+        Dictionary<PropertyInfo, IPropertyOptionalIgnoreAttribute> optionalIgnoreAttributes,
+        Dictionary<PropertyInfo, IPropertyDestructuringAttribute> destructuringAttributes,
         ILogEventPropertyValueFactory propertyValueFactory,
         Type type)
     {
         var structureProperties = new List<LogEventProperty>();
-        foreach (var pi in loggedProperties)
+        foreach (var (pi, accessor) in loggedProperties)
         {
-            var propValue = SafeGetPropValue(o, pi);
+            object propValue;
+            try
+            {
+                propValue = accessor(o);
+            }
+            catch (Exception ex)
+            {
+                SelfLog.WriteLine("The property accessor {0} threw exception {1}", pi, ex);
+                propValue = $"The property accessor threw an exception: {ex.GetType().Name}";
+            }
 
             if (optionalIgnoreAttributes.TryGetValue(pi, out var optionalIgnoreAttribute))
             {
@@ -117,19 +136,6 @@ internal class AttributedDestructuringPolicy : IDestructuringPolicy
         }
 
         return new StructureValue(structureProperties, type.Name);
-    }
-
-    private static object SafeGetPropValue(object o, PropertyInfo pi)
-    {
-        try
-        {
-            return pi.GetValue(o);
-        }
-        catch (TargetInvocationException ex)
-        {
-            SelfLog.WriteLine("The property accessor {0} threw exception {1}", pi, ex);
-            return $"The property accessor threw an exception: {ex.InnerException!.GetType().Name}";
-        }
     }
 
     internal static void Clear()
