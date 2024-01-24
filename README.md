@@ -333,3 +333,7 @@ public class WithRegex
 ```
 <sup><a href='/src/Destructurama.Attributed.Tests/Snippets.cs#L6-L25' title='Snippet source file'>snippet source</a> | <a href='#snippet-withregex' title='Start of snippet'>anchor</a></sup>
 <!-- endSnippet -->
+
+# Benchmarks
+
+The results are available [here](https://destructurama.github.io/attributed/dev/bench/).
