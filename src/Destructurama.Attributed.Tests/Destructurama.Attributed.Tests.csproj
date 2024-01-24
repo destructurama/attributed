@@ -17,7 +17,7 @@
       <PrivateAssets>all</PrivateAssets>
       <IncludeAssets>runtime; build; native; contentfiles; analyzers; buildtransitive</IncludeAssets>
     </PackageReference>
-    <!--<PackageReference Include="MarkdownSnippets.MsBuild" Version="24.5.1" PrivateAssets="all" />-->
+    <PackageReference Include="MarkdownSnippets.MsBuild" Version="24.5.1" PrivateAssets="all" />
   </ItemGroup>
 
   <ItemGroup>

@@ -2,6 +2,7 @@ using Destructurama.Attributed.Tests.Support;
 using NUnit.Framework;
 using Serilog;
 using Serilog.Events;
+using Shouldly;
 
 namespace Destructurama.Attributed.Tests;
 
@@ -85,39 +86,38 @@ public class NotLoggedIfDefaultAttributeTests
         var sv = (StructureValue)evt!.Properties["Customized"];
         var props = sv.Properties.ToDictionary(p => p.Name, p => p.Value);
 
-        Assert.IsFalse(props.ContainsKey("String"));
-        Assert.IsFalse(props.ContainsKey("Integer"));
-        Assert.IsFalse(props.ContainsKey("NullableInteger"));
-        Assert.IsFalse(props.ContainsKey("Object"));
-        Assert.IsFalse(props.ContainsKey("DateTime"));
-        Assert.IsFalse(props.ContainsKey("Struct"));
+        props.ContainsKey("String").ShouldBeFalse();
+        props.ContainsKey("Integer").ShouldBeFalse();
+        props.ContainsKey("NullableInteger").ShouldBeFalse();
+        props.ContainsKey("Object").ShouldBeFalse();
+        props.ContainsKey("DateTime").ShouldBeFalse();
+        props.ContainsKey("Struct").ShouldBeFalse();
 
-        Assert.IsTrue(props.ContainsKey("StringLogged"));
-        Assert.IsTrue(props.ContainsKey("IntegerLogged"));
-        Assert.IsTrue(props.ContainsKey("NullableIntegerLogged"));
-        Assert.IsTrue(props.ContainsKey("ObjectLogged"));
-        Assert.IsTrue(props.ContainsKey("DateTimeLogged"));
-        Assert.IsTrue(props.ContainsKey("StructLogged"));
+        props.ContainsKey("StringLogged").ShouldBeTrue();
+        props.ContainsKey("IntegerLogged").ShouldBeTrue();
+        props.ContainsKey("NullableIntegerLogged").ShouldBeTrue();
+        props.ContainsKey("ObjectLogged").ShouldBeTrue();
+        props.ContainsKey("DateTimeLogged").ShouldBeTrue();
+        props.ContainsKey("StructLogged").ShouldBeTrue();
 
-        Assert.AreEqual(default(string), props["StringLogged"].LiteralValue());
-        Assert.AreEqual(default(int), props["IntegerLogged"].LiteralValue());
-        Assert.AreEqual(default(int?), props["NullableIntegerLogged"].LiteralValue());
-        Assert.AreEqual(default, props["ObjectLogged"].LiteralValue());
-        Assert.AreEqual(default(DateTime), props["DateTimeLogged"].LiteralValue());
-        Assert.AreEqual(default(NotLoggedIfDefaultStruct), props["StructLogged"].LiteralValue());
+        props["StringLogged"].LiteralValue().ShouldBe(default(string));
+        props["IntegerLogged"].LiteralValue().ShouldBe(default(int));
+        props["NullableIntegerLogged"].LiteralValue().ShouldBe(default(int?));
+        props["ObjectLogged"].LiteralValue().ShouldBe(default);
+        props["DateTimeLogged"].LiteralValue().ShouldBe(default(DateTime));
+        props["StructLogged"].LiteralValue().ShouldBe(default(NotLoggedIfDefaultStruct));
 
-        Assert.IsTrue(props.ContainsKey("StructWithAttributes"));
-        Assert.IsTrue(props["StructWithAttributes"] is StructureValue);
+        props.ContainsKey("StructWithAttributes").ShouldBeTrue();
+        props["StructWithAttributes"].ShouldBeOfType<StructureValue>();
 
-        var structProps = ((StructureValue)props["StructWithAttributes"]).Properties
-            .ToDictionary(p => p.Name, p => p.Value);
+        var structProps = ((StructureValue)props["StructWithAttributes"]).Properties.ToDictionary(p => p.Name, p => p.Value);
 
-        Assert.IsFalse(structProps.ContainsKey("Integer"));
-        Assert.IsFalse(structProps.ContainsKey("DateTime"));
-        Assert.IsTrue(structProps.ContainsKey("IntegerLogged"));
-        Assert.IsTrue(structProps.ContainsKey("DateTimeLogged"));
-        Assert.AreEqual(default(int), structProps["IntegerLogged"].LiteralValue());
-        Assert.AreEqual(default(DateTime), structProps["DateTimeLogged"].LiteralValue());
+        structProps.ContainsKey("Integer").ShouldBeFalse();
+        structProps.ContainsKey("DateTime").ShouldBeFalse();
+        structProps.ContainsKey("IntegerLogged").ShouldBeTrue();
+        structProps.ContainsKey("DateTimeLogged").ShouldBeTrue();
+        structProps["IntegerLogged"].LiteralValue().ShouldBe(default(int));
+        structProps["DateTimeLogged"].LiteralValue().ShouldBe(default(DateTime));
     }
 
     [Test]
@@ -160,50 +160,49 @@ public class NotLoggedIfDefaultAttributeTests
         var sv = (StructureValue)evt!.Properties["Customized"];
         var props = sv.Properties.ToDictionary(p => p.Name, p => p.Value);
 
-        Assert.IsTrue(props.ContainsKey("String"));
-        Assert.IsTrue(props.ContainsKey("Integer"));
-        Assert.IsTrue(props.ContainsKey("NullableInteger"));
-        Assert.IsTrue(props.ContainsKey("Object"));
-        Assert.IsTrue(props.ContainsKey("DateTime"));
-        Assert.IsTrue(props.ContainsKey("Struct"));
-        Assert.IsTrue(props.ContainsKey("IntegerAsObject"));
+        props.ContainsKey("String").ShouldBeTrue();
+        props.ContainsKey("Integer").ShouldBeTrue();
+        props.ContainsKey("NullableInteger").ShouldBeTrue();
+        props.ContainsKey("Object").ShouldBeTrue();
+        props.ContainsKey("DateTime").ShouldBeTrue();
+        props.ContainsKey("Struct").ShouldBeTrue();
+        props.ContainsKey("IntegerAsObject").ShouldBeTrue();
 
-        Assert.IsTrue(props.ContainsKey("StringLogged"));
-        Assert.IsTrue(props.ContainsKey("IntegerLogged"));
-        Assert.IsTrue(props.ContainsKey("NullableIntegerLogged"));
-        Assert.IsTrue(props.ContainsKey("ObjectLogged"));
-        Assert.IsTrue(props.ContainsKey("DateTimeLogged"));
-        Assert.IsTrue(props.ContainsKey("StructLogged"));
+        props.ContainsKey("StringLogged").ShouldBeTrue();
+        props.ContainsKey("IntegerLogged").ShouldBeTrue();
+        props.ContainsKey("NullableIntegerLogged").ShouldBeTrue();
+        props.ContainsKey("ObjectLogged").ShouldBeTrue();
+        props.ContainsKey("DateTimeLogged").ShouldBeTrue();
+        props.ContainsKey("StructLogged").ShouldBeTrue();
 
-        Assert.AreEqual("Foo", props["String"].LiteralValue());
-        Assert.AreEqual(10, props["Integer"].LiteralValue());
-        Assert.AreEqual(5, props["NullableInteger"].LiteralValue());
-        Assert.AreEqual("Bar", props["Object"].LiteralValue());
-        Assert.AreEqual(dateTime, props["DateTime"].LiteralValue());
-        Assert.IsInstanceOf<StructureValue>(props["Struct"]);
-        Assert.AreEqual(0, props["IntegerAsObject"].LiteralValue());
+        props["String"].LiteralValue().ShouldBe("Foo");
+        props["Integer"].LiteralValue().ShouldBe(10);
+        props["NullableInteger"].LiteralValue().ShouldBe(5);
+        props["Object"].LiteralValue().ShouldBe("Bar");
+        props["DateTime"].LiteralValue().ShouldBe(dateTime);
+        props["Struct"].ShouldBeOfType<StructureValue>();
+        props["IntegerAsObject"].LiteralValue().ShouldBe(0);
 
-        Assert.AreEqual(default(string), props["StringLogged"].LiteralValue());
-        Assert.AreEqual(default(int), props["IntegerLogged"].LiteralValue());
-        Assert.AreEqual(default(int?), props["NullableIntegerLogged"].LiteralValue());
-        Assert.AreEqual(default, props["ObjectLogged"].LiteralValue());
-        Assert.AreEqual(default(DateTime), props["DateTimeLogged"].LiteralValue());
-        Assert.AreEqual(default(NotLoggedIfDefaultStruct), props["StructLogged"].LiteralValue());
+        props["StringLogged"].LiteralValue().ShouldBe(default(string));
+        props["IntegerLogged"].LiteralValue().ShouldBe(default(int));
+        props["NullableIntegerLogged"].LiteralValue().ShouldBe(default(int?));
+        props["ObjectLogged"].LiteralValue().ShouldBe(default);
+        props["DateTimeLogged"].LiteralValue().ShouldBe(default(DateTime));
+        props["StructLogged"].LiteralValue().ShouldBe(default(NotLoggedIfDefaultStruct));
 
-        Assert.IsTrue(props.ContainsKey("StructWithAttributes"));
-        Assert.IsTrue(props["StructWithAttributes"] is StructureValue);
+        props.ContainsKey("StructWithAttributes").ShouldBeTrue();
+        props["StructWithAttributes"].ShouldBeOfType<StructureValue>();
 
-        var structProps = ((StructureValue)props["StructWithAttributes"]).Properties
-            .ToDictionary(p => p.Name, p => p.Value);
+        var structProps = ((StructureValue)props["StructWithAttributes"]).Properties.ToDictionary(p => p.Name, p => p.Value);
 
-        Assert.IsTrue(structProps.ContainsKey("Integer"));
-        Assert.IsTrue(structProps.ContainsKey("DateTime"));
-        Assert.IsTrue(structProps.ContainsKey("IntegerLogged"));
-        Assert.IsTrue(structProps.ContainsKey("DateTimeLogged"));
-        Assert.AreEqual(20, structProps["Integer"].LiteralValue());
-        Assert.AreEqual(dateTime, structProps["DateTime"].LiteralValue());
-        Assert.AreEqual(default(int), structProps["IntegerLogged"].LiteralValue());
-        Assert.AreEqual(default(DateTime), structProps["DateTimeLogged"].LiteralValue());
+        structProps.ContainsKey("Integer").ShouldBeTrue();
+        structProps.ContainsKey("DateTime").ShouldBeTrue();
+        structProps.ContainsKey("IntegerLogged").ShouldBeTrue();
+        structProps.ContainsKey("DateTimeLogged").ShouldBeTrue();
+        structProps["Integer"].LiteralValue().ShouldBe(20);
+        structProps["DateTime"].LiteralValue().ShouldBe(dateTime);
+        structProps["IntegerLogged"].LiteralValue().ShouldBe(default(int));
+        structProps["DateTimeLogged"].LiteralValue().ShouldBe(default(DateTime));
     }
 }
 
