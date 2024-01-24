@@ -83,7 +83,7 @@ internal class AttributedDestructuringPolicy : IDestructuringPolicy
         static Func<object, object> Compile(PropertyInfo property)
         {
             var objParameterExpr = Expression.Parameter(typeof(object), "instance");
-            var instanceExpr = Expression.TypeAs(objParameterExpr, property.DeclaringType);
+            var instanceExpr = Expression.Convert(objParameterExpr, property.DeclaringType);
             var propertyExpr = Expression.Property(instanceExpr, property);
             var propertyObjExpr = Expression.Convert(propertyExpr, typeof(object));
             return Expression.Lambda<Func<object, object>>(propertyObjExpr, objParameterExpr).Compile();
