@@ -48,8 +48,7 @@ internal class AttributedDestructuringPolicy : IDestructuringPolicy
 
     private CacheEntry CreateCacheEntry(Type type)
     {
-        var ti = type.GetTypeInfo();
-        var classDestructurer = ti.GetCustomAttribute<ITypeDestructuringAttribute>();
+        var classDestructurer = type.GetCustomAttribute<ITypeDestructuringAttribute>();
         if (classDestructurer != null)
             return new(classDestructurer.CreateLogEventPropertyValue);
 

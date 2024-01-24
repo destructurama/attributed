@@ -18,7 +18,7 @@ namespace Destructurama.Util;
 
 internal static class AttributeFinder
 {
-    public static T GetCustomAttribute<T>(this TypeInfo typeInfo) =>
+    public static T GetCustomAttribute<T>(this Type typeInfo) =>
         typeInfo.GetCustomAttributes().OfType<T>().FirstOrDefault();
 
     public static T GetCustomAttribute<T>(this PropertyInfo propertyInfo) =>
