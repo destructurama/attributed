@@ -3,6 +3,7 @@ using Destructurama.Attributed.Tests.Support;
 using NUnit.Framework;
 using Serilog;
 using Serilog.Events;
+using Shouldly;
 
 namespace Destructurama.Attributed.Tests;
 
@@ -162,17 +163,17 @@ public class IgnoreNullPropertiesTests
         var sv = (StructureValue)evt!.Properties["Customized"];
         var props = sv.Properties.ToDictionary(p => p.Name, p => p.Value);
 
-        Assert.IsTrue(props.ContainsKey("Integer"));
-        Assert.IsTrue(props.ContainsKey("DateTime"));
-        Assert.IsTrue(props.ContainsKey("Struct"));
-        Assert.IsTrue(props.ContainsKey("StructPartiallyInitialized"));
+        props.ContainsKey("Integer").ShouldBeTrue();
+        props.ContainsKey("DateTime").ShouldBeTrue();
+        props.ContainsKey("Struct").ShouldBeTrue();
+        props.ContainsKey("StructPartiallyInitialized").ShouldBeTrue();
 
-        Assert.IsFalse(props.ContainsKey("String"));
-        Assert.IsFalse(props.ContainsKey("NullableInteger"));
-        Assert.IsFalse(props.ContainsKey("IntegerAsObject"));
-        Assert.IsFalse(props.ContainsKey("Object"));
-        Assert.IsFalse(props.ContainsKey("NullableDateTime"));
-        Assert.IsFalse(props.ContainsKey("NullableStruct"));
+        props.ContainsKey("String").ShouldBeFalse();
+        props.ContainsKey("NullableInteger").ShouldBeFalse();
+        props.ContainsKey("IntegerAsObject").ShouldBeFalse();
+        props.ContainsKey("Object").ShouldBeFalse();
+        props.ContainsKey("NullableDateTime").ShouldBeFalse();
+        props.ContainsKey("NullableStruct").ShouldBeFalse();
     }
 
     [Test]
@@ -223,54 +224,52 @@ public class IgnoreNullPropertiesTests
         var sv = (StructureValue)evt!.Properties["Customized"];
         var props = sv.Properties.ToDictionary(p => p.Name, p => p.Value);
 
-        Assert.IsTrue(props.ContainsKey("String"));
-        Assert.IsTrue(props.ContainsKey("Integer"));
-        Assert.IsTrue(props.ContainsKey("NullableInteger"));
-        Assert.IsTrue(props.ContainsKey("Object"));
-        Assert.IsTrue(props.ContainsKey("IntegerAsObject"));
-        Assert.IsTrue(props.ContainsKey("DateTime"));
-        Assert.IsTrue(props.ContainsKey("NullableDateTime"));
-        Assert.IsTrue(props.ContainsKey("Struct"));
-        Assert.IsTrue(props.ContainsKey("NullableStruct"));
-        Assert.IsTrue(props.ContainsKey("StructPartiallyInitialized"));
+        props.ContainsKey("String").ShouldBeTrue();
+        props.ContainsKey("Integer").ShouldBeTrue();
+        props.ContainsKey("NullableInteger").ShouldBeTrue();
+        props.ContainsKey("Object").ShouldBeTrue();
+        props.ContainsKey("IntegerAsObject").ShouldBeTrue();
+        props.ContainsKey("DateTime").ShouldBeTrue();
+        props.ContainsKey("NullableDateTime").ShouldBeTrue();
+        props.ContainsKey("Struct").ShouldBeTrue();
+        props.ContainsKey("NullableStruct").ShouldBeTrue();
+        props.ContainsKey("StructPartiallyInitialized").ShouldBeTrue();
 
-        Assert.AreEqual("Foo", props["String"].LiteralValue());
-        Assert.AreEqual(10, props["Integer"].LiteralValue());
-        Assert.AreEqual(5, props["NullableInteger"].LiteralValue());
-        Assert.AreEqual("Bar", props["Object"].LiteralValue());
-        Assert.AreEqual(0, props["IntegerAsObject"].LiteralValue());
-        Assert.AreEqual(dateTime, props["DateTime"].LiteralValue());
-        Assert.AreEqual(dateTime, props["NullableDateTime"].LiteralValue());
-        Assert.IsInstanceOf<StructureValue>(props["Struct"]);
-        Assert.IsInstanceOf<StructureValue>(props["NullableStruct"]);
-        Assert.IsInstanceOf<StructureValue>(props["StructPartiallyInitialized"]);
+        props["String"].LiteralValue().ShouldBe("Foo");
+        props["Integer"].LiteralValue().ShouldBe(10);
+        props["NullableInteger"].LiteralValue().ShouldBe(5);
+        props["Object"].LiteralValue().ShouldBe("Bar");
+        props["IntegerAsObject"].LiteralValue().ShouldBe(0);
+        props["DateTime"].LiteralValue().ShouldBe(dateTime);
+        props["NullableDateTime"].LiteralValue().ShouldBe(dateTime);
+        props["Struct"].ShouldBeOfType<StructureValue>();
+        props["NullableStruct"].ShouldBeOfType<StructureValue>();
+        props["StructPartiallyInitialized"].ShouldBeOfType<StructureValue>();
 
-        var structProps = ((StructureValue)props["Struct"]).Properties
-            .ToDictionary(p => p.Name, p => p.Value);
+        var structProps = ((StructureValue)props["Struct"]).Properties.ToDictionary(p => p.Name, p => p.Value);
 
-        Assert.IsTrue(structProps.ContainsKey("Integer"));
-        Assert.IsTrue(structProps.ContainsKey("NullableInteger"));
-        Assert.IsTrue(structProps.ContainsKey("DateTime"));
-        Assert.IsTrue(structProps.ContainsKey("NullableDateTime"));
-        Assert.IsTrue(structProps.ContainsKey("Object"));
-        Assert.AreEqual(20, structProps["Integer"].LiteralValue());
-        Assert.AreEqual(15, structProps["NullableInteger"].LiteralValue());
-        Assert.AreEqual(dateTime, structProps["DateTime"].LiteralValue());
-        Assert.AreEqual(dateTime, structProps["NullableDateTime"].LiteralValue());
-        Assert.AreEqual("Bar", structProps["Object"].LiteralValue());
+        structProps.ContainsKey("Integer").ShouldBeTrue();
+        structProps.ContainsKey("NullableInteger").ShouldBeTrue();
+        structProps.ContainsKey("DateTime").ShouldBeTrue();
+        structProps.ContainsKey("NullableDateTime").ShouldBeTrue();
+        structProps.ContainsKey("Object").ShouldBeTrue();
+        structProps["Integer"].LiteralValue().ShouldBe(20);
+        structProps["NullableInteger"].LiteralValue().ShouldBe(15);
+        structProps["DateTime"].LiteralValue().ShouldBe(dateTime);
+        structProps["NullableDateTime"].LiteralValue().ShouldBe(dateTime);
+        structProps["Object"].LiteralValue().ShouldBe("Bar");
 
-        var partiallyItitializedProps = ((StructureValue)props["StructPartiallyInitialized"]).Properties
-            .ToDictionary(p => p.Name, p => p.Value);
+        var partiallyItitializedProps = ((StructureValue)props["StructPartiallyInitialized"]).Properties.ToDictionary(p => p.Name, p => p.Value);
 
-        Assert.IsTrue(partiallyItitializedProps.ContainsKey("Integer"));
-        Assert.IsTrue(partiallyItitializedProps.ContainsKey("NullableInteger"));
-        Assert.IsTrue(partiallyItitializedProps.ContainsKey("DateTime"));
-        Assert.IsTrue(partiallyItitializedProps.ContainsKey("NullableDateTime"));
-        Assert.IsFalse(partiallyItitializedProps.ContainsKey("Object"));
-        Assert.AreEqual(20, partiallyItitializedProps["Integer"].LiteralValue());
-        Assert.AreEqual(15, partiallyItitializedProps["NullableInteger"].LiteralValue());
-        Assert.AreEqual(dateTime, partiallyItitializedProps["DateTime"].LiteralValue());
-        Assert.AreEqual(dateTime, partiallyItitializedProps["NullableDateTime"].LiteralValue());
+        partiallyItitializedProps.ContainsKey("Integer").ShouldBeTrue();
+        partiallyItitializedProps.ContainsKey("NullableInteger").ShouldBeTrue();
+        partiallyItitializedProps.ContainsKey("DateTime").ShouldBeTrue();
+        partiallyItitializedProps.ContainsKey("NullableDateTime").ShouldBeTrue();
+        partiallyItitializedProps.ContainsKey("Object").ShouldBeFalse();
+        partiallyItitializedProps["Integer"].LiteralValue().ShouldBe(20);
+        partiallyItitializedProps["NullableInteger"].LiteralValue().ShouldBe(15);
+        partiallyItitializedProps["DateTime"].LiteralValue().ShouldBe(dateTime);
+        partiallyItitializedProps["NullableDateTime"].LiteralValue().ShouldBe(dateTime);
     }
 
     [Test]
@@ -290,8 +289,8 @@ public class IgnoreNullPropertiesTests
         var sv = (StructureValue)evt!.Properties["Customized"];
         var props = sv.Properties.ToDictionary(p => p.Name, p => p.Value);
 
-        Assert.IsFalse(props.ContainsKey("String"));
-        Assert.IsFalse(props.ContainsKey("Object"));
+        props.ContainsKey("String").ShouldBeFalse();
+        props.ContainsKey("Object").ShouldBeFalse();
     }
 
     [Test]
@@ -304,7 +303,6 @@ public class IgnoreNullPropertiesTests
             .WriteTo.Sink(new DelegatingSink(e => evt = e))
             .CreateLogger();
 
-        var dateTime = new DateTime(2000, 1, 2, 3, 4, 5);
         var customized = new AttributedWithMask
         {
             String = "Foo[Masked]",
@@ -316,11 +314,11 @@ public class IgnoreNullPropertiesTests
         var sv = (StructureValue)evt!.Properties["Customized"];
         var props = sv.Properties.ToDictionary(p => p.Name, p => p.Value);
 
-        Assert.IsTrue(props.ContainsKey("String"));
-        Assert.IsTrue(props.ContainsKey("Object"));
+        props.ContainsKey("String").ShouldBeTrue();
+        props.ContainsKey("Object").ShouldBeTrue();
 
-        Assert.AreEqual("Foo***", props["String"].LiteralValue());
-        Assert.AreEqual("Bar***", props["Object"].LiteralValue());
+        props["String"].LiteralValue().ShouldBe("Foo***");
+        props["Object"].LiteralValue().ShouldBe("Bar***");
     }
 
     [Test]
@@ -345,7 +343,7 @@ public class IgnoreNullPropertiesTests
         log.Information("Here is {@Customized}", customized);
 
         var sv = evt!.Properties["Customized"];
-        Assert.IsInstanceOf<SequenceValue>(sv);
+        sv.ShouldBeOfType<SequenceValue>();
     }
 
     [Test]
@@ -373,15 +371,14 @@ public class IgnoreNullPropertiesTests
         var sv = (StructureValue)evt!.Properties["Customized"];
         var props = sv.Properties.ToDictionary(p => p.Name, p => p.Value);
 
-        Assert.IsTrue(props.ContainsKey("Integer"));
-        Assert.IsFalse(props.ContainsKey("NullableInteger"));
-        Assert.IsTrue(props.ContainsKey("Dependency"));
+        props.ContainsKey("Integer").ShouldBeTrue();
+        props.ContainsKey("NullableInteger").ShouldBeFalse();
+        props.ContainsKey("Dependency").ShouldBeTrue();
 
-        var dependencyProps = ((StructureValue)props["Dependency"]).Properties
-            .ToDictionary(p => p.Name, p => p.Value);
+        var dependencyProps = ((StructureValue)props["Dependency"]).Properties.ToDictionary(p => p.Name, p => p.Value);
 
-        Assert.IsTrue(dependencyProps.ContainsKey("Integer"));
-        Assert.IsFalse(dependencyProps.ContainsKey("NullableInteger"));
+        dependencyProps.ContainsKey("Integer").ShouldBeTrue();
+        dependencyProps.ContainsKey("NullableInteger").ShouldBeFalse();
     }
 
     [Test]
@@ -401,17 +398,17 @@ public class IgnoreNullPropertiesTests
         var sv = (StructureValue)evt!.Properties["Customized"];
         var props = sv.Properties.ToDictionary(p => p.Name, p => p.Value);
 
-        Assert.IsTrue(props.ContainsKey("Integer"));
-        Assert.IsTrue(props.ContainsKey("DateTime"));
-        Assert.IsTrue(props.ContainsKey("Struct"));
-        Assert.IsTrue(props.ContainsKey("StructPartiallyInitialized"));
+        props.ContainsKey("Integer").ShouldBeTrue();
+        props.ContainsKey("DateTime").ShouldBeTrue();
+        props.ContainsKey("Struct").ShouldBeTrue();
+        props.ContainsKey("StructPartiallyInitialized").ShouldBeTrue();
 
-        Assert.IsFalse(props.ContainsKey("String"));
-        Assert.IsFalse(props.ContainsKey("NullableInteger"));
-        Assert.IsFalse(props.ContainsKey("IntegerAsObject"));
-        Assert.IsFalse(props.ContainsKey("Object"));
-        Assert.IsFalse(props.ContainsKey("NullableDateTime"));
-        Assert.IsFalse(props.ContainsKey("NullableStruct"));
+        props.ContainsKey("String").ShouldBeFalse();
+        props.ContainsKey("NullableInteger").ShouldBeFalse();
+        props.ContainsKey("IntegerAsObject").ShouldBeFalse();
+        props.ContainsKey("Object").ShouldBeFalse();
+        props.ContainsKey("NullableDateTime").ShouldBeFalse();
+        props.ContainsKey("NullableStruct").ShouldBeFalse();
     }
 
     [Test]
@@ -462,57 +459,53 @@ public class IgnoreNullPropertiesTests
         var sv = (StructureValue)evt!.Properties["Customized"];
         var props = sv.Properties.ToDictionary(p => p.Name, p => p.Value);
 
-        Assert.IsTrue(props.ContainsKey("String"));
-        Assert.IsTrue(props.ContainsKey("Integer"));
-        Assert.IsTrue(props.ContainsKey("NullableInteger"));
-        Assert.IsTrue(props.ContainsKey("Object"));
-        Assert.IsTrue(props.ContainsKey("IntegerAsObject"));
-        Assert.IsTrue(props.ContainsKey("DateTime"));
-        Assert.IsTrue(props.ContainsKey("NullableDateTime"));
-        Assert.IsTrue(props.ContainsKey("Struct"));
-        Assert.IsTrue(props.ContainsKey("NullableStruct"));
-        Assert.IsTrue(props.ContainsKey("StructPartiallyInitialized"));
+        props.ContainsKey("String").ShouldBeTrue();
+        props.ContainsKey("Integer").ShouldBeTrue();
+        props.ContainsKey("NullableInteger").ShouldBeTrue();
+        props.ContainsKey("Object").ShouldBeTrue();
+        props.ContainsKey("IntegerAsObject").ShouldBeTrue();
+        props.ContainsKey("DateTime").ShouldBeTrue();
+        props.ContainsKey("NullableDateTime").ShouldBeTrue();
+        props.ContainsKey("Struct").ShouldBeTrue();
+        props.ContainsKey("NullableStruct").ShouldBeTrue();
+        props.ContainsKey("StructPartiallyInitialized").ShouldBeTrue();
 
-        Assert.AreEqual("Foo", props["String"].LiteralValue());
-        Assert.AreEqual(10, props["Integer"].LiteralValue());
-        Assert.AreEqual(5, props["NullableInteger"].LiteralValue());
-        Assert.AreEqual("Bar", props["Object"].LiteralValue());
-        Assert.AreEqual(0, props["IntegerAsObject"].LiteralValue());
-        Assert.AreEqual(dateTime, props["DateTime"].LiteralValue());
-        Assert.AreEqual(dateTime, props["NullableDateTime"].LiteralValue());
-        Assert.IsInstanceOf<StructureValue>(props["Struct"]);
-        Assert.IsInstanceOf<StructureValue>(props["NullableStruct"]);
-        Assert.IsInstanceOf<StructureValue>(props["StructPartiallyInitialized"]);
+        props["String"].LiteralValue().ShouldBe("Foo");
+        props["Integer"].LiteralValue().ShouldBe(10);
+        props["NullableInteger"].LiteralValue().ShouldBe(5);
+        props["Object"].LiteralValue().ShouldBe("Bar");
+        props["IntegerAsObject"].LiteralValue().ShouldBe(0);
+        props["DateTime"].LiteralValue().ShouldBe(dateTime);
+        props["NullableDateTime"].LiteralValue().ShouldBe(dateTime);
+        props["Struct"].ShouldBeOfType<StructureValue>();
+        props["NullableStruct"].ShouldBeOfType<StructureValue>();
+        props["StructPartiallyInitialized"].ShouldBeOfType<StructureValue>();
 
-        var structProps = ((StructureValue)props["Struct"]).Properties
-            .ToDictionary(p => p.Name, p => p.Value);
+        var structProps = ((StructureValue)props["Struct"]).Properties.ToDictionary(p => p.Name, p => p.Value);
 
-        Assert.IsTrue(structProps.ContainsKey("Integer"));
-        Assert.IsTrue(structProps.ContainsKey("NullableInteger"));
-        Assert.IsTrue(structProps.ContainsKey("DateTime"));
-        Assert.IsTrue(structProps.ContainsKey("NullableDateTime"));
-        Assert.IsTrue(structProps.ContainsKey("Object"));
-        Assert.AreEqual(20, structProps["Integer"].LiteralValue());
-        Assert.AreEqual(15, structProps["NullableInteger"].LiteralValue());
-        Assert.AreEqual(dateTime, structProps["DateTime"].LiteralValue());
-        Assert.AreEqual(dateTime, structProps["NullableDateTime"].LiteralValue());
-        Assert.AreEqual("Bar", structProps["Object"].LiteralValue());
+        structProps.ContainsKey("Integer").ShouldBeTrue();
+        structProps.ContainsKey("NullableInteger").ShouldBeTrue();
+        structProps.ContainsKey("DateTime").ShouldBeTrue();
+        structProps.ContainsKey("NullableDateTime").ShouldBeTrue();
+        structProps.ContainsKey("Object").ShouldBeTrue();
+        structProps["Integer"].LiteralValue().ShouldBe(20);
+        structProps["NullableInteger"].LiteralValue().ShouldBe(15);
+        structProps["DateTime"].LiteralValue().ShouldBe(dateTime);
+        structProps["NullableDateTime"].LiteralValue().ShouldBe(dateTime);
+        structProps["Object"].LiteralValue().ShouldBe("Bar");
 
-        var partiallyItitializedProps = ((StructureValue)props["StructPartiallyInitialized"]).Properties
-            .ToDictionary(p => p.Name, p => p.Value);
+        var partiallyItitializedProps = ((StructureValue)props["StructPartiallyInitialized"]).Properties.ToDictionary(p => p.Name, p => p.Value);
 
-        Assert.IsTrue(partiallyItitializedProps.ContainsKey("Integer"));
-        Assert.IsTrue(partiallyItitializedProps.ContainsKey("NullableInteger"));
-        Assert.IsTrue(partiallyItitializedProps.ContainsKey("DateTime"));
-        Assert.IsTrue(partiallyItitializedProps.ContainsKey("NullableDateTime"));
-        Assert.IsTrue(partiallyItitializedProps.ContainsKey("Object"));
-        Assert.AreEqual(20, partiallyItitializedProps["Integer"].LiteralValue());
-        Assert.AreEqual(15, partiallyItitializedProps["NullableInteger"].LiteralValue());
-        Assert.AreEqual(dateTime, partiallyItitializedProps["DateTime"].LiteralValue());
-        Assert.AreEqual(dateTime, partiallyItitializedProps["NullableDateTime"].LiteralValue());
-
+        partiallyItitializedProps.ContainsKey("Integer").ShouldBeTrue();
+        partiallyItitializedProps.ContainsKey("NullableInteger").ShouldBeTrue();
+        partiallyItitializedProps.ContainsKey("DateTime").ShouldBeTrue();
+        partiallyItitializedProps.ContainsKey("NullableDateTime").ShouldBeTrue();
+        partiallyItitializedProps.ContainsKey("Object").ShouldBeTrue();
+        partiallyItitializedProps["Integer"].LiteralValue().ShouldBe(20);
+        partiallyItitializedProps["NullableInteger"].LiteralValue().ShouldBe(15);
+        partiallyItitializedProps["DateTime"].LiteralValue().ShouldBe(dateTime);
+        partiallyItitializedProps["NullableDateTime"].LiteralValue().ShouldBe(dateTime);
     }
-
 }
 
 

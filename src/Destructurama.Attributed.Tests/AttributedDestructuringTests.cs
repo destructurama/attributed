@@ -2,12 +2,35 @@ using Destructurama.Attributed.Tests.Support;
 using NUnit.Framework;
 using Serilog;
 using Serilog.Events;
+using Shouldly;
 
 namespace Destructurama.Attributed.Tests;
 
 [TestFixture]
 public class AttributedDestructuringTests
 {
+    [Test]
+    public void Throwing_Accessor_Should_Be_Handled()
+    {
+        // Setup
+        LogEvent evt = null!;
+
+        var log = new LoggerConfiguration()
+            .Destructure.UsingAttributes()
+            .WriteTo.Sink(new DelegatingSink(e => evt = e))
+            .CreateLogger();
+        var obj = new ClassWithThrowingAccessor();
+
+        // Execute
+        log.Information("Here is {@Customized}", obj);
+
+        // Verify
+        var sv = (StructureValue)evt.Properties["Customized"];
+        sv.Properties.Count.ShouldBe(1);
+        sv.Properties[0].Name.ShouldBe("BadProperty");
+        sv.Properties[0].Value.ShouldBeOfType<ScalarValue>().Value.ShouldBe("***");
+    }
+
     [Test]
     public void AttributesAreConsultedWhenDestructuring()
     {
@@ -37,17 +60,23 @@ public class AttributedDestructuringTests
         var sv = (StructureValue)evt.Properties["Customized"];
         var props = sv.Properties.ToDictionary(p => p.Name, p => p.Value);
 
-        Assert.IsInstanceOf<ImmutableScalar>(props["ImmutableScalar"].LiteralValue());
-        Assert.AreEqual(new MutableScalar().ToString(), props["MutableScalar"].LiteralValue());
-        Assert.IsInstanceOf<StructureValue>(props["NotAScalar"]);
-        Assert.IsFalse(props.ContainsKey("Ignored"));
-        Assert.IsInstanceOf<NotAScalar>(props["ScalarAnyway"].LiteralValue());
-        Assert.IsInstanceOf<Struct1>(props["Struct1"].LiteralValue());
-        Assert.IsInstanceOf<Struct2>(props["Struct2"].LiteralValue());
+        props["ImmutableScalar"].LiteralValue().ShouldBeOfType<ImmutableScalar>();
+        props["MutableScalar"].LiteralValue().ShouldBe(new MutableScalar().ToString());
+        props["NotAScalar"].ShouldBeOfType<StructureValue>();
+        props.ContainsKey("Ignored").ShouldBeFalse();
+        props["ScalarAnyway"].LiteralValue().ShouldBeOfType<NotAScalar>();
+        props["Struct1"].LiteralValue().ShouldBeOfType<Struct1>();
+        props["Struct2"].LiteralValue().ShouldBeOfType<Struct2>();
 
         var str = sv.ToString();
-        Assert.That(str.Contains("This is a username"));
-        Assert.False(str.Contains("This is a password"));
+        str.Contains("This is a username").ShouldBeTrue();
+        str.Contains("This is a password").ShouldBeFalse();
+    }
+
+    public class ClassWithThrowingAccessor
+    {
+        [LogMasked]
+        public string? BadProperty => throw new FormatException("oops");
     }
 
     [LogAsScalar]

@@ -2,6 +2,7 @@ using Destructurama.Attributed.Tests.Support;
 using NUnit.Framework;
 using Serilog;
 using Serilog.Events;
+using Shouldly;
 
 namespace Destructurama.Attributed.Tests;
 
@@ -152,8 +153,8 @@ public class MaskedAttributeTests
         var sv = (StructureValue)evt.Properties["Customized"];
         var props = sv.Properties.ToDictionary(p => p.Name, p => p.Value);
 
-        Assert.IsTrue(props.ContainsKey("DefaultMasked"));
-        Assert.AreEqual("***", props["DefaultMasked"].LiteralValue());
+        props.ContainsKey("DefaultMasked").ShouldBeTrue();
+        props["DefaultMasked"].LiteralValue().ShouldBe("***");
     }
 
     [Test]
@@ -171,7 +172,7 @@ public class MaskedAttributeTests
 
         var customized = new CustomizedMaskedLogs
         {
-            DefaultMaskedArray = new[] { "123456789", "123456789", "123456789" }
+            DefaultMaskedArray = ["123456789", "123456789", "123456789"]
         };
 
         log.Information("Here is {@Customized}", customized);
@@ -179,10 +180,10 @@ public class MaskedAttributeTests
         var sv = (StructureValue)evt.Properties["Customized"];
         var props = sv.Properties.ToDictionary(p => p.Name, p => p.Value);
 
-        Assert.IsTrue(props.ContainsKey("DefaultMaskedArray"));
+        props.ContainsKey("DefaultMaskedArray").ShouldBeTrue();
         var seq = props["DefaultMaskedArray"] as SequenceValue;
         foreach (var elem in seq!.Elements)
-            Assert.AreEqual("***", elem.LiteralValue());
+            elem.LiteralValue().ShouldBe("***");
     }
 
     [Test]
@@ -208,8 +209,8 @@ public class MaskedAttributeTests
         var sv = (StructureValue)evt.Properties["Customized"];
         var props = sv.Properties.ToDictionary(p => p.Name, p => p.Value);
 
-        Assert.IsTrue(props.ContainsKey("DefaultMaskedPreserved"));
-        Assert.AreEqual("*********", props["DefaultMaskedPreserved"].LiteralValue());
+        props.ContainsKey("DefaultMaskedPreserved").ShouldBeTrue();
+        props["DefaultMaskedPreserved"].LiteralValue().ShouldBe("*********");
     }
 
     [Test]
@@ -235,8 +236,8 @@ public class MaskedAttributeTests
         var sv = (StructureValue)evt.Properties["Customized"];
         var props = sv.Properties.ToDictionary(p => p.Name, p => p.Value);
 
-        Assert.IsTrue(props.ContainsKey("DefaultMaskedNotPreservedOnEmptyString"));
-        Assert.AreEqual("***", props["DefaultMaskedNotPreservedOnEmptyString"].LiteralValue());
+        props.ContainsKey("DefaultMaskedNotPreservedOnEmptyString").ShouldBeTrue();
+        props["DefaultMaskedNotPreservedOnEmptyString"].LiteralValue().ShouldBe("***");
     }
 
     [Test]
@@ -262,8 +263,8 @@ public class MaskedAttributeTests
         var sv = (StructureValue)evt.Properties["Customized"];
         var props = sv.Properties.ToDictionary(p => p.Name, p => p.Value);
 
-        Assert.IsTrue(props.ContainsKey("CustomMasked"));
-        Assert.AreEqual("_REMOVED_", props["CustomMasked"].LiteralValue());
+        props.ContainsKey("CustomMasked").ShouldBeTrue();
+        props["CustomMasked"].LiteralValue().ShouldBe("_REMOVED_");
     }
 
     [Test]
@@ -289,8 +290,8 @@ public class MaskedAttributeTests
         var sv = (StructureValue)evt.Properties["Customized"];
         var props = sv.Properties.ToDictionary(p => p.Name, p => p.Value);
 
-        Assert.IsTrue(props.ContainsKey("CustomMasked"));
-        Assert.AreEqual("", props["CustomMaskedWithEmptyString"].LiteralValue());
+        props.ContainsKey("CustomMasked").ShouldBeTrue();
+        props["CustomMaskedWithEmptyString"].LiteralValue().ShouldBe("");
     }
 
     [Test]
@@ -316,8 +317,8 @@ public class MaskedAttributeTests
         var sv = (StructureValue)evt.Properties["Customized"];
         var props = sv.Properties.ToDictionary(p => p.Name, p => p.Value);
 
-        Assert.IsTrue(props.ContainsKey("CustomMaskedPreservedLength"));
-        Assert.AreEqual("#########", props["CustomMaskedPreservedLength"].LiteralValue());
+        props.ContainsKey("CustomMaskedPreservedLength").ShouldBeTrue();
+        props["CustomMaskedPreservedLength"].LiteralValue().ShouldBe("#########");
     }
 
     [Test]
@@ -343,8 +344,8 @@ public class MaskedAttributeTests
         var sv = (StructureValue)evt.Properties["Customized"];
         var props = sv.Properties.ToDictionary(p => p.Name, p => p.Value);
 
-        Assert.IsTrue(props.ContainsKey("ShowFirstThreeThenCustomMask"));
-        Assert.AreEqual("123_REMOVED_", props["ShowFirstThreeThenCustomMask"].LiteralValue());
+        props.ContainsKey("ShowFirstThreeThenCustomMask").ShouldBeTrue();
+        props["ShowFirstThreeThenCustomMask"].LiteralValue().ShouldBe("123_REMOVED_");
     }
 
     [Test]
@@ -370,8 +371,8 @@ public class MaskedAttributeTests
         var sv = (StructureValue)evt.Properties["Customized"];
         var props = sv.Properties.ToDictionary(p => p.Name, p => p.Value);
 
-        Assert.IsTrue(props.ContainsKey("ShowFirstThreeThenCustomMaskPreservedLengthIgnored"));
-        Assert.AreEqual("123_REMOVED_", props["ShowFirstThreeThenCustomMaskPreservedLengthIgnored"].LiteralValue());
+        props.ContainsKey("ShowFirstThreeThenCustomMaskPreservedLengthIgnored").ShouldBeTrue();
+        props["ShowFirstThreeThenCustomMaskPreservedLengthIgnored"].LiteralValue().ShouldBe("123_REMOVED_");
     }
 
     [Test]
@@ -397,8 +398,8 @@ public class MaskedAttributeTests
         var sv = (StructureValue)evt.Properties["Customized"];
         var props = sv.Properties.ToDictionary(p => p.Name, p => p.Value);
 
-        Assert.IsTrue(props.ContainsKey("ShowFirstAndLastThreeAndDefaultMaskInTheMiddle"));
-        Assert.AreEqual("123***321", props["ShowFirstAndLastThreeAndDefaultMaskInTheMiddle"].LiteralValue());
+        props.ContainsKey("ShowFirstAndLastThreeAndDefaultMaskInTheMiddle").ShouldBeTrue();
+        props["ShowFirstAndLastThreeAndDefaultMaskInTheMiddle"].LiteralValue().ShouldBe("123***321");
     }
 
     [Test]
@@ -424,8 +425,8 @@ public class MaskedAttributeTests
         var sv = (StructureValue)evt.Properties["Customized"];
         var props = sv.Properties.ToDictionary(p => p.Name, p => p.Value);
 
-        Assert.IsTrue(props.ContainsKey("ShowFirstAndLastThreeAndDefaultMaskInTheMiddlePreservedLength"));
-        Assert.AreEqual("123***********321", props["ShowFirstAndLastThreeAndDefaultMaskInTheMiddlePreservedLength"].LiteralValue());
+        props.ContainsKey("ShowFirstAndLastThreeAndDefaultMaskInTheMiddlePreservedLength").ShouldBeTrue();
+        props["ShowFirstAndLastThreeAndDefaultMaskInTheMiddlePreservedLength"].LiteralValue().ShouldBe("123***********321");
     }
 
     [Test]
@@ -451,8 +452,8 @@ public class MaskedAttributeTests
         var sv = (StructureValue)evt.Properties["Customized"];
         var props = sv.Properties.ToDictionary(p => p.Name, p => p.Value);
 
-        Assert.IsTrue(props.ContainsKey("ShowFirstAndLastThreeAndDefaultMaskInTheMiddlePreservedLength"));
-        Assert.AreEqual("123*456", props["ShowFirstAndLastThreeAndDefaultMaskInTheMiddlePreservedLength"].LiteralValue());
+        props.ContainsKey("ShowFirstAndLastThreeAndDefaultMaskInTheMiddlePreservedLength").ShouldBeTrue();
+        props["ShowFirstAndLastThreeAndDefaultMaskInTheMiddlePreservedLength"].LiteralValue().ShouldBe("123*456");
     }
 
     [Test]
@@ -478,8 +479,8 @@ public class MaskedAttributeTests
         var sv = (StructureValue)evt.Properties["Customized"];
         var props = sv.Properties.ToDictionary(p => p.Name, p => p.Value);
 
-        Assert.IsTrue(props.ContainsKey("ShowFirstAndLastThreeAndCustomMaskInTheMiddle"));
-        Assert.AreEqual("123_REMOVED_321", props["ShowFirstAndLastThreeAndCustomMaskInTheMiddle"].LiteralValue());
+        props.ContainsKey("ShowFirstAndLastThreeAndCustomMaskInTheMiddle").ShouldBeTrue();
+        props["ShowFirstAndLastThreeAndCustomMaskInTheMiddle"].LiteralValue().ShouldBe("123_REMOVED_321");
     }
 
     [Test]
@@ -505,8 +506,8 @@ public class MaskedAttributeTests
         var sv = (StructureValue)evt.Properties["Customized"];
         var props = sv.Properties.ToDictionary(p => p.Name, p => p.Value);
 
-        Assert.IsTrue(props.ContainsKey("ShowFirstAndLastThreeAndCustomMaskInTheMiddle"));
-        Assert.AreEqual("123_REMOVED_321", props["ShowFirstAndLastThreeAndCustomMaskInTheMiddle"].LiteralValue());
+        props.ContainsKey("ShowFirstAndLastThreeAndCustomMaskInTheMiddle").ShouldBeTrue();
+        props["ShowFirstAndLastThreeAndCustomMaskInTheMiddle"].LiteralValue().ShouldBe("123_REMOVED_321");
     }
 
     [Test]
@@ -532,8 +533,8 @@ public class MaskedAttributeTests
         var sv = (StructureValue)evt.Properties["Customized"];
         var props = sv.Properties.ToDictionary(p => p.Name, p => p.Value);
 
-        Assert.IsTrue(props.ContainsKey("ShowFirstAndLastThreeAndCustomMaskInTheMiddle"));
-        Assert.AreEqual("12", props["ShowFirstAndLastThreeAndCustomMaskInTheMiddle"].LiteralValue());
+        props.ContainsKey("ShowFirstAndLastThreeAndCustomMaskInTheMiddle").ShouldBeTrue();
+        props["ShowFirstAndLastThreeAndCustomMaskInTheMiddle"].LiteralValue().ShouldBe("12");
     }
 
     [Test]
@@ -559,8 +560,8 @@ public class MaskedAttributeTests
         var sv = (StructureValue)evt.Properties["Customized"];
         var props = sv.Properties.ToDictionary(p => p.Name, p => p.Value);
 
-        Assert.IsTrue(props.ContainsKey("ShowFirstAndLastThreeAndCustomMaskInTheMiddle"));
-        Assert.AreEqual("1234", props["ShowFirstAndLastThreeAndCustomMaskInTheMiddle"].LiteralValue());
+        props.ContainsKey("ShowFirstAndLastThreeAndCustomMaskInTheMiddle").ShouldBeTrue();
+        props["ShowFirstAndLastThreeAndCustomMaskInTheMiddle"].LiteralValue().ShouldBe("1234");
     }
 
     [Test]
@@ -586,8 +587,8 @@ public class MaskedAttributeTests
         var sv = (StructureValue)evt.Properties["Customized"];
         var props = sv.Properties.ToDictionary(p => p.Name, p => p.Value);
 
-        Assert.IsTrue(props.ContainsKey("ShowFirstThreeThenDefaultMasked"));
-        Assert.AreEqual("123***", props["ShowFirstThreeThenDefaultMasked"].LiteralValue());
+        props.ContainsKey("ShowFirstThreeThenDefaultMasked").ShouldBeTrue();
+        props["ShowFirstThreeThenDefaultMasked"].LiteralValue().ShouldBe("123***");
     }
 
     [Test]
@@ -613,8 +614,8 @@ public class MaskedAttributeTests
         var sv = (StructureValue)evt.Properties["Customized"];
         var props = sv.Properties.ToDictionary(p => p.Name, p => p.Value);
 
-        Assert.IsTrue(props.ContainsKey("ShowLastThreeThenCustomMask"));
-        Assert.AreEqual("_REMOVED_789", props["ShowLastThreeThenCustomMask"].LiteralValue());
+        props.ContainsKey("ShowLastThreeThenCustomMask").ShouldBeTrue();
+        props["ShowLastThreeThenCustomMask"].LiteralValue().ShouldBe("_REMOVED_789");
     }
 
     [Test]
@@ -640,8 +641,8 @@ public class MaskedAttributeTests
         var sv = (StructureValue)evt.Properties["Customized"];
         var props = sv.Properties.ToDictionary(p => p.Name, p => p.Value);
 
-        Assert.IsTrue(props.ContainsKey("ShowLastThreeThenCustomMaskPreservedLengthIgnored"));
-        Assert.AreEqual("_REMOVED_789", props["ShowLastThreeThenCustomMaskPreservedLengthIgnored"].LiteralValue());
+        props.ContainsKey("ShowLastThreeThenCustomMaskPreservedLengthIgnored").ShouldBeTrue();
+        props["ShowLastThreeThenCustomMaskPreservedLengthIgnored"].LiteralValue().ShouldBe("_REMOVED_789");
     }
 
     [Test]
@@ -667,8 +668,8 @@ public class MaskedAttributeTests
         var sv = (StructureValue)evt.Properties["Customized"];
         var props = sv.Properties.ToDictionary(p => p.Name, p => p.Value);
 
-        Assert.IsTrue(props.ContainsKey("ShowLastThreeThenDefaultMasked"));
-        Assert.AreEqual("***789", props["ShowLastThreeThenDefaultMasked"].LiteralValue());
+        props.ContainsKey("ShowLastThreeThenDefaultMasked").ShouldBeTrue();
+        props["ShowLastThreeThenDefaultMasked"].LiteralValue().ShouldBe("***789");
     }
 
     [Test]
@@ -694,8 +695,8 @@ public class MaskedAttributeTests
         var sv = (StructureValue)evt.Properties["Customized"];
         var props = sv.Properties.ToDictionary(p => p.Name, p => p.Value);
 
-        Assert.IsTrue(props.ContainsKey("ShowFirstThreeThenDefaultMaskedPreservedLength"));
-        Assert.AreEqual("123******", props["ShowFirstThreeThenDefaultMaskedPreservedLength"].LiteralValue());
+        props.ContainsKey("ShowFirstThreeThenDefaultMaskedPreservedLength").ShouldBeTrue();
+        props["ShowFirstThreeThenDefaultMaskedPreservedLength"].LiteralValue().ShouldBe("123******");
     }
 
     [Test]
@@ -722,8 +723,8 @@ public class MaskedAttributeTests
 
         var props = sv.Properties.ToDictionary(p => p.Name, p => p.Value);
 
-        Assert.IsTrue(props.ContainsKey("ShowFirstThreeThenDefaultMaskedPreservedLength"));
-        Assert.AreEqual("", props["ShowFirstThreeThenDefaultMaskedPreservedLength"].LiteralValue());
+        props.ContainsKey("ShowFirstThreeThenDefaultMaskedPreservedLength").ShouldBeTrue();
+        props["ShowFirstThreeThenDefaultMaskedPreservedLength"].LiteralValue().ShouldBe("");
     }
 
     [Test]
@@ -750,8 +751,8 @@ public class MaskedAttributeTests
 
         var props = sv.Properties.ToDictionary(p => p.Name, p => p.Value);
 
-        Assert.IsTrue(props.ContainsKey("ShowFirstThreeThenDefaultMaskedPreservedLength"));
-        Assert.AreEqual("123", props["ShowFirstThreeThenDefaultMaskedPreservedLength"].LiteralValue());
+        props.ContainsKey("ShowFirstThreeThenDefaultMaskedPreservedLength").ShouldBeTrue();
+        props["ShowFirstThreeThenDefaultMaskedPreservedLength"].LiteralValue().ShouldBe("123");
     }
 
     [Test]
@@ -778,8 +779,8 @@ public class MaskedAttributeTests
 
         var props = sv.Properties.ToDictionary(p => p.Name, p => p.Value);
 
-        Assert.IsTrue(props.ContainsKey("ShowFirstThreeThenDefaultMaskedPreservedLength"));
-        Assert.AreEqual("12", props["ShowFirstThreeThenDefaultMaskedPreservedLength"].LiteralValue());
+        props.ContainsKey("ShowFirstThreeThenDefaultMaskedPreservedLength").ShouldBeTrue();
+        props["ShowFirstThreeThenDefaultMaskedPreservedLength"].LiteralValue().ShouldBe("12");
     }
 
     [Test]
@@ -805,8 +806,8 @@ public class MaskedAttributeTests
         var sv = (StructureValue)evt.Properties["Customized"];
         var props = sv.Properties.ToDictionary(p => p.Name, p => p.Value);
 
-        Assert.IsTrue(props.ContainsKey("ShowLastThreeThenDefaultMaskedPreservedLength"));
-        Assert.AreEqual("******789", props["ShowLastThreeThenDefaultMaskedPreservedLength"].LiteralValue());
+        props.ContainsKey("ShowLastThreeThenDefaultMaskedPreservedLength").ShouldBeTrue();
+        props["ShowLastThreeThenDefaultMaskedPreservedLength"].LiteralValue().ShouldBe("******789");
     }
 
     [Test]
@@ -832,8 +833,8 @@ public class MaskedAttributeTests
         var sv = (StructureValue)evt.Properties["Customized"];
         var props = sv.Properties.ToDictionary(p => p.Name, p => p.Value);
 
-        Assert.IsTrue(props.ContainsKey("ShowLastThreeThenDefaultMaskedPreservedLength"));
-        Assert.AreEqual("123", props["ShowLastThreeThenDefaultMaskedPreservedLength"].LiteralValue());
+        props.ContainsKey("ShowLastThreeThenDefaultMaskedPreservedLength").ShouldBeTrue();
+        props["ShowLastThreeThenDefaultMaskedPreservedLength"].LiteralValue().ShouldBe("123");
     }
 
     [Test]
@@ -859,8 +860,8 @@ public class MaskedAttributeTests
         var sv = (StructureValue)evt.Properties["Customized"];
         var props = sv.Properties.ToDictionary(p => p.Name, p => p.Value);
 
-        Assert.IsTrue(props.ContainsKey("ShowLastThreeThenDefaultMaskedPreservedLength"));
-        Assert.AreEqual("12", props["ShowLastThreeThenDefaultMaskedPreservedLength"].LiteralValue());
+        props.ContainsKey("ShowLastThreeThenDefaultMaskedPreservedLength").ShouldBeTrue();
+        props["ShowLastThreeThenDefaultMaskedPreservedLength"].LiteralValue().ShouldBe("12");
     }
 
     [Test]
@@ -886,7 +887,7 @@ public class MaskedAttributeTests
         var sv = (StructureValue)evt.Properties["Customized"];
         var props = sv.Properties.ToDictionary(p => p.Name, p => p.Value);
 
-        Assert.IsTrue(props.ContainsKey("ShowFirstAndLastThreeAndCustomMaskInTheMiddlePreservedLengthIgnored"));
-        Assert.AreEqual("123_REMOVED_321", props["ShowFirstAndLastThreeAndCustomMaskInTheMiddlePreservedLengthIgnored"].LiteralValue());
+        props.ContainsKey("ShowFirstAndLastThreeAndCustomMaskInTheMiddlePreservedLengthIgnored").ShouldBeTrue();
+        props["ShowFirstAndLastThreeAndCustomMaskInTheMiddlePreservedLengthIgnored"].LiteralValue().ShouldBe("123_REMOVED_321");
     }
 }

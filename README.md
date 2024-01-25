@@ -48,16 +48,14 @@ Apply the `LogWithName` attribute:
 
 <!-- snippet: LogWithName -->
 <a id='snippet-logwithname'></a>
-```csharp
-using Destructurama.Attributed;
-...
+```cs
 public class PersonalData
 {
     [LogWithName("FullName")]
     public string? Name { get; set; }
 }
 ```
-<sup><a href='/test/Destructurama.Attributed.Tests/LogWithNameAttributedTests.cs#L37-L43' title='Snippet source file'>snippet source</a> | <a href='#snippet-logwithname' title='Start of snippet'>anchor</a></sup>
+<sup><a href='/src/Destructurama.Attributed.Tests/LogWithNameAttributedTests.cs#L36-L42' title='Snippet source file'>snippet source</a> | <a href='#snippet-logwithname' title='Start of snippet'>anchor</a></sup>
 <!-- endSnippet -->
 
 ## 2. Ignoring a property
@@ -66,9 +64,7 @@ Apply the `NotLogged` attribute:
 
 <!-- snippet: LoginCommand -->
 <a id='snippet-logincommand'></a>
-```csharp
-using Destructurama.Attributed;
-...
+```cs
 public class LoginCommand
 {
     public string? Username { get; set; }
@@ -77,18 +73,18 @@ public class LoginCommand
     public string? Password { get; set; }
 }
 ```
-<sup><a href='/test/Destructurama.Attributed.Tests/Snippets.cs#L29-L37' title='Snippet source file'>snippet source</a> | <a href='#snippet-logincommand' title='Start of snippet'>anchor</a></sup>
+<sup><a href='/src/Destructurama.Attributed.Tests/Snippets.cs#L29-L37' title='Snippet source file'>snippet source</a> | <a href='#snippet-logincommand' title='Start of snippet'>anchor</a></sup>
 <!-- endSnippet -->
 
 When the object is passed using `{@...}` syntax the attributes will be consulted.
 
 <!-- snippet: LogCommand -->
 <a id='snippet-logcommand'></a>
-```csharp
+```cs
 var command = new LoginCommand { Username = "logged", Password = "not logged" };
-log.Information("Logging in {@Command}", command);
+_log.Information("Logging in {@Command}", command);
 ```
-<sup><a href='/test/Destructurama.Attributed.Tests/Snippets.cs#L44-L47' title='Snippet source file'>snippet source</a> | <a href='#snippet-logcommand' title='Start of snippet'>anchor</a></sup>
+<sup><a href='/src/Destructurama.Attributed.Tests/Snippets.cs#L44-L47' title='Snippet source file'>snippet source</a> | <a href='#snippet-logcommand' title='Start of snippet'>anchor</a></sup>
 <!-- endSnippet -->
 
 ## 3. Ignoring a property if it has default value
@@ -164,9 +160,7 @@ Note that masking also works for properties of type `IEnumerable<string>` or der
 
 <!-- snippet: CustomizedMaskedLogs -->
 <a id='snippet-customizedmaskedlogs'></a>
-```csharp
-using Destructurama.Attributed;
-...
+```cs
 public class CustomizedMaskedLogs
 {
     /// <summary>
@@ -284,7 +278,7 @@ public class CustomizedMaskedLogs
     public string? ShowFirstAndLastThreeAndCustomMaskInTheMiddlePreservedLengthIgnored { get; set; }
 }
 ```
-<sup><a href='/test/Destructurama.Attributed.Tests/MaskedAttributeTests.cs#L10-L129' title='Snippet source file'>snippet source</a> | <a href='#snippet-customizedmaskedlogs' title='Start of snippet'>anchor</a></sup>
+<sup><a href='/src/Destructurama.Attributed.Tests/MaskedAttributeTests.cs#L9-L128' title='Snippet source file'>snippet source</a> | <a href='#snippet-customizedmaskedlogs' title='Start of snippet'>anchor</a></sup>
 <!-- endSnippet -->
 
 ## 7. Masking a string property with regular expressions
@@ -319,7 +313,7 @@ __Available properties__:
 
 <!-- snippet: WithRegex -->
 <a id='snippet-withregex'></a>
-```csharp
+```cs
 public class WithRegex
 {
     private const string REGEX_WITH_VERTICAL_BARS = @"([a-zA-Z0-9]+)\|([a-zA-Z0-9]+)\|([a-zA-Z0-9]+)";
@@ -337,5 +331,9 @@ public class WithRegex
     public string? RegexReplaceSecond { get; set; }
 }
 ```
-<sup><a href='/test/Destructurama.Attributed.Tests/Snippets.cs#L6-L25' title='Snippet source file'>snippet source</a> | <a href='#snippet-withregex' title='Start of snippet'>anchor</a></sup>
+<sup><a href='/src/Destructurama.Attributed.Tests/Snippets.cs#L6-L25' title='Snippet source file'>snippet source</a> | <a href='#snippet-withregex' title='Start of snippet'>anchor</a></sup>
 <!-- endSnippet -->
+
+# Benchmarks
+
+The results are available [here](https://destructurama.github.io/attributed/dev/bench/).
