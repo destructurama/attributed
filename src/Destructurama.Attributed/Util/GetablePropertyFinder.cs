@@ -22,14 +22,11 @@ internal static class GetablePropertyFinder
     {
         var seenNames = new HashSet<string>();
 
-        var currentTypeInfo = type.GetTypeInfo();
-
-        while (currentTypeInfo.AsType() != typeof(object))
+        while (type != typeof(object))
         {
-            var unseenProperties = currentTypeInfo.DeclaredProperties
+            var unseenProperties = type.GetProperties(BindingFlags.Public | BindingFlags.Instance | BindingFlags.DeclaredOnly)
                 .Where(p => p.CanRead &&
                             p.GetMethod.IsPublic &&
-                            !p.GetMethod.IsStatic &&
                             (p.Name != "Item" || p.GetIndexParameters().Length == 0) &&
                             !seenNames.Contains(p.Name));
 
@@ -39,7 +36,7 @@ internal static class GetablePropertyFinder
                 yield return propertyInfo;
             }
 
-            currentTypeInfo = currentTypeInfo.BaseType.GetTypeInfo();
+            type = type.BaseType;
         }
     }
 }

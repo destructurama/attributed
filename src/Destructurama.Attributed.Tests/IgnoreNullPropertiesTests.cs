@@ -303,7 +303,6 @@ public class IgnoreNullPropertiesTests
             .WriteTo.Sink(new DelegatingSink(e => evt = e))
             .CreateLogger();
 
-        var dateTime = new DateTime(2000, 1, 2, 3, 4, 5);
         var customized = new AttributedWithMask
         {
             String = "Foo[Masked]",
