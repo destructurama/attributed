@@ -1,6 +1,5 @@
 using Destructurama.Attributed.Tests.Support;
 using NUnit.Framework;
-using Serilog;
 using Serilog.Events;
 using Shouldly;
 
@@ -13,16 +12,7 @@ public class AttributedDestructuringTests
     public void Throwing_Accessor_Should_Be_Handled()
     {
         // Setup
-        LogEvent evt = null!;
-
-        var log = new LoggerConfiguration()
-            .Destructure.UsingAttributes()
-            .WriteTo.Sink(new DelegatingSink(e => evt = e))
-            .CreateLogger();
-        var obj = new ClassWithThrowingAccessor();
-
-        // Execute
-        log.Information("Here is {@Customized}", obj);
+        var evt = DelegatingSink.Execute(new ClassWithThrowingAccessor());
 
         // Verify
         var sv = (StructureValue)evt.Properties["Customized"];
@@ -34,13 +24,6 @@ public class AttributedDestructuringTests
     [Test]
     public void AttributesAreConsultedWhenDestructuring()
     {
-        LogEvent evt = null!;
-
-        var log = new LoggerConfiguration()
-            .Destructure.UsingAttributes()
-            .WriteTo.Sink(new DelegatingSink(e => evt = e))
-            .CreateLogger();
-
         var customized = new Customized
         {
             ImmutableScalar = new(),
@@ -55,7 +38,7 @@ public class AttributedDestructuringTests
             }
         };
 
-        log.Information("Here is {@Customized}", customized);
+        var evt = DelegatingSink.Execute(customized);
 
         var sv = (StructureValue)evt.Properties["Customized"];
         var props = sv.Properties.ToDictionary(p => p.Name, p => p.Value);
