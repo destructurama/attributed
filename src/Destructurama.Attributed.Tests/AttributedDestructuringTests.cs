@@ -1,6 +1,5 @@
 using Destructurama.Attributed.Tests.Support;
 using NUnit.Framework;
-using Serilog;
 using Serilog.Events;
 using Shouldly;
 
@@ -12,19 +11,10 @@ public class AttributedDestructuringTests
     [Test]
     public void Throwing_Accessor_Should_Be_Handled()
     {
-        // Setup
-        LogEvent evt = null!;
+        var customized = new ClassWithThrowingAccessor();
 
-        var log = new LoggerConfiguration()
-            .Destructure.UsingAttributes()
-            .WriteTo.Sink(new DelegatingSink(e => evt = e))
-            .CreateLogger();
-        var obj = new ClassWithThrowingAccessor();
+        var evt = DelegatingSink.Execute(customized);
 
-        // Execute
-        log.Information("Here is {@Customized}", obj);
-
-        // Verify
         var sv = (StructureValue)evt.Properties["Customized"];
         sv.Properties.Count.ShouldBe(1);
         sv.Properties[0].Name.ShouldBe("BadProperty");
@@ -32,15 +22,41 @@ public class AttributedDestructuringTests
     }
 
     [Test]
+    public void Only_Settable_Accessor_Should_Be_Handled()
+    {
+        var customized = new ClassWithOnlySetters();
+
+        var evt = DelegatingSink.Execute(customized);
+
+        var sv = (StructureValue)evt.Properties["Customized"];
+        sv.Properties.Count.ShouldBe(0);
+    }
+
+    [Test]
+    public void Private_Property_Should_Be_Handled()
+    {
+        var customized = new ClassWithPrivateProperty();
+
+        var evt = DelegatingSink.Execute(customized);
+
+        var sv = (StructureValue)evt.Properties["Customized"];
+        sv.Properties.Count.ShouldBe(0);
+    }
+
+    [Test]
+    public void Indexer_Should_Be_Handled()
+    {
+        var customized = new ClassWithIndexer();
+
+        var evt = DelegatingSink.Execute(customized);
+
+        var sv = (StructureValue)evt.Properties["Customized"];
+        sv.Properties.Count.ShouldBe(0);
+    }
+
+    [Test]
     public void AttributesAreConsultedWhenDestructuring()
     {
-        LogEvent evt = null!;
-
-        var log = new LoggerConfiguration()
-            .Destructure.UsingAttributes()
-            .WriteTo.Sink(new DelegatingSink(e => evt = e))
-            .CreateLogger();
-
         var customized = new Customized
         {
             ImmutableScalar = new(),
@@ -55,7 +71,7 @@ public class AttributedDestructuringTests
             }
         };
 
-        log.Information("Here is {@Customized}", customized);
+        var evt = DelegatingSink.Execute(customized);
 
         var sv = (StructureValue)evt.Properties["Customized"];
         var props = sv.Properties.ToDictionary(p => p.Name, p => p.Value);
@@ -77,6 +93,31 @@ public class AttributedDestructuringTests
     {
         [LogMasked]
         public string? BadProperty => throw new FormatException("oops");
+    }
+
+    public class ClassWithOnlySetters
+    {
+        [LogMasked]
+        public string? Name { set { } }
+
+        [LogAsScalar]
+        public Struct1 Struct1 { set { } }
+    }
+
+    public class ClassWithPrivateProperty
+    {
+        [LogMasked]
+        private string? Name { get; set; } = "Tom";
+    }
+
+    public class ClassWithIndexer
+    {
+        [LogMasked]
+        public string? this[int index]
+        {
+            get => "Tom";
+            set { }
+        }
     }
 
     [LogAsScalar]

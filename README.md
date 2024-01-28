@@ -55,7 +55,7 @@ public class PersonalData
     public string? Name { get; set; }
 }
 ```
-<sup><a href='/src/Destructurama.Attributed.Tests/LogWithNameAttributedTests.cs#L36-L42' title='Snippet source file'>snippet source</a> | <a href='#snippet-logwithname' title='Start of snippet'>anchor</a></sup>
+<sup><a href='/src/Destructurama.Attributed.Tests/LogWithNameAttributeTests.cs#L28-L34' title='Snippet source file'>snippet source</a> | <a href='#snippet-logwithname' title='Start of snippet'>anchor</a></sup>
 <!-- endSnippet -->
 
 ## 2. Ignoring a property
@@ -278,7 +278,7 @@ public class CustomizedMaskedLogs
     public string? ShowFirstAndLastThreeAndCustomMaskInTheMiddlePreservedLengthIgnored { get; set; }
 }
 ```
-<sup><a href='/src/Destructurama.Attributed.Tests/MaskedAttributeTests.cs#L9-L128' title='Snippet source file'>snippet source</a> | <a href='#snippet-customizedmaskedlogs' title='Start of snippet'>anchor</a></sup>
+<sup><a href='/src/Destructurama.Attributed.Tests/MaskedAttributeTests.cs#L8-L127' title='Snippet source file'>snippet source</a> | <a href='#snippet-customizedmaskedlogs' title='Start of snippet'>anchor</a></sup>
 <!-- endSnippet -->
 
 ## 7. Masking a string property with regular expressions
