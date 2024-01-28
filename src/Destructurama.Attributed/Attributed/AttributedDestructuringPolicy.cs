@@ -47,13 +47,32 @@ internal class AttributedDestructuringPolicy : IDestructuringPolicy
         return cached.CanDestructure;
     }
 
+    private static IEnumerable<PropertyInfo> GetPropertiesRecursive(Type type)
+    {
+        var seenNames = new HashSet<string>();
+
+        while (type != typeof(object))
+        {
+            var unseenProperties = type.GetProperties(BindingFlags.Public | BindingFlags.Instance | BindingFlags.DeclaredOnly)
+                .Where(p => p.CanRead && p.GetMethod.IsPublic && p.GetIndexParameters().Length == 0 && !seenNames.Contains(p.Name));
+
+            foreach (var propertyInfo in unseenProperties)
+            {
+                seenNames.Add(propertyInfo.Name);
+                yield return propertyInfo;
+            }
+
+            type = type.BaseType;
+        }
+    }
+
     private CacheEntry CreateCacheEntry(Type type)
     {
         var classDestructurer = type.GetCustomAttribute<ITypeDestructuringAttribute>();
         if (classDestructurer != null)
             return new(classDestructurer.CreateLogEventPropertyValue);
 
-        var properties = type.GetPropertiesRecursive().ToList();
+        var properties = GetPropertiesRecursive(type).ToList();
         if (!_options.IgnoreNullProperties && properties.All(pi =>
             pi.GetCustomAttribute<IPropertyDestructuringAttribute>() == null
             && pi.GetCustomAttribute<IPropertyOptionalIgnoreAttribute>() == null))
