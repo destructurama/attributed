@@ -1,6 +1,5 @@
 using Destructurama.Attributed.Tests.Support;
 using NUnit.Framework;
-using Serilog;
 using Serilog.Events;
 using Shouldly;
 
@@ -135,20 +134,12 @@ public class MaskedAttributeTests
     {
         // [LogMasked]
         // 123456789 -> "***"
-
-        LogEvent evt = null!;
-
-        var log = new LoggerConfiguration()
-            .Destructure.UsingAttributes()
-            .WriteTo.Sink(new DelegatingSink(e => evt = e))
-            .CreateLogger();
-
         var customized = new CustomizedMaskedLogs
         {
             DefaultMasked = "123456789"
         };
 
-        log.Information("Here is {@Customized}", customized);
+        var evt = DelegatingSink.Execute(customized);
 
         var sv = (StructureValue)evt.Properties["Customized"];
         var props = sv.Properties.ToDictionary(p => p.Name, p => p.Value);
@@ -162,20 +153,12 @@ public class MaskedAttributeTests
     {
         // [LogMasked]
         // [123456789,123456789,123456789] results in [***,***,***]
-
-        LogEvent evt = null!;
-
-        var log = new LoggerConfiguration()
-            .Destructure.UsingAttributes()
-            .WriteTo.Sink(new DelegatingSink(e => evt = e))
-            .CreateLogger();
-
         var customized = new CustomizedMaskedLogs
         {
             DefaultMaskedArray = ["123456789", "123456789", "123456789"]
         };
 
-        log.Information("Here is {@Customized}", customized);
+        var evt = DelegatingSink.Execute(customized);
 
         var sv = (StructureValue)evt.Properties["Customized"];
         var props = sv.Properties.ToDictionary(p => p.Name, p => p.Value);
@@ -191,20 +174,12 @@ public class MaskedAttributeTests
     {
         // [LogMasked]
         // 123456789 -> "*********"
-
-        LogEvent evt = null!;
-
-        var log = new LoggerConfiguration()
-            .Destructure.UsingAttributes()
-            .WriteTo.Sink(new DelegatingSink(e => evt = e))
-            .CreateLogger();
-
         var customized = new CustomizedMaskedLogs
         {
             DefaultMaskedPreserved = "123456789"
         };
 
-        log.Information("Here is {@Customized}", customized);
+        var evt = DelegatingSink.Execute(customized);
 
         var sv = (StructureValue)evt.Properties["Customized"];
         var props = sv.Properties.ToDictionary(p => p.Name, p => p.Value);
@@ -218,20 +193,12 @@ public class MaskedAttributeTests
     {
         // [LogMasked]
         // "" -> "***"
-
-        LogEvent evt = null!;
-
-        var log = new LoggerConfiguration()
-            .Destructure.UsingAttributes()
-            .WriteTo.Sink(new DelegatingSink(e => evt = e))
-            .CreateLogger();
-
         var customized = new CustomizedMaskedLogs
         {
             DefaultMaskedNotPreservedOnEmptyString = ""
         };
 
-        log.Information("Here is {@Customized}", customized);
+        var evt = DelegatingSink.Execute(customized);
 
         var sv = (StructureValue)evt.Properties["Customized"];
         var props = sv.Properties.ToDictionary(p => p.Name, p => p.Value);
@@ -245,20 +212,12 @@ public class MaskedAttributeTests
     {
         //  [LogMasked(Text = "#")]
         //   123456789 -> "_REMOVED_"
-
-        LogEvent evt = null!;
-
-        var log = new LoggerConfiguration()
-            .Destructure.UsingAttributes()
-            .WriteTo.Sink(new DelegatingSink(e => evt = e))
-            .CreateLogger();
-
         var customized = new CustomizedMaskedLogs
         {
             CustomMasked = "123456789"
         };
 
-        log.Information("Here is {@Customized}", customized);
+        var evt = DelegatingSink.Execute(customized);
 
         var sv = (StructureValue)evt.Properties["Customized"];
         var props = sv.Properties.ToDictionary(p => p.Name, p => p.Value);
@@ -272,20 +231,12 @@ public class MaskedAttributeTests
     {
         //  [LogMasked(Text = "#")]
         //   123456789 -> "_REMOVED_"
-
-        LogEvent evt = null!;
-
-        var log = new LoggerConfiguration()
-            .Destructure.UsingAttributes()
-            .WriteTo.Sink(new DelegatingSink(e => evt = e))
-            .CreateLogger();
-
         var customized = new CustomizedMaskedLogs
         {
             CustomMaskedWithEmptyString = "123456789"
         };
 
-        log.Information("Here is {@Customized}", customized);
+        var evt = DelegatingSink.Execute(customized);
 
         var sv = (StructureValue)evt.Properties["Customized"];
         var props = sv.Properties.ToDictionary(p => p.Name, p => p.Value);
@@ -299,20 +250,12 @@ public class MaskedAttributeTests
     {
         //  [LogMasked(Text = "#")]
         //   123456789 -> "#########"
-
-        LogEvent evt = null!;
-
-        var log = new LoggerConfiguration()
-            .Destructure.UsingAttributes()
-            .WriteTo.Sink(new DelegatingSink(e => evt = e))
-            .CreateLogger();
-
         var customized = new CustomizedMaskedLogs
         {
             CustomMaskedPreservedLength = "123456789"
         };
 
-        log.Information("Here is {@Customized}", customized);
+        var evt = DelegatingSink.Execute(customized);
 
         var sv = (StructureValue)evt.Properties["Customized"];
         var props = sv.Properties.ToDictionary(p => p.Name, p => p.Value);
@@ -326,20 +269,12 @@ public class MaskedAttributeTests
     {
         // [LogMasked(Text = "REMOVED", ShowFirst = 3)]
         // -> "123_REMOVED_"
-
-        LogEvent evt = null!;
-
-        var log = new LoggerConfiguration()
-            .Destructure.UsingAttributes()
-            .WriteTo.Sink(new DelegatingSink(e => evt = e))
-            .CreateLogger();
-
         var customized = new CustomizedMaskedLogs
         {
             ShowFirstThreeThenCustomMask = "123456789"
         };
 
-        log.Information("Here is {@Customized}", customized);
+        var evt = DelegatingSink.Execute(customized);
 
         var sv = (StructureValue)evt.Properties["Customized"];
         var props = sv.Properties.ToDictionary(p => p.Name, p => p.Value);
@@ -353,20 +288,12 @@ public class MaskedAttributeTests
     {
         // [LogMasked(Text = "REMOVED", ShowFirst = 3,PreserveLength = true)]
         // -> "123_REMOVED_"
-
-        LogEvent evt = null!;
-
-        var log = new LoggerConfiguration()
-            .Destructure.UsingAttributes()
-            .WriteTo.Sink(new DelegatingSink(e => evt = e))
-            .CreateLogger();
-
         var customized = new CustomizedMaskedLogs
         {
             ShowFirstThreeThenCustomMaskPreservedLengthIgnored = "123456789"
         };
 
-        log.Information("Here is {@Customized}", customized);
+        var evt = DelegatingSink.Execute(customized);
 
         var sv = (StructureValue)evt.Properties["Customized"];
         var props = sv.Properties.ToDictionary(p => p.Name, p => p.Value);
@@ -380,20 +307,12 @@ public class MaskedAttributeTests
     {
         // [LogMasked(ShowFirst = 3, ShowLast = 3)]
         // -> "123***321"
-
-        LogEvent evt = null!;
-
-        var log = new LoggerConfiguration()
-            .Destructure.UsingAttributes()
-            .WriteTo.Sink(new DelegatingSink(e => evt = e))
-            .CreateLogger();
-
         var customized = new CustomizedMaskedLogs
         {
             ShowFirstAndLastThreeAndDefaultMaskInTheMiddle = "12345678987654321"
         };
 
-        log.Information("Here is {@Customized}", customized);
+        var evt = DelegatingSink.Execute(customized);
 
         var sv = (StructureValue)evt.Properties["Customized"];
         var props = sv.Properties.ToDictionary(p => p.Name, p => p.Value);
@@ -407,20 +326,12 @@ public class MaskedAttributeTests
     {
         // [LogMasked(ShowFirst = 3, ShowLast = 3)]
         // -> "123***********321"
-
-        LogEvent evt = null!;
-
-        var log = new LoggerConfiguration()
-            .Destructure.UsingAttributes()
-            .WriteTo.Sink(new DelegatingSink(e => evt = e))
-            .CreateLogger();
-
         var customized = new CustomizedMaskedLogs
         {
             ShowFirstAndLastThreeAndDefaultMaskInTheMiddlePreservedLength = "12345678987654321"
         };
 
-        log.Information("Here is {@Customized}", customized);
+        var evt = DelegatingSink.Execute(customized);
 
         var sv = (StructureValue)evt.Properties["Customized"];
         var props = sv.Properties.ToDictionary(p => p.Name, p => p.Value);
@@ -434,20 +345,12 @@ public class MaskedAttributeTests
     {
         // [LogMasked(ShowFirst = 3, ShowLast = 3)]
         // -> "123*456"
-
-        LogEvent evt = null!;
-
-        var log = new LoggerConfiguration()
-            .Destructure.UsingAttributes()
-            .WriteTo.Sink(new DelegatingSink(e => evt = e))
-            .CreateLogger();
-
         var customized = new CustomizedMaskedLogs
         {
             ShowFirstAndLastThreeAndDefaultMaskInTheMiddlePreservedLength = "123x456"
         };
 
-        log.Information("Here is {@Customized}", customized);
+        var evt = DelegatingSink.Execute(customized);
 
         var sv = (StructureValue)evt.Properties["Customized"];
         var props = sv.Properties.ToDictionary(p => p.Name, p => p.Value);
@@ -461,20 +364,12 @@ public class MaskedAttributeTests
     {
         // [LogMasked(Text = "REMOVED", ShowFirst = 3, ShowLast = 3)]
         // 12345678987654321 -> 123_REMOVED_321
-
-        LogEvent evt = null!;
-
-        var log = new LoggerConfiguration()
-            .Destructure.UsingAttributes()
-            .WriteTo.Sink(new DelegatingSink(e => evt = e))
-            .CreateLogger();
-
         var customized = new CustomizedMaskedLogs
         {
             ShowFirstAndLastThreeAndCustomMaskInTheMiddle = "12345678987654321"
         };
 
-        log.Information("Here is {@Customized}", customized);
+        var evt = DelegatingSink.Execute(customized);
 
         var sv = (StructureValue)evt.Properties["Customized"];
         var props = sv.Properties.ToDictionary(p => p.Name, p => p.Value);
@@ -488,20 +383,12 @@ public class MaskedAttributeTests
     {
         // [LogMasked(Text = "#", ShowFirst = 3, ShowLast = 3)]
         // 12345678987654321 -> "123_REMOVED_321"
-
-        LogEvent evt = null!;
-
-        var log = new LoggerConfiguration()
-            .Destructure.UsingAttributes()
-            .WriteTo.Sink(new DelegatingSink(e => evt = e))
-            .CreateLogger();
-
         var customized = new CustomizedMaskedLogs
         {
             ShowFirstAndLastThreeAndCustomMaskInTheMiddle = "12345678987654321"
         };
 
-        log.Information("Here is {@Customized}", customized);
+        var evt = DelegatingSink.Execute(customized);
 
         var sv = (StructureValue)evt.Properties["Customized"];
         var props = sv.Properties.ToDictionary(p => p.Name, p => p.Value);
@@ -515,20 +402,12 @@ public class MaskedAttributeTests
     {
         // [LogMasked(Text = "#", ShowFirst = 3, ShowLast = 3)]
         // 12 -> "12"
-
-        LogEvent evt = null!;
-
-        var log = new LoggerConfiguration()
-            .Destructure.UsingAttributes()
-            .WriteTo.Sink(new DelegatingSink(e => evt = e))
-            .CreateLogger();
-
         var customized = new CustomizedMaskedLogs
         {
             ShowFirstAndLastThreeAndCustomMaskInTheMiddle = "12"
         };
 
-        log.Information("Here is {@Customized}", customized);
+        var evt = DelegatingSink.Execute(customized);
 
         var sv = (StructureValue)evt.Properties["Customized"];
         var props = sv.Properties.ToDictionary(p => p.Name, p => p.Value);
@@ -542,20 +421,12 @@ public class MaskedAttributeTests
     {
         // [LogMasked(Text = "#", ShowFirst = 3, ShowLast = 3)]
         // 1234 -> "1234"
-
-        LogEvent evt = null!;
-
-        var log = new LoggerConfiguration()
-            .Destructure.UsingAttributes()
-            .WriteTo.Sink(new DelegatingSink(e => evt = e))
-            .CreateLogger();
-
         var customized = new CustomizedMaskedLogs
         {
             ShowFirstAndLastThreeAndCustomMaskInTheMiddle = "1234"
         };
 
-        log.Information("Here is {@Customized}", customized);
+        var evt = DelegatingSink.Execute(customized);
 
         var sv = (StructureValue)evt.Properties["Customized"];
         var props = sv.Properties.ToDictionary(p => p.Name, p => p.Value);
@@ -569,20 +440,12 @@ public class MaskedAttributeTests
     {
         //  [LogMasked(ShowLast = 3)]
         //  123456789 -> "123***"
-
-        LogEvent evt = null!;
-
-        var log = new LoggerConfiguration()
-            .Destructure.UsingAttributes()
-            .WriteTo.Sink(new DelegatingSink(e => evt = e))
-            .CreateLogger();
-
         var customized = new CustomizedMaskedLogs
         {
             ShowFirstThreeThenDefaultMasked = "123456789"
         };
 
-        log.Information("Here is {@Customized}", customized);
+        var evt = DelegatingSink.Execute(customized);
 
         var sv = (StructureValue)evt.Properties["Customized"];
         var props = sv.Properties.ToDictionary(p => p.Name, p => p.Value);
@@ -596,20 +459,12 @@ public class MaskedAttributeTests
     {
         //  [LogMasked(Text = "_REMOVED_", ShowLast = 3)]
         //  123456789 -> "_REMOVED_789"
-
-        LogEvent evt = null!;
-
-        var log = new LoggerConfiguration()
-            .Destructure.UsingAttributes()
-            .WriteTo.Sink(new DelegatingSink(e => evt = e))
-            .CreateLogger();
-
         var customized = new CustomizedMaskedLogs
         {
             ShowLastThreeThenCustomMask = "123456789"
         };
 
-        log.Information("Here is {@Customized}", customized);
+        var evt = DelegatingSink.Execute(customized);
 
         var sv = (StructureValue)evt.Properties["Customized"];
         var props = sv.Properties.ToDictionary(p => p.Name, p => p.Value);
@@ -623,20 +478,12 @@ public class MaskedAttributeTests
     {
         //  [LogMasked(Text = "_REMOVED_", ShowLast = 3, PreserveLength = true)]
         //  123456789 -> "_REMOVED_789"
-
-        LogEvent evt = null!;
-
-        var log = new LoggerConfiguration()
-            .Destructure.UsingAttributes()
-            .WriteTo.Sink(new DelegatingSink(e => evt = e))
-            .CreateLogger();
-
         var customized = new CustomizedMaskedLogs
         {
             ShowLastThreeThenCustomMaskPreservedLengthIgnored = "123456789"
         };
 
-        log.Information("Here is {@Customized}", customized);
+        var evt = DelegatingSink.Execute(customized);
 
         var sv = (StructureValue)evt.Properties["Customized"];
         var props = sv.Properties.ToDictionary(p => p.Name, p => p.Value);
@@ -650,20 +497,12 @@ public class MaskedAttributeTests
     {
         //  [LogMasked(ShowLast = 3)]
         //  123456789 -> "***789"
-
-        LogEvent evt = null!;
-
-        var log = new LoggerConfiguration()
-            .Destructure.UsingAttributes()
-            .WriteTo.Sink(new DelegatingSink(e => evt = e))
-            .CreateLogger();
-
         var customized = new CustomizedMaskedLogs
         {
             ShowLastThreeThenDefaultMasked = "123456789"
         };
 
-        log.Information("Here is {@Customized}", customized);
+        var evt = DelegatingSink.Execute(customized);
 
         var sv = (StructureValue)evt.Properties["Customized"];
         var props = sv.Properties.ToDictionary(p => p.Name, p => p.Value);
@@ -677,20 +516,12 @@ public class MaskedAttributeTests
     {
         //  [LogMasked(ShowFirst = 3,PreserveLength = true))]
         // -> "123******"
-
-        LogEvent evt = null!;
-
-        var log = new LoggerConfiguration()
-            .Destructure.UsingAttributes()
-            .WriteTo.Sink(new DelegatingSink(e => evt = e))
-            .CreateLogger();
-
         var customized = new CustomizedMaskedLogs
         {
             ShowFirstThreeThenDefaultMaskedPreservedLength = "123456789"
         };
 
-        log.Information("Here is {@Customized}", customized);
+        var evt = DelegatingSink.Execute(customized);
 
         var sv = (StructureValue)evt.Properties["Customized"];
         var props = sv.Properties.ToDictionary(p => p.Name, p => p.Value);
@@ -704,20 +535,12 @@ public class MaskedAttributeTests
     {
         //  [LogMasked(ShowFirst = 3,PreserveLength = true))]
         // -> ""
-
-        LogEvent evt = null!;
-
-        var log = new LoggerConfiguration()
-            .Destructure.UsingAttributes()
-            .WriteTo.Sink(new DelegatingSink(e => evt = e))
-            .CreateLogger();
-
         var customized = new CustomizedMaskedLogs
         {
             ShowFirstThreeThenDefaultMaskedPreservedLength = ""
         };
 
-        log.Information("Here is {@Customized}", customized);
+        var evt = DelegatingSink.Execute(customized);
 
         var sv = (StructureValue)evt.Properties["Customized"];
 
@@ -732,20 +555,12 @@ public class MaskedAttributeTests
     {
         //  [LogMasked(ShowFirst = 3,PreserveLength = true))]
         // -> "123"
-
-        LogEvent evt = null!;
-
-        var log = new LoggerConfiguration()
-            .Destructure.UsingAttributes()
-            .WriteTo.Sink(new DelegatingSink(e => evt = e))
-            .CreateLogger();
-
         var customized = new CustomizedMaskedLogs
         {
             ShowFirstThreeThenDefaultMaskedPreservedLength = "123"
         };
 
-        log.Information("Here is {@Customized}", customized);
+        var evt = DelegatingSink.Execute(customized);
 
         var sv = (StructureValue)evt.Properties["Customized"];
 
@@ -760,20 +575,12 @@ public class MaskedAttributeTests
     {
         //  [LogMasked(ShowFirst = 3,PreserveLength = true))]
         // -> "12"
-
-        LogEvent evt = null!;
-
-        var log = new LoggerConfiguration()
-            .Destructure.UsingAttributes()
-            .WriteTo.Sink(new DelegatingSink(e => evt = e))
-            .CreateLogger();
-
         var customized = new CustomizedMaskedLogs
         {
             ShowFirstThreeThenDefaultMaskedPreservedLength = "12"
         };
 
-        log.Information("Here is {@Customized}", customized);
+        var evt = DelegatingSink.Execute(customized);
 
         var sv = (StructureValue)evt.Properties["Customized"];
 
@@ -788,20 +595,12 @@ public class MaskedAttributeTests
     {
         //  [LogMasked(ShowLast = 3,PreserveLength = true))]
         // -> "******789"
-
-        LogEvent evt = null!;
-
-        var log = new LoggerConfiguration()
-            .Destructure.UsingAttributes()
-            .WriteTo.Sink(new DelegatingSink(e => evt = e))
-            .CreateLogger();
-
         var customized = new CustomizedMaskedLogs
         {
             ShowLastThreeThenDefaultMaskedPreservedLength = "123456789"
         };
 
-        log.Information("Here is {@Customized}", customized);
+        var evt = DelegatingSink.Execute(customized);
 
         var sv = (StructureValue)evt.Properties["Customized"];
         var props = sv.Properties.ToDictionary(p => p.Name, p => p.Value);
@@ -815,20 +614,12 @@ public class MaskedAttributeTests
     {
         //  [LogMasked(ShowLast = 3,PreserveLength = true))]
         // -> "123"
-
-        LogEvent evt = null!;
-
-        var log = new LoggerConfiguration()
-            .Destructure.UsingAttributes()
-            .WriteTo.Sink(new DelegatingSink(e => evt = e))
-            .CreateLogger();
-
         var customized = new CustomizedMaskedLogs
         {
             ShowLastThreeThenDefaultMaskedPreservedLength = "123"
         };
 
-        log.Information("Here is {@Customized}", customized);
+        var evt = DelegatingSink.Execute(customized);
 
         var sv = (StructureValue)evt.Properties["Customized"];
         var props = sv.Properties.ToDictionary(p => p.Name, p => p.Value);
@@ -842,20 +633,12 @@ public class MaskedAttributeTests
     {
         //  [LogMasked(ShowLast = 3,PreserveLength = true))]
         // -> "12"
-
-        LogEvent evt = null!;
-
-        var log = new LoggerConfiguration()
-            .Destructure.UsingAttributes()
-            .WriteTo.Sink(new DelegatingSink(e => evt = e))
-            .CreateLogger();
-
         var customized = new CustomizedMaskedLogs
         {
             ShowLastThreeThenDefaultMaskedPreservedLength = "12"
         };
 
-        log.Information("Here is {@Customized}", customized);
+        var evt = DelegatingSink.Execute(customized);
 
         var sv = (StructureValue)evt.Properties["Customized"];
         var props = sv.Properties.ToDictionary(p => p.Name, p => p.Value);
@@ -869,20 +652,12 @@ public class MaskedAttributeTests
     {
         // [LogMasked(Text = "REMOVED", ShowFirst = 3, ShowLast = 3, PreserveLength = true)]
         // 12345678987654321 -> 123_REMOVED_321
-
-        LogEvent evt = null!;
-
-        var log = new LoggerConfiguration()
-            .Destructure.UsingAttributes()
-            .WriteTo.Sink(new DelegatingSink(e => evt = e))
-            .CreateLogger();
-
         var customized = new CustomizedMaskedLogs
         {
             ShowFirstAndLastThreeAndCustomMaskInTheMiddlePreservedLengthIgnored = "12345678987654321"
         };
 
-        log.Information("Here is {@Customized}", customized);
+        var evt = DelegatingSink.Execute(customized);
 
         var sv = (StructureValue)evt.Properties["Customized"];
         var props = sv.Properties.ToDictionary(p => p.Name, p => p.Value);
