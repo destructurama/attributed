@@ -11,8 +11,9 @@ public class AttributedDestructuringTests
     [Test]
     public void Throwing_Accessor_Should_Be_Handled()
     {
-        // Setup
-        var evt = DelegatingSink.Execute(new ClassWithThrowingAccessor());
+        var customized = new ClassWithThrowingAccessor();
+
+        var evt = DelegatingSink.Execute(customized);
 
         // Verify
         var sv = (StructureValue)evt.Properties["Customized"];

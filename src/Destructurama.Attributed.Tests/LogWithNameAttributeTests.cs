@@ -11,12 +11,12 @@ public class LogWithNameAttributeTests
     [Test]
     public void AttributesAreConsultedWhenDestructuring()
     {
-        var personalData = new PersonalData
+        var customized = new PersonalData
         {
             Name = "John Doe"
         };
 
-        var evt = DelegatingSink.Execute(personalData);
+        var evt = DelegatingSink.Execute(customized);
 
         var sv = (StructureValue)evt.Properties["Customized"];
         var props = sv.Properties.ToDictionary(p => p.Name, p => p.Value);
