@@ -342,7 +342,7 @@ public class IgnoreNullPropertiesTests
     {
         var customized = new NotLoggedIfNullAttributed();
 
-        var evt = DelegatingSink.Execute(customized, configure: x => x.IgnoreNullProperties = true);
+        var evt = DelegatingSink.Execute(customized, configure: x => x.IgnoreNullProperties = false);
 
         var sv = (StructureValue)evt!.Properties["Customized"];
         var props = sv.Properties.ToDictionary(p => p.Name, p => p.Value);
