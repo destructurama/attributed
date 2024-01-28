@@ -8,12 +8,13 @@ namespace Destructurama.Attributed.Tests;
 [TestFixture]
 public class LogWithNameAttributeTests
 {
-    [Test]
-    public void AttributesAreConsultedWhenDestructuring()
+    [TestCase("John Doe")]
+    [TestCase(null)]
+    public void AttributesAreConsultedWhenDestructuring(string name)
     {
         var customized = new PersonalData
         {
-            Name = "John Doe"
+            Name = name
         };
 
         var evt = DelegatingSink.Execute(customized);
@@ -22,7 +23,7 @@ public class LogWithNameAttributeTests
         var props = sv.Properties.ToDictionary(p => p.Name, p => p.Value);
 
         var literalValue = props["FullName"].LiteralValue();
-        literalValue.ShouldBe("John Doe");
+        literalValue.ShouldBe(name);
     }
 
     #region LogWithName
