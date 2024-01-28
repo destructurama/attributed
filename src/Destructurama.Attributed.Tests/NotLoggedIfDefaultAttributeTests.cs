@@ -1,6 +1,5 @@
 using Destructurama.Attributed.Tests.Support;
 using NUnit.Framework;
-using Serilog;
 using Serilog.Events;
 using Shouldly;
 
@@ -72,16 +71,9 @@ public class NotLoggedIfDefaultAttributeTests
     [Test]
     public void NotLoggedIfDefault_Uninitialized()
     {
-        LogEvent? evt = null;
-
-        var log = new LoggerConfiguration()
-            .Destructure.UsingAttributes()
-            .WriteTo.Sink(new DelegatingSink(e => evt = e))
-            .CreateLogger();
-
         var customized = new NotLoggedIfDefaultCustomizedDefaultLogs();
 
-        log.Information("Here is {@Customized}", customized);
+        var evt = DelegatingSink.Execute(customized);
 
         var sv = (StructureValue)evt!.Properties["Customized"];
         var props = sv.Properties.ToDictionary(p => p.Name, p => p.Value);
@@ -123,13 +115,6 @@ public class NotLoggedIfDefaultAttributeTests
     [Test]
     public void NotLoggedIfDefault_Initialized()
     {
-        LogEvent? evt = null;
-
-        var log = new LoggerConfiguration()
-            .Destructure.UsingAttributes()
-            .WriteTo.Sink(new DelegatingSink(e => evt = e))
-            .CreateLogger();
-
         var dateTime = DateTime.UtcNow;
         var theStruct = new NotLoggedIfDefaultStruct
         {
@@ -155,7 +140,7 @@ public class NotLoggedIfDefaultAttributeTests
             IntegerAsObject = 0
         };
 
-        log.Information("Here is {@Customized}", customized);
+        var evt = DelegatingSink.Execute(customized);
 
         var sv = (StructureValue)evt!.Properties["Customized"];
         var props = sv.Properties.ToDictionary(p => p.Name, p => p.Value);

@@ -1,7 +1,6 @@
 using System.Collections;
 using Destructurama.Attributed.Tests.Support;
 using NUnit.Framework;
-using Serilog;
 using Serilog.Events;
 using Shouldly;
 
@@ -111,8 +110,8 @@ public class IgnoreNullPropertiesTests
     }
 
     /// <summary>
-    /// At least one attribute from Destructurma.Attributed is enough to ignore all default properties on IEnumerable,
-    /// when IgnoreNullProperties is true.
+    /// At least one attribute from Destructurma.Attributed is enough to ignore all
+    /// default properties on IEnumerable, when IgnoreNullProperties is true.
     /// </summary>
     private class CustomEnumerableAttributed : IEnumerable<int>
     {
@@ -130,8 +129,7 @@ public class IgnoreNullPropertiesTests
             yield return 1;
         }
 
-        IEnumerator IEnumerable.GetEnumerator()
-            => GetEnumerator();
+        IEnumerator IEnumerable.GetEnumerator() => GetEnumerator();
     }
 
     [SetUp]
@@ -149,16 +147,9 @@ public class IgnoreNullPropertiesTests
     [Test]
     public void NotLoggedIfNull_Uninitialized()
     {
-        LogEvent? evt = null;
-
-        var log = new LoggerConfiguration()
-            .Destructure.UsingAttributes(x => x.IgnoreNullProperties = true)
-            .WriteTo.Sink(new DelegatingSink(e => evt = e))
-            .CreateLogger();
-
         var customized = new NotLoggedIfNull();
 
-        log.Information("Here is {@Customized}", customized);
+        var evt = DelegatingSink.Execute(customized, configure: x => x.IgnoreNullProperties = true);
 
         var sv = (StructureValue)evt!.Properties["Customized"];
         var props = sv.Properties.ToDictionary(p => p.Name, p => p.Value);
@@ -179,13 +170,6 @@ public class IgnoreNullPropertiesTests
     [Test]
     public void NotLoggedIfNull_Initialized()
     {
-        LogEvent? evt = null;
-
-        var log = new LoggerConfiguration()
-            .Destructure.UsingAttributes(x => x.IgnoreNullProperties = true)
-            .WriteTo.Sink(new DelegatingSink(e => evt = e))
-            .CreateLogger();
-
         var dateTime = DateTime.UtcNow;
         var theStruct = new NotLoggedIfNullStruct
         {
@@ -219,7 +203,7 @@ public class IgnoreNullPropertiesTests
             StructPartiallyInitialized = theStructPartiallyUnitialized,
         };
 
-        log.Information("Here is {@Customized}", customized);
+        var evt = DelegatingSink.Execute(customized, configure: x => x.IgnoreNullProperties = true);
 
         var sv = (StructureValue)evt!.Properties["Customized"];
         var props = sv.Properties.ToDictionary(p => p.Name, p => p.Value);
@@ -275,16 +259,9 @@ public class IgnoreNullPropertiesTests
     [Test]
     public void WithMask_NotLoggedIfNull_Uninitialized()
     {
-        LogEvent? evt = null;
-
-        var log = new LoggerConfiguration()
-            .Destructure.UsingAttributes(x => x.IgnoreNullProperties = true)
-            .WriteTo.Sink(new DelegatingSink(e => evt = e))
-            .CreateLogger();
-
         var customized = new AttributedWithMask();
 
-        log.Information("Here is {@Customized}", customized);
+        var evt = DelegatingSink.Execute(customized, configure: x => x.IgnoreNullProperties = true);
 
         var sv = (StructureValue)evt!.Properties["Customized"];
         var props = sv.Properties.ToDictionary(p => p.Name, p => p.Value);
@@ -296,20 +273,13 @@ public class IgnoreNullPropertiesTests
     [Test]
     public void WithMask_NotLoggedIfNull_Initialized()
     {
-        LogEvent? evt = null;
-
-        var log = new LoggerConfiguration()
-            .Destructure.UsingAttributes(x => x.IgnoreNullProperties = true)
-            .WriteTo.Sink(new DelegatingSink(e => evt = e))
-            .CreateLogger();
-
         var customized = new AttributedWithMask
         {
             String = "Foo[Masked]",
             Object = "Bar[Masked]",
         };
 
-        log.Information("Here is {@Customized}", customized);
+        var evt = DelegatingSink.Execute(customized, configure: x => x.IgnoreNullProperties = true);
 
         var sv = (StructureValue)evt!.Properties["Customized"];
         var props = sv.Properties.ToDictionary(p => p.Name, p => p.Value);
@@ -324,13 +294,6 @@ public class IgnoreNullPropertiesTests
     [Test]
     public void EnumerableIgnored()
     {
-        LogEvent? evt = null;
-
-        var log = new LoggerConfiguration()
-            .Destructure.UsingAttributes(x => x.IgnoreNullProperties = true)
-            .WriteTo.Sink(new DelegatingSink(e => evt = e))
-            .CreateLogger();
-
         var customized = new CustomEnumerableDestructionIgnored()
         {
             Integer = 0,
@@ -340,7 +303,7 @@ public class IgnoreNullPropertiesTests
             }
         };
 
-        log.Information("Here is {@Customized}", customized);
+        var evt = DelegatingSink.Execute(customized, configure: x => x.IgnoreNullProperties = true);
 
         var sv = evt!.Properties["Customized"];
         sv.ShouldBeOfType<SequenceValue>();
@@ -349,13 +312,6 @@ public class IgnoreNullPropertiesTests
     [Test]
     public void EnumerableDestructedAsStruct()
     {
-        LogEvent? evt = null;
-
-        var log = new LoggerConfiguration()
-            .Destructure.UsingAttributes(x => x.IgnoreNullProperties = true)
-            .WriteTo.Sink(new DelegatingSink(e => evt = e))
-            .CreateLogger();
-
         var customized = new CustomEnumerableAttributed
         {
             Integer = 0,
@@ -366,7 +322,7 @@ public class IgnoreNullPropertiesTests
             },
         };
 
-        log.Information("Here is {@Customized}", customized);
+        var evt = DelegatingSink.Execute(customized, configure: x => x.IgnoreNullProperties = true);
 
         var sv = (StructureValue)evt!.Properties["Customized"];
         var props = sv.Properties.ToDictionary(p => p.Name, p => p.Value);
@@ -384,16 +340,9 @@ public class IgnoreNullPropertiesTests
     [Test]
     public void NotLoggedIfNullAttribute_Uninitialized()
     {
-        LogEvent? evt = null;
-
-        var log = new LoggerConfiguration()
-            .Destructure.UsingAttributes(x => x.IgnoreNullProperties = false)
-            .WriteTo.Sink(new DelegatingSink(e => evt = e))
-            .CreateLogger();
-
         var customized = new NotLoggedIfNullAttributed();
 
-        log.Information("Here is {@Customized}", customized);
+        var evt = DelegatingSink.Execute(customized, configure: x => x.IgnoreNullProperties = false);
 
         var sv = (StructureValue)evt!.Properties["Customized"];
         var props = sv.Properties.ToDictionary(p => p.Name, p => p.Value);
@@ -414,13 +363,6 @@ public class IgnoreNullPropertiesTests
     [Test]
     public void NotLoggedIfNullAttribute_Initialized()
     {
-        LogEvent? evt = null;
-
-        var log = new LoggerConfiguration()
-            .Destructure.UsingAttributes(x => x.IgnoreNullProperties = false)
-            .WriteTo.Sink(new DelegatingSink(e => evt = e))
-            .CreateLogger();
-
         var dateTime = DateTime.UtcNow;
         var theStruct = new NotLoggedIfNullStruct
         {
@@ -454,7 +396,7 @@ public class IgnoreNullPropertiesTests
             StructPartiallyInitialized = theStructPartiallyUnitialized,
         };
 
-        log.Information("Here is {@Customized}", customized);
+        var evt = DelegatingSink.Execute(customized, configure: x => x.IgnoreNullProperties = false);
 
         var sv = (StructureValue)evt!.Properties["Customized"];
         var props = sv.Properties.ToDictionary(p => p.Name, p => p.Value);

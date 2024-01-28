@@ -1,6 +1,5 @@
 using Destructurama.Attributed.Tests.Support;
 using NUnit.Framework;
-using Serilog;
 using Serilog.Events;
 using Shouldly;
 
@@ -43,20 +42,12 @@ public class ReplacedAttributeTests
     {
         // [LogReplaced(@"([a-zA-Z0-9]+)\|([a-zA-Z0-9]+)\|([a-zA-Z0-9]+)", "***|$2|$3")]
         // 123|456|789 -> "***|456|789"
-
-        LogEvent evt = null!;
-
-        var log = new LoggerConfiguration()
-            .Destructure.UsingAttributes()
-            .WriteTo.Sink(new DelegatingSink(e => evt = e))
-            .CreateLogger();
-
         var customized = new CustomizedRegexLogs
         {
             RegexReplaceFirst = "123|456|789"
         };
 
-        log.Information("Here is {@Customized}", customized);
+        var evt = DelegatingSink.Execute(customized);
 
         var sv = (StructureValue)evt.Properties["Customized"];
         var props = sv.Properties.ToDictionary(p => p.Name, p => p.Value);
@@ -70,20 +61,12 @@ public class ReplacedAttributeTests
     {
         // [LogReplaced(@"([a-zA-Z0-9]+)\|([a-zA-Z0-9]+)\|([a-zA-Z0-9]+)", "$1|***|$3")]
         // 123|456|789 -> "123|***|789"
-
-        LogEvent evt = null!;
-
-        var log = new LoggerConfiguration()
-            .Destructure.UsingAttributes()
-            .WriteTo.Sink(new DelegatingSink(e => evt = e))
-            .CreateLogger();
-
         var customized = new CustomizedRegexLogs
         {
             RegexReplaceSecond = "123|456|789"
         };
 
-        log.Information("Here is {@Customized}", customized);
+        var evt = DelegatingSink.Execute(customized);
 
         var sv = (StructureValue)evt.Properties["Customized"];
         var props = sv.Properties.ToDictionary(p => p.Name, p => p.Value);
@@ -97,20 +80,12 @@ public class ReplacedAttributeTests
     {
         // [LogReplaced(@"([a-zA-Z0-9]+)\|([a-zA-Z0-9]+)\|([a-zA-Z0-9]+)", "$1|$2|***")]
         // 123|456|789 -> "123|456|***"
-
-        LogEvent evt = null!;
-
-        var log = new LoggerConfiguration()
-            .Destructure.UsingAttributes()
-            .WriteTo.Sink(new DelegatingSink(e => evt = e))
-            .CreateLogger();
-
         var customized = new CustomizedRegexLogs
         {
             RegexReplaceThird = "123|456|789"
         };
 
-        log.Information("Here is {@Customized}", customized);
+        var evt = DelegatingSink.Execute(customized);
 
         var sv = (StructureValue)evt.Properties["Customized"];
         var props = sv.Properties.ToDictionary(p => p.Name, p => p.Value);
@@ -124,20 +99,12 @@ public class ReplacedAttributeTests
     {
         // [LogReplaced(@"([a-zA-Z0-9]+)\|([a-zA-Z0-9]+)\|([a-zA-Z0-9]+)", "***|$2|****")]
         // 123|456|789 -> "***|456|****"
-
-        LogEvent evt = null!;
-
-        var log = new LoggerConfiguration()
-            .Destructure.UsingAttributes()
-            .WriteTo.Sink(new DelegatingSink(e => evt = e))
-            .CreateLogger();
-
         var customized = new CustomizedRegexLogs
         {
             RegexReplaceFirstThird = "123|456|789"
         };
 
-        log.Information("Here is {@Customized}", customized);
+        var evt = DelegatingSink.Execute(customized);
 
         var sv = (StructureValue)evt.Properties["Customized"];
         var props = sv.Properties.ToDictionary(p => p.Name, p => p.Value);
@@ -151,21 +118,13 @@ public class ReplacedAttributeTests
     {
         // [LogReplaced(@"([a-zA-Z0-9]+)\|([a-zA-Z0-9]+)\|([a-zA-Z0-9]+)", "***|$2|$3")]
         // 123|456|789 -> "***|456|789"
-
-        LogEvent evt = null!;
-
-        var log = new LoggerConfiguration()
-            .Destructure.UsingAttributes()
-            .WriteTo.Sink(new DelegatingSink(e => evt = e))
-            .CreateLogger();
-
         var customized = new CustomizedRegexLogs
         {
             RegexReplaceFirst = "123|456|789",
             RegexReplaceThird = "123|456|789"
         };
 
-        log.Information("Here is {@Customized}", customized);
+        var evt = DelegatingSink.Execute(customized);
 
         var sv = (StructureValue)evt.Properties["Customized"];
         var props = sv.Properties.ToDictionary(p => p.Name, p => p.Value);
