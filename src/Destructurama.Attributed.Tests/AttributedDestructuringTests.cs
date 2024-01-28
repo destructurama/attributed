@@ -33,6 +33,28 @@ public class AttributedDestructuringTests
     }
 
     [Test]
+    public void Private_Property_Should_Be_Handled()
+    {
+        var customized = new ClassWithPrivateProperty();
+
+        var evt = DelegatingSink.Execute(customized);
+
+        var sv = (StructureValue)evt.Properties["Customized"];
+        sv.Properties.Count.ShouldBe(0);
+    }
+
+    [Test]
+    public void Indexer_Should_Be_Handled()
+    {
+        var customized = new ClassWithIndexer();
+
+        var evt = DelegatingSink.Execute(customized);
+
+        var sv = (StructureValue)evt.Properties["Customized"];
+        sv.Properties.Count.ShouldBe(0);
+    }
+
+    [Test]
     public void AttributesAreConsultedWhenDestructuring()
     {
         var customized = new Customized
@@ -80,6 +102,22 @@ public class AttributedDestructuringTests
 
         [LogAsScalar]
         public Struct1 Struct1 { set { } }
+    }
+
+    public class ClassWithPrivateProperty
+    {
+        [LogMasked]
+        private string? Name { get; set; } = "Tom";
+    }
+
+    public class ClassWithIndexer
+    {
+        [LogMasked]
+        public string? this[int index]
+        {
+            get => "Tom";
+            set { }
+        }
     }
 
     [LogAsScalar]
