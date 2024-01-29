@@ -260,6 +260,12 @@ public class CustomizedMaskedLogs
     public string? ShowFirstAndLastThreeAndDefaultMaskInTheMiddle { get; set; }
 
     /// <summary>
+    /// 123456789 results in "123456789", no mask applied
+    /// </summary>
+    [LogMasked(ShowFirst = -1, ShowLast = -1)]
+    public string? ShowFirstAndLastInvalidValues { get; set; }
+
+    /// <summary>
     /// 123456789 results in "123***789"
     /// </summary>
     [LogMasked(ShowFirst = 3, ShowLast = 3, PreserveLength = true)]
@@ -278,7 +284,7 @@ public class CustomizedMaskedLogs
     public string? ShowFirstAndLastThreeAndCustomMaskInTheMiddlePreservedLengthIgnored { get; set; }
 }
 ```
-<sup><a href='/src/Destructurama.Attributed.Tests/MaskedAttributeTests.cs#L8-L127' title='Snippet source file'>snippet source</a> | <a href='#snippet-customizedmaskedlogs' title='Start of snippet'>anchor</a></sup>
+<sup><a href='/src/Destructurama.Attributed.Tests/MaskedAttributeTests.cs#L8-L133' title='Snippet source file'>snippet source</a> | <a href='#snippet-customizedmaskedlogs' title='Start of snippet'>anchor</a></sup>
 <!-- endSnippet -->
 
 ## 7. Masking a string property with regular expressions
