@@ -32,6 +32,12 @@ public class CustomizedRegexLogs
     /// </summary>
     [LogReplaced(REGEX_WITH_VERTICAL_BARS, "***|$2|****")]
     public string? RegexReplaceFirstThird { get; set; }
+
+    /// <summary>
+    /// LogReplaced works only for string properties.
+    /// </summary>
+    [LogReplaced("does not matter", "does not matter")]
+    public int RegexReplaceForInt { get; set; }
 }
 
 [TestFixture]
@@ -133,5 +139,21 @@ public class ReplacedAttributeTests
         props["RegexReplaceFirst"].LiteralValue().ShouldBe("***|456|789");
         props.ContainsKey("RegexReplaceThird").ShouldBeTrue();
         props["RegexReplaceThird"].LiteralValue().ShouldBe("123|456|***");
+    }
+
+    [Test]
+    public void LogReplacedAttribute_Should_Work_Only_For_String_Properties()
+    {
+        var customized = new CustomizedRegexLogs
+        {
+            RegexReplaceForInt = 42,
+        };
+
+        var evt = DelegatingSink.Execute(customized);
+
+        var sv = (StructureValue)evt.Properties["Customized"];
+        var props = sv.Properties.ToDictionary(p => p.Name, p => p.Value);
+
+        props.ContainsKey("RegexReplaceForInt").ShouldBeFalse();
     }
 }

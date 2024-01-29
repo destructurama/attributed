@@ -15,11 +15,43 @@ public class AttributedDestructuringTests
 
         var evt = DelegatingSink.Execute(customized);
 
-        // Verify
         var sv = (StructureValue)evt.Properties["Customized"];
         sv.Properties.Count.ShouldBe(1);
         sv.Properties[0].Name.ShouldBe("BadProperty");
         sv.Properties[0].Value.ShouldBeOfType<ScalarValue>().Value.ShouldBe("***");
+    }
+
+    [Test]
+    public void Only_Settable_Accessor_Should_Be_Handled()
+    {
+        var customized = new ClassWithOnlySetters();
+
+        var evt = DelegatingSink.Execute(customized);
+
+        var sv = (StructureValue)evt.Properties["Customized"];
+        sv.Properties.Count.ShouldBe(0);
+    }
+
+    [Test]
+    public void Private_Property_Should_Be_Handled()
+    {
+        var customized = new ClassWithPrivateProperty();
+
+        var evt = DelegatingSink.Execute(customized);
+
+        var sv = (StructureValue)evt.Properties["Customized"];
+        sv.Properties.Count.ShouldBe(0);
+    }
+
+    [Test]
+    public void Indexer_Should_Be_Handled()
+    {
+        var customized = new ClassWithIndexer();
+
+        var evt = DelegatingSink.Execute(customized);
+
+        var sv = (StructureValue)evt.Properties["Customized"];
+        sv.Properties.Count.ShouldBe(0);
     }
 
     [Test]
@@ -51,6 +83,8 @@ public class AttributedDestructuringTests
         props["ScalarAnyway"].LiteralValue().ShouldBeOfType<NotAScalar>();
         props["Struct1"].LiteralValue().ShouldBeOfType<Struct1>();
         props["Struct2"].LiteralValue().ShouldBeOfType<Struct2>();
+        props["StructReturningNull"].LiteralValue().ShouldBeNull();
+        props["StructNull"].LiteralValue().ShouldBeNull();
 
         var str = sv.ToString();
         str.Contains("This is a username").ShouldBeTrue();
@@ -61,6 +95,31 @@ public class AttributedDestructuringTests
     {
         [LogMasked]
         public string? BadProperty => throw new FormatException("oops");
+    }
+
+    public class ClassWithOnlySetters
+    {
+        [LogMasked]
+        public string? Name { set { } }
+
+        [LogAsScalar]
+        public Struct1 Struct1 { set { } }
+    }
+
+    public class ClassWithPrivateProperty
+    {
+        [LogMasked]
+        private string? Name { get; set; } = "Tom";
+    }
+
+    public class ClassWithIndexer
+    {
+        [LogMasked]
+        public string? this[int index]
+        {
+            get => "Tom";
+            set { }
+        }
     }
 
     [LogAsScalar]
@@ -95,6 +154,12 @@ public class AttributedDestructuringTests
         public Struct1 Struct1 { get; set; }
 
         public Struct2 Struct2 { get; set; }
+
+        [LogAsScalar(isMutable: true)]
+        public StructReturningNull StructReturningNull { get; set; }
+
+        [LogAsScalar(isMutable: true)]
+        public StructReturningNull? StructNull { get; set; }
     }
 
     public class UserAuthData
@@ -116,5 +181,11 @@ public class AttributedDestructuringTests
     {
         public int SomeProperty { get; set; }
         public override string ToString() => "BBB";
+    }
+
+    public struct StructReturningNull
+    {
+        public int SomeProperty { get; set; }
+        public override string ToString() => null!;
     }
 }

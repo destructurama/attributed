@@ -106,6 +106,12 @@ public class CustomizedMaskedLogs
     public string? ShowFirstAndLastThreeAndDefaultMaskInTheMiddle { get; set; }
 
     /// <summary>
+    /// 123456789 results in "123456789", no mask applied
+    /// </summary>
+    [LogMasked(ShowFirst = -1, ShowLast = -1)]
+    public string? ShowFirstAndLastInvalidValues { get; set; }
+
+    /// <summary>
     /// 123456789 results in "123***789"
     /// </summary>
     [LogMasked(ShowFirst = 3, ShowLast = 3, PreserveLength = true)]
@@ -357,6 +363,25 @@ public class MaskedAttributeTests
 
         props.ContainsKey("ShowFirstAndLastThreeAndDefaultMaskInTheMiddlePreservedLength").ShouldBeTrue();
         props["ShowFirstAndLastThreeAndDefaultMaskInTheMiddlePreservedLength"].LiteralValue().ShouldBe("123*456");
+    }
+
+    [Test]
+    public void LogMaskedAttribute_With_Invalid_Values_Should_Return_Value_As_Is()
+    {
+        // [LogMasked(ShowFirst = -1, ShowLast = -1)]
+        // -> "123456789", no mask applied
+        var customized = new CustomizedMaskedLogs
+        {
+            ShowFirstAndLastInvalidValues = "123456789"
+        };
+
+        var evt = DelegatingSink.Execute(customized);
+
+        var sv = (StructureValue)evt.Properties["Customized"];
+        var props = sv.Properties.ToDictionary(p => p.Name, p => p.Value);
+
+        props.ContainsKey("ShowFirstAndLastInvalidValues").ShouldBeTrue();
+        props["ShowFirstAndLastInvalidValues"].LiteralValue().ShouldBe("123456789");
     }
 
     [Test]
