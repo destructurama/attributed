@@ -1,5 +1,5 @@
 window.BENCHMARK_DATA = {
-  "lastUpdate": 1706512277257,
+  "lastUpdate": 1706514427584,
   "repoUrl": "https://github.com/destructurama/attributed",
   "entries": {
     "Benchmarks": [
@@ -792,6 +792,72 @@ window.BENCHMARK_DATA = {
             "value": 201.7630216053554,
             "unit": "ns",
             "range": "± 0.5102225384462279"
+          }
+        ]
+      },
+      {
+        "commit": {
+          "author": {
+            "email": "sungam3r@yandex.ru",
+            "name": "Ivan Maximov",
+            "username": "sungam3r"
+          },
+          "committer": {
+            "email": "noreply@github.com",
+            "name": "GitHub",
+            "username": "web-flow"
+          },
+          "distinct": true,
+          "id": "e0576f7c54ce1a983fe5c98701d60e8f515c0d52",
+          "message": "Add test (#105)",
+          "timestamp": "2024-01-29T10:43:48+03:00",
+          "tree_id": "7dc5de5effac0588f16aedc145cefef96a565be4",
+          "url": "https://github.com/destructurama/attributed/commit/e0576f7c54ce1a983fe5c98701d60e8f515c0d52"
+        },
+        "date": 1706514426510,
+        "tool": "benchmarkdotnet",
+        "benches": [
+          {
+            "name": "Benchmarks.AttributedBenchmarks.LogAsScalar",
+            "value": 222.6163188457489,
+            "unit": "ns",
+            "range": "± 1.3883849538328976"
+          },
+          {
+            "name": "Benchmarks.AttributedBenchmarks.LogMasked",
+            "value": 443.9170009295146,
+            "unit": "ns",
+            "range": "± 1.5650423747907878"
+          },
+          {
+            "name": "Benchmarks.AttributedBenchmarks.LogReplaced",
+            "value": 576.9936083384922,
+            "unit": "ns",
+            "range": "± 2.8262872882137025"
+          },
+          {
+            "name": "Benchmarks.AttributedBenchmarks.LogWithName",
+            "value": 242.64140564600626,
+            "unit": "ns",
+            "range": "± 1.198520922495111"
+          },
+          {
+            "name": "Benchmarks.AttributedBenchmarks.NotLogged",
+            "value": 110.73109686772028,
+            "unit": "ns",
+            "range": "± 0.4090013992778297"
+          },
+          {
+            "name": "Benchmarks.AttributedBenchmarks.NotLoggedIfDefault",
+            "value": 124.39114651679992,
+            "unit": "ns",
+            "range": "± 0.709625593727412"
+          },
+          {
+            "name": "Benchmarks.AttributedBenchmarks.NotLoggedIfNull",
+            "value": 196.57256259237016,
+            "unit": "ns",
+            "range": "± 1.3591468448710722"
           }
         ]
       }
