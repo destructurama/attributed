@@ -84,6 +84,7 @@ public class AttributedDestructuringTests
         props["Struct1"].LiteralValue().ShouldBeOfType<Struct1>();
         props["Struct2"].LiteralValue().ShouldBeOfType<Struct2>();
         props["StructReturningNull"].LiteralValue().ShouldBeNull();
+        props["StructNull"].LiteralValue().ShouldBeNull();
 
         var str = sv.ToString();
         str.Contains("This is a username").ShouldBeTrue();
@@ -156,6 +157,9 @@ public class AttributedDestructuringTests
 
         [LogAsScalar(isMutable: true)]
         public StructReturningNull StructReturningNull { get; set; }
+
+        [LogAsScalar(isMutable: true)]
+        public StructReturningNull? StructNull { get; set; }
     }
 
     public class UserAuthData
