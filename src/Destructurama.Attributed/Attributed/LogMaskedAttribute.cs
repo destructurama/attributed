@@ -56,9 +56,9 @@ public class LogMaskedAttribute : Attribute, IPropertyDestructuringAttribute
         return (ShowFirst, ShowLast) switch
         {
             (0, 0) => PreserveLength ? new string(Text[0], val.Length) : Text,
-            (> 0, 0) => ShowOnlyFirst(),
+            ( > 0, 0) => ShowOnlyFirst(),
             (0, > 0) => ShowOnlyLast(),
-            (> 0, > 0) => ShowFirstAndLast(),
+            ( > 0, > 0) => ShowFirstAndLast(),
             _ => val
         };
 
