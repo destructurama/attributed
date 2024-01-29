@@ -53,15 +53,16 @@ public class LogMaskedAttribute : Attribute, IPropertyDestructuringAttribute
         if (string.IsNullOrEmpty(val))
             return PreserveLength ? val : Text;
 
-        if (ShowFirst == 0 && ShowLast == 0)
+        return (ShowFirst, ShowLast) switch
         {
-            if (PreserveLength)
-                return new string(Text[0], val.Length);
+            (0, 0) => PreserveLength ? new string(Text[0], val.Length) : Text,
+            ( > 0, 0) => ShowOnlyFirst(),
+            (0, > 0) => ShowOnlyLast(),
+            ( > 0, > 0) => ShowFirstAndLast(),
+            _ => val
+        };
 
-            return Text;
-        }
-
-        if (ShowFirst > 0 && ShowLast == 0)
+        string ShowOnlyFirst()
         {
             var first = val.Substring(0, Math.Min(ShowFirst, val.Length));
 
@@ -73,10 +74,9 @@ public class LogMaskedAttribute : Attribute, IPropertyDestructuringAttribute
                 mask = new(Text[0], val.Length - ShowFirst);
 
             return first + mask;
-
         }
 
-        if (ShowFirst == 0 && ShowLast > 0)
+        string ShowOnlyLast()
         {
             var last = ShowLast > val.Length ? val : val.Substring(val.Length - ShowLast);
 
@@ -90,7 +90,7 @@ public class LogMaskedAttribute : Attribute, IPropertyDestructuringAttribute
             return mask + last;
         }
 
-        if (ShowFirst > 0 && ShowLast > 0)
+        string ShowFirstAndLast()
         {
             if (ShowFirst + ShowLast >= val.Length)
                 return val;
@@ -104,8 +104,6 @@ public class LogMaskedAttribute : Attribute, IPropertyDestructuringAttribute
 
             return first + (mask ?? Text) + last;
         }
-
-        return val;
     }
 
     /// <inheritdoc/>
