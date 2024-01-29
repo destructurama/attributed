@@ -17,7 +17,7 @@ using Serilog.Events;
 
 namespace Destructurama.Util;
 
-internal struct CacheEntry
+internal readonly struct CacheEntry
 {
     public CacheEntry(Func<object, ILogEventPropertyValueFactory, LogEventPropertyValue> destructureFunc)
     {

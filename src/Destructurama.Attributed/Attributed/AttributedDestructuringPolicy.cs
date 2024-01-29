@@ -68,25 +68,27 @@ internal class AttributedDestructuringPolicy : IDestructuringPolicy
 
     private CacheEntry CreateCacheEntry(Type type)
     {
-        var classDestructurer = type.GetCustomAttribute<ITypeDestructuringAttribute>();
+        static T GetCustomAttribute<T>(PropertyInfo propertyInfo) => propertyInfo.GetCustomAttributes().OfType<T>().FirstOrDefault();
+
+        var classDestructurer = type.GetCustomAttributes().OfType<ITypeDestructuringAttribute>().FirstOrDefault();
         if (classDestructurer != null)
             return new(classDestructurer.CreateLogEventPropertyValue);
 
         var properties = GetPropertiesRecursive(type).ToList();
         if (!_options.IgnoreNullProperties && properties.All(pi =>
-            pi.GetCustomAttribute<IPropertyDestructuringAttribute>() == null
-            && pi.GetCustomAttribute<IPropertyOptionalIgnoreAttribute>() == null))
+            GetCustomAttribute<IPropertyDestructuringAttribute>(pi) == null
+            && GetCustomAttribute<IPropertyOptionalIgnoreAttribute>(pi) == null))
         {
             return CacheEntry.Ignore;
         }
 
         var optionalIgnoreAttributes = properties
-            .Select(pi => new { pi, Attribute = pi.GetCustomAttribute<IPropertyOptionalIgnoreAttribute>() })
+            .Select(pi => new { pi, Attribute = GetCustomAttribute<IPropertyOptionalIgnoreAttribute>(pi) })
             .Where(o => o.Attribute != null)
             .ToDictionary(o => o.pi, o => o.Attribute);
 
         var destructuringAttributes = properties
-            .Select(pi => new { pi, Attribute = pi.GetCustomAttribute<IPropertyDestructuringAttribute>() })
+            .Select(pi => new { pi, Attribute = GetCustomAttribute<IPropertyDestructuringAttribute>(pi) })
             .Where(o => o.Attribute != null)
             .ToDictionary(o => o.pi, o => o.Attribute);
 
