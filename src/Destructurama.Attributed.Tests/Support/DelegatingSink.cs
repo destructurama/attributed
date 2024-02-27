@@ -28,5 +28,4 @@ internal sealed class DelegatingSink : ILogEventSink
 
         return evt;
     }
-
 }
