@@ -22,7 +22,7 @@ namespace Destructurama;
 /// <summary>
 /// Adds the Destructure.UsingAttributes() extension to <see cref="LoggerConfiguration"/>.
 /// </summary>
-public static class LoggerConfigurationAppSettingsExtensions
+public static class LoggerConfigurationAttributedExtensions
 {
     /// <summary>
     /// Adds a custom <see cref="IDestructuringPolicy"/> to enable manipulation of how objects

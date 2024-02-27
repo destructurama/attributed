@@ -67,7 +67,7 @@ namespace Destructurama.Attributed
 }
 namespace Destructurama
 {
-    public static class LoggerConfigurationAppSettingsExtensions
+    public static class LoggerConfigurationAttributedExtensions
     {
         public static Serilog.LoggerConfiguration UsingAttributes(this Serilog.Configuration.LoggerDestructuringConfiguration configuration) { }
         public static Serilog.LoggerConfiguration UsingAttributes(this Serilog.Configuration.LoggerDestructuringConfiguration configuration, System.Action<Destructurama.Attributed.AttributedDestructuringPolicyOptions> configure) { }

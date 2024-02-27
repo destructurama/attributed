@@ -24,7 +24,7 @@ public class ApiApprovalTests
 {
     /// <summary>Check for changes to the public APIs.</summary>
     /// <param name="type">The type used as a marker for the assembly whose public API change you want to check.</param>
-    [TestCase(typeof(LoggerConfigurationAppSettingsExtensions))]
+    [TestCase(typeof(LoggerConfigurationAttributedExtensions))]
     public void PublicApi_Should_Not_Change_Unintentionally(Type type)
     {
         string publicApi = type.Assembly.GeneratePublicApi(new()
