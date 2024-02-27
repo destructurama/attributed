@@ -40,8 +40,11 @@ public class LogAsScalarAttribute : Attribute, ITypeDestructuringAttribute, IPro
     }
 
     /// <inheritdoc/>
-    public LogEventPropertyValue CreateLogEventPropertyValue(object? value, ILogEventPropertyValueFactory propertyValueFactory) =>
-        new ScalarValue(_isMutable ? value?.ToString() : value);
+    public LogEventPropertyValue CreateLogEventPropertyValue(object? value, ILogEventPropertyValueFactory propertyValueFactory)
+    {
+        var v = _isMutable ? value?.ToString() : value;
+        return v == null ? ScalarValue.Null : new ScalarValue(v);
+    }
 
     /// <inheritdoc/>
     public bool TryCreateLogEventProperty(string name, object? value, ILogEventPropertyValueFactory propertyValueFactory, out LogEventProperty property)

@@ -54,7 +54,7 @@ public class LogReplacedAttribute : Attribute, IPropertyDestructuringAttribute
     {
         if (value == null)
         {
-            property = new(name, new ScalarValue(value));
+            property = new(name, ScalarValue.Null);
             return true;
         }
 
