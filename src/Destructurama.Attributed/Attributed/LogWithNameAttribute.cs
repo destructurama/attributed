@@ -38,7 +38,7 @@ public class LogWithNameAttribute : Attribute, IPropertyDestructuringAttribute
     /// <inheritdoc/>
     public bool TryCreateLogEventProperty(string name, object? value, ILogEventPropertyValueFactory propertyValueFactory, [NotNullWhen(true)] out LogEventProperty? property)
     {
-        property = new LogEventProperty(_newName, propertyValueFactory.CreatePropertyValue(value));
+        property = new LogEventProperty(_newName, propertyValueFactory.CreatePropertyValue(value, destructureObjects: true));
         return true;
     }
 }
