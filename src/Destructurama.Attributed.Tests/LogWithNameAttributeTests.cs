@@ -26,6 +26,7 @@ public class LogWithNameAttributeTests
         literalValue.ShouldBe(name);
     }
 
+    // https://github.com/destructurama/attributed/issues/65
     [Test]
     public void Issue65()
     {
