@@ -26,6 +26,41 @@ public class LogWithNameAttributeTests
         literalValue.ShouldBe(name);
     }
 
+    // https://github.com/destructurama/attributed/issues/65
+    [Test]
+    public void Issue65()
+    {
+        var customized = new MessageBase
+        {
+            Context = new ContextClass(),
+        };
+        var evt = DelegatingSink.Execute(customized);
+        var sv = (StructureValue)evt.Properties["Customized"];
+        sv.Properties.Count.ShouldBe(1);
+        sv.Properties[0].Name.ShouldBe("messageContext");
+        var sv2 = sv.Properties[0].Value.ShouldBeOfType<StructureValue>();
+        sv2.Properties.Count.ShouldBe(2);
+        sv2.Properties[0].Name.ShouldBe("Foo");
+        sv2.Properties[1].Name.ShouldBe("Bar");
+        sv2.Properties[0].Value.LiteralValue().ShouldBe("MyFoo");
+        sv2.Properties[1].Value.LiteralValue().ShouldBe("MyBar");
+    }
+
+    public class MessageBase
+    {
+        [LogWithName("messageContext")]
+        public ContextClass? Context { get; set; }
+    }
+
+    public class ContextClass
+    {
+        public string Foo { get; set; } = "MyFoo";
+
+        public string Bar { get; set; } = "MyBar";
+
+        public override string ToString() => "ContextClass ToString Output";
+    }
+
     #region LogWithName
     public class PersonalData
     {
