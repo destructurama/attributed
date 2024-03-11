@@ -58,7 +58,7 @@ jobs:
         run: dotnet build --no-restore -c Debug
       - name: Test solution [Debug]
         working-directory: src
-        run: dotnet test --no-restore -p:CollectCoverage=true -p:CoverletOutputFormat=opencover -p:CoverletOutput=../.coverage/
+        run: dotnet test --no-build -p:CollectCoverage=true -p:CoverletOutputFormat=opencover -p:CoverletOutput=../.coverage/
       - name: Upload coverage to codecov
         if: ${{ startsWith(matrix.os, 'ubuntu') }}
         uses: codecov/codecov-action@v4
