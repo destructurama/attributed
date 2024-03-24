@@ -48,7 +48,6 @@ public class NotLoggedIfDefaultAttribute : Attribute, IPropertyOptionalIgnoreAtt
     {
         if (value != null)
         {
-
             if (type.IsValueType)
             {
                 if (!_cache.TryGetValue(type, out CachedValue cachedValue))
