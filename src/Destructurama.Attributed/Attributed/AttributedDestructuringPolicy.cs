@@ -74,15 +74,11 @@ internal class AttributedDestructuringPolicy : IDestructuringPolicy
             if (attr != null)
                 return attr;
 
-            if (_options.RespectLogPropertyIgnoreAttribute)
-            {
-                // Do not check attribute explicitly to not take dependency from Microsoft.Extensions.Telemetry.Abstractions package.
-                // https://github.com/serilog/serilog/issues/1984
-                if (propertyInfo.GetCustomAttributes().Any(a => a.GetType().FullName == "Microsoft.Extensions.Logging.LogPropertyIgnoreAttribute"))
-                    return NotLoggedAttribute.Instance;
-            }
-
-            return null;
+            // Do not check attribute explicitly to not take dependency from Microsoft.Extensions.Telemetry.Abstractions package.
+            // https://github.com/serilog/serilog/issues/1984
+            return _options.RespectLogPropertyIgnoreAttribute && propertyInfo.GetCustomAttributes().Any(a => a.GetType().FullName == "Microsoft.Extensions.Logging.LogPropertyIgnoreAttribute")
+                ? NotLoggedAttribute.Instance
+                : null;
         }
 
         var classDestructurer = type.GetCustomAttributes().OfType<ITypeDestructuringAttribute>().FirstOrDefault();
