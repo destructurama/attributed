@@ -68,7 +68,18 @@ internal class AttributedDestructuringPolicy : IDestructuringPolicy
 
     private CacheEntry CreateCacheEntry(Type type)
     {
-        static T GetCustomAttribute<T>(PropertyInfo propertyInfo) => propertyInfo.GetCustomAttributes().OfType<T>().FirstOrDefault();
+        IPropertyDestructuringAttribute? GetPropertyDestructuringAttribute(PropertyInfo propertyInfo)
+        {
+            var attr = propertyInfo.GetCustomAttributes().OfType<IPropertyDestructuringAttribute>().FirstOrDefault();
+            if (attr != null)
+                return attr;
+
+            // Do not check attribute explicitly to not take dependency from Microsoft.Extensions.Telemetry.Abstractions package.
+            // https://github.com/serilog/serilog/issues/1984
+            return _options.RespectLogPropertyIgnoreAttribute && propertyInfo.GetCustomAttributes().Any(a => a.GetType().FullName == "Microsoft.Extensions.Logging.LogPropertyIgnoreAttribute")
+                ? NotLoggedAttribute.Instance
+                : null;
+        }
 
         var classDestructurer = type.GetCustomAttributes().OfType<ITypeDestructuringAttribute>().FirstOrDefault();
         if (classDestructurer != null)
@@ -76,19 +87,19 @@ internal class AttributedDestructuringPolicy : IDestructuringPolicy
 
         var properties = GetPropertiesRecursive(type).ToList();
         if (!_options.IgnoreNullProperties && properties.All(pi =>
-            GetCustomAttribute<IPropertyDestructuringAttribute>(pi) == null
-            && GetCustomAttribute<IPropertyOptionalIgnoreAttribute>(pi) == null))
+            GetPropertyDestructuringAttribute(pi) == null
+            && pi.GetCustomAttributes().OfType<IPropertyOptionalIgnoreAttribute>().FirstOrDefault() == null))
         {
             return CacheEntry.Ignore;
         }
 
         var optionalIgnoreAttributes = properties
-            .Select(pi => new { pi, Attribute = GetCustomAttribute<IPropertyOptionalIgnoreAttribute>(pi) })
+            .Select(pi => new { pi, Attribute = pi.GetCustomAttributes().OfType<IPropertyOptionalIgnoreAttribute>().FirstOrDefault() })
             .Where(o => o.Attribute != null)
             .ToDictionary(o => o.pi, o => o.Attribute);
 
         var destructuringAttributes = properties
-            .Select(pi => new { pi, Attribute = GetCustomAttribute<IPropertyDestructuringAttribute>(pi) })
+            .Select(pi => new { pi, Attribute = GetPropertyDestructuringAttribute(pi)! })
             .Where(o => o.Attribute != null)
             .ToDictionary(o => o.pi, o => o.Attribute);
 

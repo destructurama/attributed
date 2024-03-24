@@ -1,4 +1,5 @@
 using Destructurama.Attributed.Tests.Support;
+using Microsoft.Extensions.Logging;
 using NUnit.Framework;
 using Serilog.Events;
 using Shouldly;
@@ -63,6 +64,7 @@ public class AttributedDestructuringTests
             MutableScalar = new(),
             NotAScalar = new(),
             Ignored = "Hello, there",
+            Ignored2 = "Hello, there again",
             ScalarAnyway = new(),
             AuthData = new()
             {
@@ -71,10 +73,13 @@ public class AttributedDestructuringTests
             }
         };
 
-        var evt = DelegatingSink.Execute(customized);
+        var evt = DelegatingSink.Execute(customized, configure: opt => opt.RespectLogPropertyIgnoreAttribute = true);
 
         var sv = (StructureValue)evt.Properties["Customized"];
         var props = sv.Properties.ToDictionary(p => p.Name, p => p.Value);
+
+        props.ShouldNotContainKey("Ignored");
+        props.ShouldNotContainKey("Ignored2");
 
         props["ImmutableScalar"].LiteralValue().ShouldBeOfType<ImmutableScalar>();
         props["MutableScalar"].LiteralValue().ShouldBe(new MutableScalar().ToString());
@@ -144,6 +149,9 @@ public class AttributedDestructuringTests
 
         [NotLogged]
         public string? Ignored { get; set; }
+
+        [LogPropertyIgnore]
+        public string? Ignored2 { get; set; }
 
         [LogAsScalar]
         public NotAScalar? ScalarAnyway { get; set; }
