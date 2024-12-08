@@ -81,9 +81,8 @@ public class CustomizedMaskedLogs
     [LogMasked(Text = "_REMOVED_", ShowFirst = 3)]
     public string? ShowFirstThreeThenCustomMask { get; set; }
 
-
     /// <summary>
-    ///  d3c4a1f2-3b4e-4f5a-9b6c-7d8e9f0a1b2c results in "d3c4a_REMOVED_"
+    /// d3c4a1f2-3b4e-4f5a-9b6c-7d8e9f0a1b2c results in "d3c4a_REMOVED_"
     /// </summary>
     [LogMasked(Text = "_REMOVED_", ShowFirst = 5)]
     public Guid? ShowFirstThreeThenCustomMaskGuid { get; set; }
@@ -716,6 +715,5 @@ public class MaskedAttributeTests
         props.ContainsKey("ShowFirstAndLastThreeAndCustomMaskInTheMiddlePreservedLengthIgnored").ShouldBeTrue();
         props["ShowFirstAndLastThreeAndCustomMaskInTheMiddlePreservedLengthIgnored"].LiteralValue().ShouldBe("123_REMOVED_321");
     }
-
     
 }
