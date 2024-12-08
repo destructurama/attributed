@@ -76,7 +76,7 @@ public class CustomizedMaskedLogs
     public string? ShowLastThreeThenDefaultMaskedPreservedLength { get; set; }
 
     /// <summary>
-    ///  123456789 results in "123_REMOVED_"
+    /// 123456789 results in "123_REMOVED_"
     /// </summary>
     [LogMasked(Text = "_REMOVED_", ShowFirst = 3)]
     public string? ShowFirstThreeThenCustomMask { get; set; }
