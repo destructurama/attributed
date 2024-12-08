@@ -715,5 +715,4 @@ public class MaskedAttributeTests
         props.ContainsKey("ShowFirstAndLastThreeAndCustomMaskInTheMiddlePreservedLengthIgnored").ShouldBeTrue();
         props["ShowFirstAndLastThreeAndCustomMaskInTheMiddlePreservedLengthIgnored"].LiteralValue().ShouldBe("123_REMOVED_321");
     }
-    
 }
