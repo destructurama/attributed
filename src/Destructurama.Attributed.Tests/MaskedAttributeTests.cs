@@ -16,6 +16,18 @@ public class CustomizedMaskedLogs
     public string? DefaultMasked { get; set; }
 
     /// <summary>
+    /// 9223372036854775807 results in "***"
+    /// </summary>
+    [LogMasked]
+    public long? DefaultMaskedLong { get; set; }
+
+    /// <summary>
+    /// 2147483647 results in "***"
+    /// </summary>
+    [LogMasked]
+    public int? DefaultMaskedInt { get; set; }
+
+    /// <summary>
     /// [123456789,123456789,123456789] results in [***,***,***]
     /// </summary>
     [LogMasked]
@@ -56,6 +68,18 @@ public class CustomizedMaskedLogs
     /// </summary>
     [LogMasked(ShowFirst = 3)]
     public string? ShowFirstThreeThenDefaultMasked { get; set; }
+
+    /// <summary>
+    /// 9223372036854775807 results in "922***807"
+    /// </summary>
+    [LogMasked(ShowFirst = 3, ShowLast = 3)]
+    public long? ShowFirstAndLastThreeAndDefaultMaskLongInTheMiddle { get; set; }
+
+    /// <summary>
+    /// 2147483647 results in "214****647"
+    /// </summary>
+    [LogMasked(ShowFirst = 3, ShowLast = 3, PreserveLength = true)]
+    public long? ShowFirstAndLastThreeAndDefaultMaskIntInTheMiddlePreservedLength { get; set; }
 
     /// <summary>
     /// 123456789 results in "123******"
@@ -690,4 +714,82 @@ public class MaskedAttributeTests
         props.ContainsKey("ShowFirstAndLastThreeAndCustomMaskInTheMiddlePreservedLengthIgnored").ShouldBeTrue();
         props["ShowFirstAndLastThreeAndCustomMaskInTheMiddlePreservedLengthIgnored"].LiteralValue().ShouldBe("123_REMOVED_321");
     }
+
+    [Test]
+    public void LogMaskedAttribute_Replaces_Long_Value_With_DefaultStars_Mask()
+    {
+        // [LogMasked]
+        // 9223372036854775807 -> "***"
+        var customized = new CustomizedMaskedLogs
+        {
+            DefaultMaskedLong = long.MaxValue
+        };
+
+        var evt = DelegatingSink.Execute(customized);
+
+        var sv = (StructureValue)evt.Properties["Customized"];
+        var props = sv.Properties.ToDictionary(p => p.Name, p => p.Value);
+
+        props.ContainsKey("DefaultMaskedLong").ShouldBeTrue();
+        props["DefaultMaskedLong"].LiteralValue().ShouldBe("***");
+    }
+
+    [Test]
+    public void LogMaskedAttribute_Shows_First_NChars_And_Last_NChars_Replaces_Long_Value_With_Default_StarMask()
+    {
+        // [LogMasked(ShowFirst = 3, ShowLast = 3)]
+        // 9223372036854775807 -> "922***807"
+        var customized = new CustomizedMaskedLogs
+        {
+            ShowFirstAndLastThreeAndDefaultMaskLongInTheMiddle = long.MaxValue
+        };
+
+        var evt = DelegatingSink.Execute(customized);
+
+        var sv = (StructureValue)evt.Properties["Customized"];
+        var props = sv.Properties.ToDictionary(p => p.Name, p => p.Value);
+
+        props.ContainsKey("ShowFirstAndLastThreeAndDefaultMaskLongInTheMiddle").ShouldBeTrue();
+        props["ShowFirstAndLastThreeAndDefaultMaskLongInTheMiddle"].LiteralValue().ShouldBe("922***807");
+    }
+
+    [Test]
+    public void LogMaskedAttribute_Replaces_Int_Value_With_DefaultStars_Mask()
+    {
+        // [LogMasked]
+        // 2147483647 -> "***"
+        var customized = new CustomizedMaskedLogs
+        {
+            DefaultMaskedInt = int.MaxValue
+        };
+
+        var evt = DelegatingSink.Execute(customized);
+
+        var sv = (StructureValue)evt.Properties["Customized"];
+        var props = sv.Properties.ToDictionary(p => p.Name, p => p.Value);
+
+        props.ContainsKey("DefaultMaskedInt").ShouldBeTrue();
+        props["DefaultMaskedInt"].LiteralValue().ShouldBe("***");
+    }
+
+    [Test]
+    public void LogMaskedAttribute_Shows_First_NChars_And_Last_NChars_Replaces_Int_Value_With_Default_StarMask_And_PreservedLength()
+    {
+        // [LogMasked(ShowFirst = 3, ShowLast = 3, PreserveLength = true)]
+        // 2147483647 -> "214****647"
+
+        var customized = new CustomizedMaskedLogs
+        {
+            ShowFirstAndLastThreeAndDefaultMaskIntInTheMiddlePreservedLength = int.MaxValue
+        };
+
+        var evt = DelegatingSink.Execute(customized);
+
+        var sv = (StructureValue)evt.Properties["Customized"];
+        var props = sv.Properties.ToDictionary(p => p.Name, p => p.Value);
+
+        props.ContainsKey("ShowFirstAndLastThreeAndDefaultMaskIntInTheMiddlePreservedLength").ShouldBeTrue();
+        props["ShowFirstAndLastThreeAndDefaultMaskIntInTheMiddlePreservedLength"].LiteralValue().ShouldBe("214****647");
+    }
+
 }

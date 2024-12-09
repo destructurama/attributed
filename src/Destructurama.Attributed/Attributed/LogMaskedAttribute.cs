@@ -119,7 +119,9 @@ public class LogMaskedAttribute : Attribute, IPropertyDestructuringAttribute
         {
             IEnumerable<string> strings => new SequenceValue(strings.Select(s => new ScalarValue(FormatMaskedValue(s)))),
             string s => new ScalarValue(FormatMaskedValue(s)),
-            _ => ScalarValue.Null
+            long l => new ScalarValue(FormatMaskedValue(l.ToString())),
+            int i => new ScalarValue(FormatMaskedValue(i.ToString())),
+            _ => ScalarValue.Null,
         };
     }
 }

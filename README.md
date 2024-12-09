@@ -55,7 +55,7 @@ public class PersonalData
     public string? Name { get; set; }
 }
 ```
-<sup><a href='/src/Destructurama.Attributed.Tests/LogWithNameAttributeTests.cs#L63-L69' title='Snippet source file'>snippet source</a> | <a href='#snippet-logwithname' title='Start of snippet'>anchor</a></sup>
+<sup><a href='/src/Destructurama.Attributed.Tests/LogWithNameAttributeTests.cs#L64-L70' title='Snippet source file'>snippet source</a> | <a href='#snippet-logwithname' title='Start of snippet'>anchor</a></sup>
 <!-- endSnippet -->
 
 ## 2. Ignoring a property
@@ -170,6 +170,18 @@ public class CustomizedMaskedLogs
     public string? DefaultMasked { get; set; }
 
     /// <summary>
+    /// 9223372036854775807 results in "***"
+    /// </summary>
+    [LogMasked]
+    public long? DefaultMaskedLong { get; set; }
+
+    /// <summary>
+    /// 2147483647 results in "***"
+    /// </summary>
+    [LogMasked]
+    public int? DefaultMaskedInt { get; set; }
+
+    /// <summary>
     /// [123456789,123456789,123456789] results in [***,***,***]
     /// </summary>
     [LogMasked]
@@ -210,6 +222,18 @@ public class CustomizedMaskedLogs
     /// </summary>
     [LogMasked(ShowFirst = 3)]
     public string? ShowFirstThreeThenDefaultMasked { get; set; }
+
+    /// <summary>
+    /// 9223372036854775807 results in "922***807"
+    /// </summary>
+    [LogMasked(ShowFirst = 3, ShowLast = 3)]
+    public long? ShowFirstAndLastThreeAndDefaultMaskLongInTheMiddle { get; set; }
+
+    /// <summary>
+    /// 2147483647 results in "214****647"
+    /// </summary>
+    [LogMasked(ShowFirst = 3, ShowLast = 3, PreserveLength = true)]
+    public long? ShowFirstAndLastThreeAndDefaultMaskIntInTheMiddlePreservedLength { get; set; }
 
     /// <summary>
     /// 123456789 results in "123******"
@@ -284,7 +308,7 @@ public class CustomizedMaskedLogs
     public string? ShowFirstAndLastThreeAndCustomMaskInTheMiddlePreservedLengthIgnored { get; set; }
 }
 ```
-<sup><a href='/src/Destructurama.Attributed.Tests/MaskedAttributeTests.cs#L8-L133' title='Snippet source file'>snippet source</a> | <a href='#snippet-customizedmaskedlogs' title='Start of snippet'>anchor</a></sup>
+<sup><a href='/src/Destructurama.Attributed.Tests/MaskedAttributeTests.cs#L8-L157' title='Snippet source file'>snippet source</a> | <a href='#snippet-customizedmaskedlogs' title='Start of snippet'>anchor</a></sup>
 <!-- endSnippet -->
 
 ## 7. Masking a string property with regular expressions
