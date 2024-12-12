@@ -690,4 +690,33 @@ public class MaskedAttributeTests
         props.ContainsKey("ShowFirstAndLastThreeAndCustomMaskInTheMiddlePreservedLengthIgnored").ShouldBeTrue();
         props["ShowFirstAndLastThreeAndCustomMaskInTheMiddlePreservedLengthIgnored"].LiteralValue().ShouldBe("123_REMOVED_321");
     }
+
+    [Test]
+    public void LogMaskedAttribute_Nullify_Bool_Property()
+    {
+        var customized = new CustomizedMaskedLogs2
+        {
+            Enabled1 = true,
+            Enabled2 = true,
+        };
+
+        var evt = DelegatingSink.Execute(customized);
+
+        var sv = (StructureValue)evt.Properties["Customized"];
+        var props = sv.Properties.ToDictionary(p => p.Name, p => p.Value);
+
+        props.ContainsKey("Enabled1").ShouldBeTrue();
+        props["Enabled1"].LiteralValue().ShouldBe(true);
+
+        props.ContainsKey("Enabled2").ShouldBeTrue();
+        props["Enabled2"].LiteralValue().ShouldBeNull();
+    }
+
+    private class CustomizedMaskedLogs2
+    {
+        public bool Enabled1 { get; set; }
+
+        [LogMasked]
+        public bool Enabled2 { get; set; }
+    }
 }
