@@ -24,6 +24,8 @@ namespace Destructurama.Attributed;
 [AttributeUsage(AttributeTargets.Property)]
 public class NotLoggedAttribute : Attribute, IPropertyDestructuringAttribute
 {
+    internal static readonly NotLoggedAttribute Instance = new();
+
     /// <inheritdoc/>
     public bool TryCreateLogEventProperty(string name, object? value, ILogEventPropertyValueFactory propertyValueFactory, [NotNullWhen(true)] out LogEventProperty? property)
     {
