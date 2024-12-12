@@ -18,7 +18,7 @@ using Serilog.Events;
 namespace Destructurama.Attributed;
 
 /// <summary>
-/// Base interface for all Destructurama attributes that override how a property type is destructured.
+/// Base interface for all Destructurama attributes that overrides how a property type is destructured.
 /// </summary>
 public interface ITypeDestructuringAttribute
 {
