@@ -315,6 +315,8 @@ __Available properties__:
  - **Options:** The [RegexOptions](https://docs.microsoft.com/en-us/dotnet/api/system.text.regularexpressions.regexoptions?view=netcore-3.1) that will be applied. Defaults to __RegexOptions.None__.
  - **Timeout:** A time-out interval to evaluate regular expression. Defaults to __Regex.InfiniteMatchTimeout__.
 
+Note that replacement also works for properties of type `IEnumerable<string>` or derived from it, for example, `string[]` or `List<string>`.
+
 ### Examples
 
 <!-- snippet: WithRegex -->
