@@ -121,6 +121,7 @@ public class LogMaskedAttribute : Attribute, IPropertyDestructuringAttribute
             string s => new ScalarValue(FormatMaskedValue(s)),
             long l => new ScalarValue(FormatMaskedValue(l.ToString())),
             int i => new ScalarValue(FormatMaskedValue(i.ToString())),
+            Guid g => new ScalarValue(FormatMaskedValue(g.ToString())),
             _ => ScalarValue.Null,
         };
     }

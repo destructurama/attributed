@@ -47,7 +47,7 @@ var log = new LoggerConfiguration()
 Apply the `LogWithName` attribute:
 
 <!-- snippet: LogWithName -->
-<a id='snippet-logwithname'></a>
+<a id='snippet-LogWithName'></a>
 ```cs
 public class PersonalData
 {
@@ -55,7 +55,7 @@ public class PersonalData
     public string? Name { get; set; }
 }
 ```
-<sup><a href='/src/Destructurama.Attributed.Tests/LogWithNameAttributeTests.cs#L64-L70' title='Snippet source file'>snippet source</a> | <a href='#snippet-logwithname' title='Start of snippet'>anchor</a></sup>
+<sup><a href='/src/Destructurama.Attributed.Tests/LogWithNameAttributeTests.cs#L64-L70' title='Snippet source file'>snippet source</a> | <a href='#snippet-LogWithName' title='Start of snippet'>anchor</a></sup>
 <!-- endSnippet -->
 
 ## 2. Ignoring a property
@@ -63,7 +63,7 @@ public class PersonalData
 Apply the `NotLogged` attribute:
 
 <!-- snippet: LoginCommand -->
-<a id='snippet-logincommand'></a>
+<a id='snippet-LoginCommand'></a>
 ```cs
 public class LoginCommand
 {
@@ -73,18 +73,18 @@ public class LoginCommand
     public string? Password { get; set; }
 }
 ```
-<sup><a href='/src/Destructurama.Attributed.Tests/Snippets.cs#L29-L37' title='Snippet source file'>snippet source</a> | <a href='#snippet-logincommand' title='Start of snippet'>anchor</a></sup>
+<sup><a href='/src/Destructurama.Attributed.Tests/Snippets.cs#L29-L37' title='Snippet source file'>snippet source</a> | <a href='#snippet-LoginCommand' title='Start of snippet'>anchor</a></sup>
 <!-- endSnippet -->
 
 When the object is passed using `{@...}` syntax the attributes will be consulted.
 
 <!-- snippet: LogCommand -->
-<a id='snippet-logcommand'></a>
+<a id='snippet-LogCommand'></a>
 ```cs
 var command = new LoginCommand { Username = "logged", Password = "not logged" };
 _log.Information("Logging in {@Command}", command);
 ```
-<sup><a href='/src/Destructurama.Attributed.Tests/Snippets.cs#L44-L47' title='Snippet source file'>snippet source</a> | <a href='#snippet-logcommand' title='Start of snippet'>anchor</a></sup>
+<sup><a href='/src/Destructurama.Attributed.Tests/Snippets.cs#L44-L47' title='Snippet source file'>snippet source</a> | <a href='#snippet-LogCommand' title='Start of snippet'>anchor</a></sup>
 <!-- endSnippet -->
 
 ## 3. Ignoring a property if it has default value
@@ -159,7 +159,7 @@ Note that masking also works for properties of type `IEnumerable<string>` or der
 ### Examples
 
 <!-- snippet: CustomizedMaskedLogs -->
-<a id='snippet-customizedmaskedlogs'></a>
+<a id='snippet-CustomizedMaskedLogs'></a>
 ```cs
 public class CustomizedMaskedLogs
 {
@@ -254,10 +254,16 @@ public class CustomizedMaskedLogs
     public string? ShowLastThreeThenDefaultMaskedPreservedLength { get; set; }
 
     /// <summary>
-    ///  123456789 results in "123REMOVED"
+    ///  123456789 results in "123_REMOVED_"
     /// </summary>
     [LogMasked(Text = "_REMOVED_", ShowFirst = 3)]
     public string? ShowFirstThreeThenCustomMask { get; set; }
+
+    /// <summary>
+    /// d3c4a1f2-3b4e-4f5a-9b6c-7d8e9f0a1b2c results in "d3c4a_REMOVED_"
+    /// </summary>
+    [LogMasked(Text = "_REMOVED_", ShowFirst = 5)]
+    public Guid? ShowFirstFiveThenCustomMaskGuid { get; set; }
 
     /// <summary>
     ///  123456789 results in "123_REMOVED_"
@@ -308,7 +314,7 @@ public class CustomizedMaskedLogs
     public string? ShowFirstAndLastThreeAndCustomMaskInTheMiddlePreservedLengthIgnored { get; set; }
 }
 ```
-<sup><a href='/src/Destructurama.Attributed.Tests/MaskedAttributeTests.cs#L8-L157' title='Snippet source file'>snippet source</a> | <a href='#snippet-customizedmaskedlogs' title='Start of snippet'>anchor</a></sup>
+<sup><a href='/src/Destructurama.Attributed.Tests/MaskedAttributeTests.cs#L8-L163' title='Snippet source file'>snippet source</a> | <a href='#snippet-CustomizedMaskedLogs' title='Start of snippet'>anchor</a></sup>
 <!-- endSnippet -->
 
 ## 7. Masking a string property with regular expressions
@@ -342,7 +348,7 @@ __Available properties__:
 ### Examples
 
 <!-- snippet: WithRegex -->
-<a id='snippet-withregex'></a>
+<a id='snippet-WithRegex'></a>
 ```cs
 public class WithRegex
 {
@@ -361,7 +367,7 @@ public class WithRegex
     public string? RegexReplaceSecond { get; set; }
 }
 ```
-<sup><a href='/src/Destructurama.Attributed.Tests/Snippets.cs#L6-L25' title='Snippet source file'>snippet source</a> | <a href='#snippet-withregex' title='Start of snippet'>anchor</a></sup>
+<sup><a href='/src/Destructurama.Attributed.Tests/Snippets.cs#L6-L25' title='Snippet source file'>snippet source</a> | <a href='#snippet-WithRegex' title='Start of snippet'>anchor</a></sup>
 <!-- endSnippet -->
 
 # Benchmarks
