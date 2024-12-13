@@ -200,25 +200,25 @@ public class CustomizedMaskedLogs
     public string? DefaultMaskedNotPreservedOnEmptyString { get; set; }
 
     /// <summary>
-    ///  123456789 results in "#"
+    /// 123456789 results in "#"
     /// </summary>
     [LogMasked(Text = "_REMOVED_")]
     public string? CustomMasked { get; set; }
 
     /// <summary>
-    ///  123456789 results in "#"
+    /// 123456789 results in "#"
     /// </summary>
     [LogMasked(Text = "")]
     public string? CustomMaskedWithEmptyString { get; set; }
 
     /// <summary>
-    ///  123456789 results in "#########"
+    /// 123456789 results in "#########"
     /// </summary>
     [LogMasked(Text = "#", PreserveLength = true)]
     public string? CustomMaskedPreservedLength { get; set; }
 
     /// <summary>
-    ///  123456789 results in "123******"
+    /// 123456789 results in "123******"
     /// </summary>
     [LogMasked(ShowFirst = 3)]
     public string? ShowFirstThreeThenDefaultMasked { get; set; }
@@ -272,13 +272,13 @@ public class CustomizedMaskedLogs
     public string? ShowFirstThreeThenCustomMaskPreservedLengthIgnored { get; set; }
 
     /// <summary>
-    ///  123456789 results in "_REMOVED_789"
+    /// 123456789 results in "_REMOVED_789"
     /// </summary>
     [LogMasked(Text = "_REMOVED_", ShowLast = 3)]
     public string? ShowLastThreeThenCustomMask { get; set; }
 
     /// <summary>
-    ///  123456789 results in "_REMOVED_789"
+    /// 123456789 results in "_REMOVED_789"
     /// </summary>
     [LogMasked(Text = "_REMOVED_", ShowLast = 3, PreserveLength = true)]
     public string? ShowLastThreeThenCustomMaskPreservedLengthIgnored { get; set; }
@@ -302,13 +302,13 @@ public class CustomizedMaskedLogs
     public string? ShowFirstAndLastThreeAndDefaultMaskInTheMiddlePreservedLength { get; set; }
 
     /// <summary>
-    ///  123456789 results in "123_REMOVED_789"
+    /// 123456789 results in "123_REMOVED_789"
     /// </summary>
     [LogMasked(Text = "_REMOVED_", ShowFirst = 3, ShowLast = 3)]
     public string? ShowFirstAndLastThreeAndCustomMaskInTheMiddle { get; set; }
 
     /// <summary>
-    ///  123456789 results in "123_REMOVED_789". PreserveLength is ignored"
+    /// 123456789 results in "123_REMOVED_789". PreserveLength is ignored"
     /// </summary>
     [LogMasked(Text = "_REMOVED_", ShowFirst = 3, ShowLast = 3, PreserveLength = true)]
     public string? ShowFirstAndLastThreeAndCustomMaskInTheMiddlePreservedLengthIgnored { get; set; }
