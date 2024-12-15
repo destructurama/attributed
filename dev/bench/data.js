@@ -1,5 +1,5 @@
 window.BENCHMARK_DATA = {
-  "lastUpdate": 1734254678736,
+  "lastUpdate": 1734254966286,
   "repoUrl": "https://github.com/destructurama/attributed",
   "entries": {
     "Benchmarks": [
@@ -2706,6 +2706,72 @@ window.BENCHMARK_DATA = {
             "value": 183.39052419662477,
             "unit": "ns",
             "range": "± 1.9384144867473203"
+          }
+        ]
+      },
+      {
+        "commit": {
+          "author": {
+            "email": "49699333+dependabot[bot]@users.noreply.github.com",
+            "name": "dependabot[bot]",
+            "username": "dependabot[bot]"
+          },
+          "committer": {
+            "email": "noreply@github.com",
+            "name": "GitHub",
+            "username": "web-flow"
+          },
+          "distinct": true,
+          "id": "56d938602582124126dd488a601e5e8f34d50018",
+          "message": "Bump Serilog from 3.1.1 to 4.2.0 in /src (#129)\n\nBumps [Serilog](https://github.com/serilog/serilog) from 3.1.1 to 4.2.0.\r\n- [Release notes](https://github.com/serilog/serilog/releases)\r\n- [Commits](https://github.com/serilog/serilog/compare/v3.1.1...v4.2.0)\r\n\r\n---\r\nupdated-dependencies:\r\n- dependency-name: Serilog\r\n  dependency-type: direct:production\r\n  update-type: version-update:semver-major\r\n...\r\n\r\nSigned-off-by: dependabot[bot] <support@github.com>\r\nCo-authored-by: dependabot[bot] <49699333+dependabot[bot]@users.noreply.github.com>",
+          "timestamp": "2024-12-15T12:26:05+03:00",
+          "tree_id": "e6e0d2f34f13f1adc2ad8bf3f8d676412108af83",
+          "url": "https://github.com/destructurama/attributed/commit/56d938602582124126dd488a601e5e8f34d50018"
+        },
+        "date": 1734254965920,
+        "tool": "benchmarkdotnet",
+        "benches": [
+          {
+            "name": "Benchmarks.AttributedBenchmarks.LogAsScalar",
+            "value": 234.73883243969507,
+            "unit": "ns",
+            "range": "± 0.8213099430642647"
+          },
+          {
+            "name": "Benchmarks.AttributedBenchmarks.LogMasked",
+            "value": 445.08161511788,
+            "unit": "ns",
+            "range": "± 1.1030567332917878"
+          },
+          {
+            "name": "Benchmarks.AttributedBenchmarks.LogReplaced",
+            "value": 610.9765674150907,
+            "unit": "ns",
+            "range": "± 1.1567894913663443"
+          },
+          {
+            "name": "Benchmarks.AttributedBenchmarks.LogWithName",
+            "value": 408.1390948613485,
+            "unit": "ns",
+            "range": "± 1.8389653363514138"
+          },
+          {
+            "name": "Benchmarks.AttributedBenchmarks.NotLogged",
+            "value": 115.7275724044213,
+            "unit": "ns",
+            "range": "± 0.2853710074842286"
+          },
+          {
+            "name": "Benchmarks.AttributedBenchmarks.NotLoggedIfDefault",
+            "value": 134.52324612324054,
+            "unit": "ns",
+            "range": "± 0.6721890834002026"
+          },
+          {
+            "name": "Benchmarks.AttributedBenchmarks.NotLoggedIfNull",
+            "value": 181.94383701256342,
+            "unit": "ns",
+            "range": "± 0.7190495515127865"
           }
         ]
       }
