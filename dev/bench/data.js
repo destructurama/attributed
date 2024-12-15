@@ -1,5 +1,5 @@
 window.BENCHMARK_DATA = {
-  "lastUpdate": 1734019458418,
+  "lastUpdate": 1734252689441,
   "repoUrl": "https://github.com/destructurama/attributed",
   "entries": {
     "Benchmarks": [
@@ -2244,6 +2244,72 @@ window.BENCHMARK_DATA = {
             "value": 181.73873674869537,
             "unit": "ns",
             "range": "± 0.9194785416620255"
+          }
+        ]
+      },
+      {
+        "commit": {
+          "author": {
+            "email": "115791468+andreas-moneygate@users.noreply.github.com",
+            "name": "andreas-moneygate",
+            "username": "andreas-moneygate"
+          },
+          "committer": {
+            "email": "noreply@github.com",
+            "name": "GitHub",
+            "username": "web-flow"
+          },
+          "distinct": true,
+          "id": "9c7ee1d4e2cf2256e1bf16505926a934c3c89c78",
+          "message": "LogMaskedAttribute to handle int,long and guid values (#126)\n\n* LogMaskedAttribute to handle int and long values\r\n\r\n* Add support for Guid\r\n\r\nhttps://github.com/destructurama/attributed/pull/122/files\r\n\r\n* Apply suggestions from code review\r\n\r\n* Update src/Destructurama.Attributed.Tests/MaskedAttributeTests.cs\r\n\r\n---------\r\n\r\nCo-authored-by: andreas <andreasph91@gmail.com>\r\nCo-authored-by: Christos Pavlides <christos.pavlides@outlook.com>\r\nCo-authored-by: Ivan Maximov <sungam3r@yandex.ru>",
+          "timestamp": "2024-12-15T11:48:28+03:00",
+          "tree_id": "08a331a47083ad024df2355741e1a3a608ff322c",
+          "url": "https://github.com/destructurama/attributed/commit/9c7ee1d4e2cf2256e1bf16505926a934c3c89c78"
+        },
+        "date": 1734252688861,
+        "tool": "benchmarkdotnet",
+        "benches": [
+          {
+            "name": "Benchmarks.AttributedBenchmarks.LogAsScalar",
+            "value": 245.38349778311593,
+            "unit": "ns",
+            "range": "± 1.116505362961356"
+          },
+          {
+            "name": "Benchmarks.AttributedBenchmarks.LogMasked",
+            "value": 444.7634107725961,
+            "unit": "ns",
+            "range": "± 1.5134297851414673"
+          },
+          {
+            "name": "Benchmarks.AttributedBenchmarks.LogReplaced",
+            "value": 572.711918258667,
+            "unit": "ns",
+            "range": "± 2.954638482487479"
+          },
+          {
+            "name": "Benchmarks.AttributedBenchmarks.LogWithName",
+            "value": 409.7827458381653,
+            "unit": "ns",
+            "range": "± 0.9409594578742771"
+          },
+          {
+            "name": "Benchmarks.AttributedBenchmarks.NotLogged",
+            "value": 111.1537276676723,
+            "unit": "ns",
+            "range": "± 0.4505997392522968"
+          },
+          {
+            "name": "Benchmarks.AttributedBenchmarks.NotLoggedIfDefault",
+            "value": 130.53599960009257,
+            "unit": "ns",
+            "range": "± 0.5630093879961936"
+          },
+          {
+            "name": "Benchmarks.AttributedBenchmarks.NotLoggedIfNull",
+            "value": 179.23698633511862,
+            "unit": "ns",
+            "range": "± 0.5790670250429996"
           }
         ]
       }
