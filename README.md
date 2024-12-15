@@ -233,7 +233,7 @@ public class CustomizedMaskedLogs
     /// 2147483647 results in "214****647"
     /// </summary>
     [LogMasked(ShowFirst = 3, ShowLast = 3, PreserveLength = true)]
-    public long? ShowFirstAndLastThreeAndDefaultMaskIntInTheMiddlePreservedLength { get; set; }
+    public int? ShowFirstAndLastThreeAndDefaultMaskIntInTheMiddlePreservedLength { get; set; }
 
     /// <summary>
     /// 123456789 results in "123******"
@@ -254,7 +254,7 @@ public class CustomizedMaskedLogs
     public string? ShowLastThreeThenDefaultMaskedPreservedLength { get; set; }
 
     /// <summary>
-    ///  123456789 results in "123_REMOVED_"
+    /// 123456789 results in "123_REMOVED_"
     /// </summary>
     [LogMasked(Text = "_REMOVED_", ShowFirst = 3)]
     public string? ShowFirstThreeThenCustomMask { get; set; }
@@ -266,7 +266,7 @@ public class CustomizedMaskedLogs
     public Guid? ShowFirstFiveThenCustomMaskGuid { get; set; }
 
     /// <summary>
-    ///  123456789 results in "123_REMOVED_"
+    /// 123456789 results in "123_REMOVED_"
     /// </summary>
     [LogMasked(Text = "_REMOVED_", ShowFirst = 3, PreserveLength = true)]
     public string? ShowFirstThreeThenCustomMaskPreservedLengthIgnored { get; set; }
