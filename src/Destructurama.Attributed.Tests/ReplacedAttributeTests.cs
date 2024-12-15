@@ -38,6 +38,12 @@ public class CustomizedRegexLogs
     /// </summary>
     [LogReplaced("does not matter", "does not matter")]
     public int RegexReplaceForInt { get; set; }
+
+    /// <summary>
+    /// 123|456|789 results in "***|456|****"
+    /// </summary>
+    [LogReplaced(REGEX_WITH_VERTICAL_BARS, "***|$2|****")]
+    public List<string>? RegexForCollection { get; set; }
 }
 
 [TestFixture]
@@ -156,4 +162,25 @@ public class ReplacedAttributeTests
 
         props.ContainsKey("RegexReplaceForInt").ShouldBeFalse();
     }
+
+    [Test]
+    public void LogReplacedAttribute_Should_Work_For_Collection_Of_String_Properties()
+    {
+        var customized = new CustomizedRegexLogs
+        {
+            RegexForCollection = ["123|456|789", "abc|def|ghi"]
+        };
+
+        var evt = DelegatingSink.Execute(customized);
+
+        var sv = (StructureValue)evt.Properties["Customized"];
+        var props = sv.Properties.ToDictionary(p => p.Name, p => p.Value);
+
+        props.ContainsKey("RegexForCollection").ShouldBeTrue();
+        var seq = props["RegexForCollection"].ShouldBeOfType<SequenceValue>();
+        seq.Elements.Count.ShouldBe(2);
+        seq.Elements[0].LiteralValue().ShouldBe("***|456|****");
+        seq.Elements[1].LiteralValue().ShouldBe("***|def|****");
+    }
+
 }

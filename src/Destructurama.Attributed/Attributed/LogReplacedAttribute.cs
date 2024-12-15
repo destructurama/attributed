@@ -60,9 +60,13 @@ public class LogReplacedAttribute : Attribute, IPropertyDestructuringAttribute
 
         if (value is string s)
         {
-            var replacement = Regex.Replace(s, _pattern, _replacement, Options, Timeout);
+            property = new(name, new ScalarValue(Regex.Replace(s, _pattern, _replacement, Options, Timeout)));
+            return true;
+        }
 
-            property = new(name, new ScalarValue(replacement));
+        if (value is IEnumerable<string> collection)
+        {
+            property = new(name, new SequenceValue(collection.Select(s => new ScalarValue(Regex.Replace(s, _pattern, _replacement, Options, Timeout)))));
             return true;
         }
 
