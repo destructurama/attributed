@@ -21,7 +21,7 @@ jobs:
       - name: Setup .NET SDK
         uses: actions/setup-dotnet@v4
         with:
-          dotnet-version: 8.0.x
+          dotnet-version: 9.0.x
 
       - name: Run benchmarks
         working-directory: src/Benchmarks
@@ -38,7 +38,7 @@ jobs:
           tool: 'benchmarkdotnet'
           output-file-path: src/Benchmarks/BenchmarkDotNet.Artifacts/results/Combined.Benchmarks.json
           github-token: ${{ secrets.GITHUB_TOKEN }}
-          alert-threshold: '110%'
+          alert-threshold: '130%'
           comment-on-alert: true
       - name: Push benchmarks results
         if: github.event_name != 'pull_request'

@@ -16,6 +16,18 @@ public class CustomizedMaskedLogs
     public string? DefaultMasked { get; set; }
 
     /// <summary>
+    /// 9223372036854775807 results in "***"
+    /// </summary>
+    [LogMasked]
+    public long? DefaultMaskedLong { get; set; }
+
+    /// <summary>
+    /// 2147483647 results in "***"
+    /// </summary>
+    [LogMasked]
+    public int? DefaultMaskedInt { get; set; }
+
+    /// <summary>
     /// [123456789,123456789,123456789] results in [***,***,***]
     /// </summary>
     [LogMasked]
@@ -34,28 +46,40 @@ public class CustomizedMaskedLogs
     public string? DefaultMaskedNotPreservedOnEmptyString { get; set; }
 
     /// <summary>
-    ///  123456789 results in "#"
+    /// 123456789 results in "#"
     /// </summary>
     [LogMasked(Text = "_REMOVED_")]
     public string? CustomMasked { get; set; }
 
     /// <summary>
-    ///  123456789 results in "#"
+    /// 123456789 results in "#"
     /// </summary>
     [LogMasked(Text = "")]
     public string? CustomMaskedWithEmptyString { get; set; }
 
     /// <summary>
-    ///  123456789 results in "#########"
+    /// 123456789 results in "#########"
     /// </summary>
     [LogMasked(Text = "#", PreserveLength = true)]
     public string? CustomMaskedPreservedLength { get; set; }
 
     /// <summary>
-    ///  123456789 results in "123******"
+    /// 123456789 results in "123******"
     /// </summary>
     [LogMasked(ShowFirst = 3)]
     public string? ShowFirstThreeThenDefaultMasked { get; set; }
+
+    /// <summary>
+    /// 9223372036854775807 results in "922***807"
+    /// </summary>
+    [LogMasked(ShowFirst = 3, ShowLast = 3)]
+    public long? ShowFirstAndLastThreeAndDefaultMaskLongInTheMiddle { get; set; }
+
+    /// <summary>
+    /// 2147483647 results in "214****647"
+    /// </summary>
+    [LogMasked(ShowFirst = 3, ShowLast = 3, PreserveLength = true)]
+    public int? ShowFirstAndLastThreeAndDefaultMaskIntInTheMiddlePreservedLength { get; set; }
 
     /// <summary>
     /// 123456789 results in "123******"
@@ -76,25 +100,31 @@ public class CustomizedMaskedLogs
     public string? ShowLastThreeThenDefaultMaskedPreservedLength { get; set; }
 
     /// <summary>
-    ///  123456789 results in "123REMOVED"
+    /// 123456789 results in "123_REMOVED_"
     /// </summary>
     [LogMasked(Text = "_REMOVED_", ShowFirst = 3)]
     public string? ShowFirstThreeThenCustomMask { get; set; }
 
     /// <summary>
-    ///  123456789 results in "123_REMOVED_"
+    /// d3c4a1f2-3b4e-4f5a-9b6c-7d8e9f0a1b2c results in "d3c4a_REMOVED_"
+    /// </summary>
+    [LogMasked(Text = "_REMOVED_", ShowFirst = 5)]
+    public Guid? ShowFirstFiveThenCustomMaskGuid { get; set; }
+
+    /// <summary>
+    /// 123456789 results in "123_REMOVED_"
     /// </summary>
     [LogMasked(Text = "_REMOVED_", ShowFirst = 3, PreserveLength = true)]
     public string? ShowFirstThreeThenCustomMaskPreservedLengthIgnored { get; set; }
 
     /// <summary>
-    ///  123456789 results in "_REMOVED_789"
+    /// 123456789 results in "_REMOVED_789"
     /// </summary>
     [LogMasked(Text = "_REMOVED_", ShowLast = 3)]
     public string? ShowLastThreeThenCustomMask { get; set; }
 
     /// <summary>
-    ///  123456789 results in "_REMOVED_789"
+    /// 123456789 results in "_REMOVED_789"
     /// </summary>
     [LogMasked(Text = "_REMOVED_", ShowLast = 3, PreserveLength = true)]
     public string? ShowLastThreeThenCustomMaskPreservedLengthIgnored { get; set; }
@@ -118,13 +148,13 @@ public class CustomizedMaskedLogs
     public string? ShowFirstAndLastThreeAndDefaultMaskInTheMiddlePreservedLength { get; set; }
 
     /// <summary>
-    ///  123456789 results in "123_REMOVED_789"
+    /// 123456789 results in "123_REMOVED_789"
     /// </summary>
     [LogMasked(Text = "_REMOVED_", ShowFirst = 3, ShowLast = 3)]
     public string? ShowFirstAndLastThreeAndCustomMaskInTheMiddle { get; set; }
 
     /// <summary>
-    ///  123456789 results in "123_REMOVED_789". PreserveLength is ignored"
+    /// 123456789 results in "123_REMOVED_789". PreserveLength is ignored"
     /// </summary>
     [LogMasked(Text = "_REMOVED_", ShowFirst = 3, ShowLast = 3, PreserveLength = true)]
     public string? ShowFirstAndLastThreeAndCustomMaskInTheMiddlePreservedLengthIgnored { get; set; }
@@ -287,6 +317,25 @@ public class MaskedAttributeTests
 
         props.ContainsKey("ShowFirstThreeThenCustomMask").ShouldBeTrue();
         props["ShowFirstThreeThenCustomMask"].LiteralValue().ShouldBe("123_REMOVED_");
+    }
+
+    [Test]
+    public void LogMaskedAttribute_Shows_First_NChars_Then_Replaces_All_With_Custom_Mask_Guid()
+    {
+        // [LogMasked(Text = "_REMOVED_", ShowFirst = 5)]
+        // -> "d3c4a_REMOVED_"
+        var customized = new CustomizedMaskedLogs
+        {
+            ShowFirstFiveThenCustomMaskGuid = Guid.Parse("d3c4a1f2-3b4e-4f5a-9b6c-7d8e9f0a1b2c")
+        };
+
+        var evt = DelegatingSink.Execute(customized);
+
+        var sv = (StructureValue)evt.Properties["Customized"];
+        var props = sv.Properties.ToDictionary(p => p.Name, p => p.Value);
+
+        props.ContainsKey("ShowFirstFiveThenCustomMaskGuid").ShouldBeTrue();
+        props["ShowFirstFiveThenCustomMaskGuid"].LiteralValue().ShouldBe("d3c4a_REMOVED_");
     }
 
     [Test]
@@ -689,5 +738,112 @@ public class MaskedAttributeTests
 
         props.ContainsKey("ShowFirstAndLastThreeAndCustomMaskInTheMiddlePreservedLengthIgnored").ShouldBeTrue();
         props["ShowFirstAndLastThreeAndCustomMaskInTheMiddlePreservedLengthIgnored"].LiteralValue().ShouldBe("123_REMOVED_321");
+    }
+
+    [Test]
+    public void LogMaskedAttribute_Replaces_Long_Value_With_DefaultStars_Mask()
+    {
+        // [LogMasked]
+        // 9223372036854775807 -> "***"
+        var customized = new CustomizedMaskedLogs
+        {
+            DefaultMaskedLong = long.MaxValue
+        };
+
+        var evt = DelegatingSink.Execute(customized);
+
+        var sv = (StructureValue)evt.Properties["Customized"];
+        var props = sv.Properties.ToDictionary(p => p.Name, p => p.Value);
+
+        props.ContainsKey("DefaultMaskedLong").ShouldBeTrue();
+        props["DefaultMaskedLong"].LiteralValue().ShouldBe("***");
+    }
+
+    [Test]
+    public void LogMaskedAttribute_Shows_First_NChars_And_Last_NChars_Replaces_Long_Value_With_Default_StarMask()
+    {
+        // [LogMasked(ShowFirst = 3, ShowLast = 3)]
+        // 9223372036854775807 -> "922***807"
+        var customized = new CustomizedMaskedLogs
+        {
+            ShowFirstAndLastThreeAndDefaultMaskLongInTheMiddle = long.MaxValue
+        };
+
+        var evt = DelegatingSink.Execute(customized);
+
+        var sv = (StructureValue)evt.Properties["Customized"];
+        var props = sv.Properties.ToDictionary(p => p.Name, p => p.Value);
+
+        props.ContainsKey("ShowFirstAndLastThreeAndDefaultMaskLongInTheMiddle").ShouldBeTrue();
+        props["ShowFirstAndLastThreeAndDefaultMaskLongInTheMiddle"].LiteralValue().ShouldBe("922***807");
+    }
+
+    [Test]
+    public void LogMaskedAttribute_Replaces_Int_Value_With_DefaultStars_Mask()
+    {
+        // [LogMasked]
+        // 2147483647 -> "***"
+        var customized = new CustomizedMaskedLogs
+        {
+            DefaultMaskedInt = int.MaxValue
+        };
+
+        var evt = DelegatingSink.Execute(customized);
+
+        var sv = (StructureValue)evt.Properties["Customized"];
+        var props = sv.Properties.ToDictionary(p => p.Name, p => p.Value);
+
+        props.ContainsKey("DefaultMaskedInt").ShouldBeTrue();
+        props["DefaultMaskedInt"].LiteralValue().ShouldBe("***");
+    }
+
+    [Test]
+    public void LogMaskedAttribute_Shows_First_NChars_And_Last_NChars_Replaces_Int_Value_With_Default_StarMask_And_PreservedLength()
+    {
+        // [LogMasked(ShowFirst = 3, ShowLast = 3, PreserveLength = true)]
+        // 2147483647 -> "214****647"
+
+        var customized = new CustomizedMaskedLogs
+        {
+            ShowFirstAndLastThreeAndDefaultMaskIntInTheMiddlePreservedLength = int.MaxValue
+        };
+
+        var evt = DelegatingSink.Execute(customized);
+
+        var sv = (StructureValue)evt.Properties["Customized"];
+        var props = sv.Properties.ToDictionary(p => p.Name, p => p.Value);
+
+        props.ContainsKey("ShowFirstAndLastThreeAndDefaultMaskIntInTheMiddlePreservedLength").ShouldBeTrue();
+        props["ShowFirstAndLastThreeAndDefaultMaskIntInTheMiddlePreservedLength"].LiteralValue().ShouldBe("214****647");
+    }
+
+
+    [Test]
+    public void LogMaskedAttribute_Nullify_Bool_Property()
+    {
+        var customized = new CustomizedMaskedLogs2
+        {
+            Enabled1 = true,
+            Enabled2 = true,
+        };
+
+        var evt = DelegatingSink.Execute(customized);
+
+        var sv = (StructureValue)evt.Properties["Customized"];
+        var props = sv.Properties.ToDictionary(p => p.Name, p => p.Value);
+
+        props.ContainsKey("Enabled1").ShouldBeTrue();
+        props["Enabled1"].LiteralValue().ShouldBe(true);
+
+        props.ContainsKey("Enabled2").ShouldBeTrue();
+        props["Enabled2"].LiteralValue().ShouldBeNull();
+    }
+
+    private class CustomizedMaskedLogs2
+    {
+        public bool Enabled1 { get; set; }
+
+        [LogMasked]
+        public bool Enabled2 { get; set; }
     }
 }
