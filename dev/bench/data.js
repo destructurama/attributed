@@ -1,5 +1,5 @@
 window.BENCHMARK_DATA = {
-  "lastUpdate": 1734272965822,
+  "lastUpdate": 1734273012069,
   "repoUrl": "https://github.com/destructurama/attributed",
   "entries": {
     "Benchmarks": [
@@ -3102,6 +3102,72 @@ window.BENCHMARK_DATA = {
             "value": 166.08403264559232,
             "unit": "ns",
             "range": "± 1.5075917898200142"
+          }
+        ]
+      },
+      {
+        "commit": {
+          "author": {
+            "email": "49699333+dependabot[bot]@users.noreply.github.com",
+            "name": "dependabot[bot]",
+            "username": "dependabot[bot]"
+          },
+          "committer": {
+            "email": "noreply@github.com",
+            "name": "GitHub",
+            "username": "web-flow"
+          },
+          "distinct": true,
+          "id": "804dfe01dac82369df2d1cf5550681158033cdfe",
+          "message": "Bump PolySharp from 1.14.1 to 1.15.0 in /src (#134)\n\nBumps [PolySharp](https://github.com/Sergio0694/PolySharp) from 1.14.1 to 1.15.0.\r\n- [Release notes](https://github.com/Sergio0694/PolySharp/releases)\r\n- [Commits](https://github.com/Sergio0694/PolySharp/compare/1.14.1...1.15.0)\r\n\r\n---\r\nupdated-dependencies:\r\n- dependency-name: PolySharp\r\n  dependency-type: direct:production\r\n  update-type: version-update:semver-minor\r\n...\r\n\r\nSigned-off-by: dependabot[bot] <support@github.com>\r\nCo-authored-by: dependabot[bot] <49699333+dependabot[bot]@users.noreply.github.com>",
+          "timestamp": "2024-12-15T17:26:59+03:00",
+          "tree_id": "00b52a72d796ab8dbb72675b60ab1a3ec532f28f",
+          "url": "https://github.com/destructurama/attributed/commit/804dfe01dac82369df2d1cf5550681158033cdfe"
+        },
+        "date": 1734273011481,
+        "tool": "benchmarkdotnet",
+        "benches": [
+          {
+            "name": "Benchmarks.AttributedBenchmarks.LogAsScalar",
+            "value": 298.6801298214839,
+            "unit": "ns",
+            "range": "± 0.812497795718495"
+          },
+          {
+            "name": "Benchmarks.AttributedBenchmarks.LogMasked",
+            "value": 426.97665173212687,
+            "unit": "ns",
+            "range": "± 1.80172784330003"
+          },
+          {
+            "name": "Benchmarks.AttributedBenchmarks.LogReplaced",
+            "value": 528.448113377889,
+            "unit": "ns",
+            "range": "± 3.886241821430404"
+          },
+          {
+            "name": "Benchmarks.AttributedBenchmarks.LogWithName",
+            "value": 385.5486994156471,
+            "unit": "ns",
+            "range": "± 0.988556125298802"
+          },
+          {
+            "name": "Benchmarks.AttributedBenchmarks.NotLogged",
+            "value": 101.84229733262744,
+            "unit": "ns",
+            "range": "± 0.4836906874580673"
+          },
+          {
+            "name": "Benchmarks.AttributedBenchmarks.NotLoggedIfDefault",
+            "value": 115.0098038145474,
+            "unit": "ns",
+            "range": "± 0.303220797087734"
+          },
+          {
+            "name": "Benchmarks.AttributedBenchmarks.NotLoggedIfNull",
+            "value": 169.36322343349457,
+            "unit": "ns",
+            "range": "± 0.4173787007387618"
           }
         ]
       }
