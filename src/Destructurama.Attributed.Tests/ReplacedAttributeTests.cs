@@ -162,6 +162,7 @@ public class ReplacedAttributeTests
 
         props.ContainsKey("RegexReplaceForInt").ShouldBeFalse();
     }
+
     [Test]
     public void LogReplacedAttribute_Should_Work_For_Collection_Of_String_Properties()
     {
