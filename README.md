@@ -170,6 +170,18 @@ public class CustomizedMaskedLogs
     public string? DefaultMasked { get; set; }
 
     /// <summary>
+    /// 9223372036854775807 results in "***"
+    /// </summary>
+    [LogMasked]
+    public long? DefaultMaskedLong { get; set; }
+
+    /// <summary>
+    /// 2147483647 results in "***"
+    /// </summary>
+    [LogMasked]
+    public int? DefaultMaskedInt { get; set; }
+
+    /// <summary>
     /// [123456789,123456789,123456789] results in [***,***,***]
     /// </summary>
     [LogMasked]
@@ -212,6 +224,18 @@ public class CustomizedMaskedLogs
     public string? ShowFirstThreeThenDefaultMasked { get; set; }
 
     /// <summary>
+    /// 9223372036854775807 results in "922***807"
+    /// </summary>
+    [LogMasked(ShowFirst = 3, ShowLast = 3)]
+    public long? ShowFirstAndLastThreeAndDefaultMaskLongInTheMiddle { get; set; }
+
+    /// <summary>
+    /// 2147483647 results in "214****647"
+    /// </summary>
+    [LogMasked(ShowFirst = 3, ShowLast = 3, PreserveLength = true)]
+    public int? ShowFirstAndLastThreeAndDefaultMaskIntInTheMiddlePreservedLength { get; set; }
+
+    /// <summary>
     /// 123456789 results in "123******"
     /// </summary>
     [LogMasked(ShowFirst = 3, PreserveLength = true)]
@@ -230,10 +254,16 @@ public class CustomizedMaskedLogs
     public string? ShowLastThreeThenDefaultMaskedPreservedLength { get; set; }
 
     /// <summary>
-    /// 123456789 results in "123REMOVED"
+    /// 123456789 results in "123_REMOVED_"
     /// </summary>
     [LogMasked(Text = "_REMOVED_", ShowFirst = 3)]
     public string? ShowFirstThreeThenCustomMask { get; set; }
+
+    /// <summary>
+    /// d3c4a1f2-3b4e-4f5a-9b6c-7d8e9f0a1b2c results in "d3c4a_REMOVED_"
+    /// </summary>
+    [LogMasked(Text = "_REMOVED_", ShowFirst = 5)]
+    public Guid? ShowFirstFiveThenCustomMaskGuid { get; set; }
 
     /// <summary>
     /// 123456789 results in "123_REMOVED_"
@@ -284,7 +314,7 @@ public class CustomizedMaskedLogs
     public string? ShowFirstAndLastThreeAndCustomMaskInTheMiddlePreservedLengthIgnored { get; set; }
 }
 ```
-<sup><a href='/src/Destructurama.Attributed.Tests/MaskedAttributeTests.cs#L8-L133' title='Snippet source file'>snippet source</a> | <a href='#snippet-CustomizedMaskedLogs' title='Start of snippet'>anchor</a></sup>
+<sup><a href='/src/Destructurama.Attributed.Tests/MaskedAttributeTests.cs#L8-L163' title='Snippet source file'>snippet source</a> | <a href='#snippet-CustomizedMaskedLogs' title='Start of snippet'>anchor</a></sup>
 <!-- endSnippet -->
 
 ## 7. Masking a string property with regular expressions
