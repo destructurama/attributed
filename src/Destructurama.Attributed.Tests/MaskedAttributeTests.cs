@@ -112,7 +112,7 @@ public class CustomizedMaskedLogs
     public Guid? ShowFirstFiveThenCustomMaskGuid { get; set; }
 
     /// <summary>
-    ///  123456789 results in "123_REMOVED_"
+    /// 123456789 results in "123_REMOVED_"
     /// </summary>
     [LogMasked(Text = "_REMOVED_", ShowFirst = 3, PreserveLength = true)]
     public string? ShowFirstThreeThenCustomMaskPreservedLengthIgnored { get; set; }
