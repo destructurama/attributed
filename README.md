@@ -145,7 +145,7 @@ var log = new LoggerConfiguration()
 
 To prevent destructuring of a type or property at all, apply the `LogAsScalar` attribute.
 
-## 6. Masking a string property
+## 6. Masking a property
 
 Apply the `LogMasked` attribute with various settings:
 
@@ -154,6 +154,7 @@ Apply the `LogMasked` attribute with various settings:
 - **ShowLast:** Shows the last x characters in the property value.
 - **PreserveLength:** If set, it will swap out each character with the default value. Note that this property will be ignored if Text has been set to custom value.
 
+Masking works for all properties calling `ToString()` on their values.
 Note that masking also works for properties of type `IEnumerable<string>` or derived from it, for example, `string[]` or `List<string>`.
 
 ### Examples
@@ -266,6 +267,12 @@ public class CustomizedMaskedLogs
     public Guid? ShowFirstFiveThenCustomMaskGuid { get; set; }
 
     /// <summary>
+    /// Descending results in "Desce_REMOVED_"
+    /// </summary>
+    [LogMasked(Text = "_REMOVED_", ShowFirst = 5)]
+    public ListSortDirection ShowFirstFiveThenCustomMaskEnum { get; set; }
+
+    /// <summary>
     /// 123456789 results in "123_REMOVED_"
     /// </summary>
     [LogMasked(Text = "_REMOVED_", ShowFirst = 3, PreserveLength = true)]
@@ -314,7 +321,7 @@ public class CustomizedMaskedLogs
     public string? ShowFirstAndLastThreeAndCustomMaskInTheMiddlePreservedLengthIgnored { get; set; }
 }
 ```
-<sup><a href='/src/Destructurama.Attributed.Tests/MaskedAttributeTests.cs#L8-L163' title='Snippet source file'>snippet source</a> | <a href='#snippet-CustomizedMaskedLogs' title='Start of snippet'>anchor</a></sup>
+<sup><a href='/src/Destructurama.Attributed.Tests/MaskedAttributeTests.cs#L9-L170' title='Snippet source file'>snippet source</a> | <a href='#snippet-CustomizedMaskedLogs' title='Start of snippet'>anchor</a></sup>
 <!-- endSnippet -->
 
 ## 7. Masking a string property with regular expressions
