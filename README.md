@@ -372,6 +372,54 @@ public class WithRegex
 <sup><a href='/src/Destructurama.Attributed.Tests/Snippets.cs#L6-L25' title='Snippet source file'>snippet source</a> | <a href='#snippet-WithRegex' title='Start of snippet'>anchor</a></sup>
 <!-- endSnippet -->
 
+## 8. Working with Metadataclass Attribute
+
+Apply the attribute `NotLogged` to the property in your MetadataClass
+
+### Examples
+
+```cs
+    /// <summary>
+    /// Simple Metadata Sample
+    /// </summary>
+    [MetadataType(typeof(DtoMetadata))]
+    public partial class Dto
+    {
+        public string Private { get; set; }
+
+        public string Public { get; set; }
+    }
+
+    internal class DtoMetadata
+    {
+        [NotLogged]
+        public object Private { get; set; }
+    }
+
+    /// <summary>
+    /// Metadata Sample with derived subclass
+    /// </summary>
+    [MetadataType(typeof(DtoMetadataDerived))]
+    public partial class DtoWithDerived
+    {
+        public string Private { get; set; }
+
+        public string Public { get; set; }
+    }
+
+    internal class DtoMetadataBase
+    {
+        public object Public { get; set; }
+    }
+
+    internal class DtoMetadataDerived : DtoMetadataBase
+    {
+        [NotLogged]
+        public object Private { get; set; }
+    }
+
+```
+
 # Benchmarks
 
 The results are available [here](https://destructurama.github.io/attributed/dev/bench/).
