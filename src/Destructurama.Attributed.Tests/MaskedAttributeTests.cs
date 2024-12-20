@@ -1,3 +1,4 @@
+using System.ComponentModel;
 using Destructurama.Attributed.Tests.Support;
 using NUnit.Framework;
 using Serilog.Events;
@@ -110,6 +111,12 @@ public class CustomizedMaskedLogs
     /// </summary>
     [LogMasked(Text = "_REMOVED_", ShowFirst = 5)]
     public Guid? ShowFirstFiveThenCustomMaskGuid { get; set; }
+
+    /// <summary>
+    /// Descending results in "Desce_REMOVED_"
+    /// </summary>
+    [LogMasked(Text = "_REMOVED_", ShowFirst = 5)]
+    public ListSortDirection ShowFirstFiveThenCustomMaskEnum { get; set; }
 
     /// <summary>
     /// 123456789 results in "123_REMOVED_"
@@ -336,6 +343,25 @@ public class MaskedAttributeTests
 
         props.ContainsKey("ShowFirstFiveThenCustomMaskGuid").ShouldBeTrue();
         props["ShowFirstFiveThenCustomMaskGuid"].LiteralValue().ShouldBe("d3c4a_REMOVED_");
+    }
+
+    [Test]
+    public void LogMaskedAttribute_Shows_First_NChars_Then_Replaces_All_With_Custom_Mask_Enum()
+    {
+        // [LogMasked(Text = "_REMOVED_", ShowFirst = 5)]
+        // -> "Desce_REMOVED_"
+        var customized = new CustomizedMaskedLogs
+        {
+            ShowFirstFiveThenCustomMaskEnum = ListSortDirection.Descending,
+        };
+
+        var evt = DelegatingSink.Execute(customized);
+
+        var sv = (StructureValue)evt.Properties["Customized"];
+        var props = sv.Properties.ToDictionary(p => p.Name, p => p.Value);
+
+        props.ContainsKey("ShowFirstFiveThenCustomMaskEnum").ShouldBeTrue();
+        props["ShowFirstFiveThenCustomMaskEnum"].LiteralValue().ShouldBe("Desce_REMOVED_");
     }
 
     [Test]
@@ -819,7 +845,7 @@ public class MaskedAttributeTests
 
 
     [Test]
-    public void LogMaskedAttribute_Nullify_Bool_Property()
+    public void LogMaskedAttribute_Mask_Bool_Property()
     {
         var customized = new CustomizedMaskedLogs2
         {
@@ -836,7 +862,7 @@ public class MaskedAttributeTests
         props["Enabled1"].LiteralValue().ShouldBe(true);
 
         props.ContainsKey("Enabled2").ShouldBeTrue();
-        props["Enabled2"].LiteralValue().ShouldBeNull();
+        props["Enabled2"].LiteralValue().ShouldBe("***");
     }
 
     private class CustomizedMaskedLogs2
