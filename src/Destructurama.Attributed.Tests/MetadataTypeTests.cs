@@ -85,5 +85,4 @@ public class MetadataTypeTests
         public object Private { get; set; }
     }
 
-
 }
