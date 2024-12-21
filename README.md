@@ -372,7 +372,7 @@ public class WithRegex
 <sup><a href='/src/Destructurama.Attributed.Tests/Snippets.cs#L6-L25' title='Snippet source file'>snippet source</a> | <a href='#snippet-WithRegex' title='Start of snippet'>anchor</a></sup>
 <!-- endSnippet -->
 
-## 8. Working with Metadataclass Attribute
+## 8. Working with MetadataTypeAttribute
 
 Apply the attribute `NotLogged` to the property in your MetadataClass. 
 

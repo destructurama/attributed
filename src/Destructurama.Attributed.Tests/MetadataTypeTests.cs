@@ -57,6 +57,7 @@ public class MetadataTypeTests
         props.Count.ShouldBe(1);
         props["Public"].LiteralValue().ShouldBe("not_Secret");
     }
+
     [Test]
     public void MetadataTypeWithDerived_Should_Be_Respected()
     {
@@ -113,6 +114,5 @@ public class MetadataTypeTests
         [NotLogged]
         public object Private { get; set; }
     }
-
 
 }
