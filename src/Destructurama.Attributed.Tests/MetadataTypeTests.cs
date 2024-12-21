@@ -10,6 +10,36 @@ namespace Destructurama.Attributed.Tests;
 public class MetadataTypeTests
 {
 #if NET5_0_OR_GREATER
+    [SetUp]
+    public void SetUp()
+    {
+        AttributedDestructuringPolicy.Clear();
+    }
+
+    [TearDown]
+    public void TearDown()
+    {
+        AttributedDestructuringPolicy.Clear();
+    }
+
+    [Test]
+    public void MetadataType_Should_Not_Be_Respected()
+    {
+        var customized = new Dto
+        {
+            Private = "secret",
+            Public = "not_Secret"
+        };
+
+        var evt = DelegatingSink.Execute(customized);
+
+        var sv = (StructureValue)evt.Properties["Customized"];
+        var props = sv.Properties.ToDictionary(p => p.Name, p => p.Value);
+
+        props.Count.ShouldBe(2);
+        props["Public"].LiteralValue().ShouldBe("not_Secret");
+        props["Private"].LiteralValue().ShouldBe("secret");
+    }
     [Test]
     public void MetadataType_Should_Be_Respected()
     {
@@ -19,7 +49,7 @@ public class MetadataTypeTests
             Public = "not_Secret"
         };
 
-        var evt = DelegatingSink.Execute(customized);
+        var evt = DelegatingSink.Execute(customized, configure: opt => opt.UseMetadataTypeAttribute = true);
 
         var sv = (StructureValue)evt.Properties["Customized"];
         var props = sv.Properties.ToDictionary(p => p.Name, p => p.Value);
@@ -36,7 +66,7 @@ public class MetadataTypeTests
             Public = "not_Secret"
         };
 
-        var evt = DelegatingSink.Execute(customized);
+        var evt = DelegatingSink.Execute(customized, configure: opt => opt.UseMetadataTypeAttribute = true);
 
         var sv = (StructureValue)evt.Properties["Customized"];
         var props = sv.Properties.ToDictionary(p => p.Name, p => p.Value);

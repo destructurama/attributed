@@ -374,7 +374,15 @@ public class WithRegex
 
 ## 8. Working with Metadataclass Attribute
 
-Apply the attribute `NotLogged` to the property in your MetadataClass
+Apply the attribute `NotLogged` to the property in your MetadataClass. 
+
+This requires to set configuration option UseMetadataTypeAttribute to true.
+
+```csharp
+var log = new LoggerConfiguration()
+  .Destructure.UsingAttributes(x => x.UseMetadataTypeAttribute = true)
+  ...
+```
 
 ### Examples
 

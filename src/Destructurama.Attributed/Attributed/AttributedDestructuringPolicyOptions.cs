@@ -19,4 +19,8 @@ public class AttributedDestructuringPolicyOptions
     /// This works the same as when applying <see cref="NotLoggedAttribute"/> to the property but may help if you have no access to it's source code.
     /// </summary>
     public bool RespectLogPropertyIgnoreAttribute { get; set; }
+    /// <summary>
+    /// By setting this property to <see langword="true"/> the attributes declared in Metadatatype class will be used associated with data class
+    /// </summary>
+    public bool UseMetadataTypeAttribute { get; set; }
 }
