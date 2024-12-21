@@ -21,6 +21,9 @@ using Destructurama.Util;
 using Serilog.Core;
 using Serilog.Debugging;
 using Serilog.Events;
+#if NETSTANDARD2_1_OR_GREATER
+using System.ComponentModel.DataAnnotations;
+#endif
 
 namespace Destructurama.Attributed;
 
@@ -47,7 +50,7 @@ internal class AttributedDestructuringPolicy : IDestructuringPolicy
         return cached.CanDestructure;
     }
 
-    private static IEnumerable<PropertyInfo> GetPropertiesRecursive(Type type)
+    private IEnumerable<PropertyInfo> GetPropertiesRecursive(Type type)
     {
         var seenNames = new HashSet<string>();
 
@@ -56,6 +59,27 @@ internal class AttributedDestructuringPolicy : IDestructuringPolicy
             var unseenProperties = type.GetProperties(BindingFlags.Public | BindingFlags.Instance | BindingFlags.DeclaredOnly)
                 .Where(p => p.CanRead && p.GetMethod.IsPublic && p.GetIndexParameters().Length == 0 && !seenNames.Contains(p.Name));
 
+#if NETSTANDARD2_1_OR_GREATER
+
+            if (_options.UseMetadataTypeAttribute)
+            {
+                var metaProp = new List<PropertyInfo>();
+                // find Metadata Class
+                // Take only first Entry, metadatatypeAttribute definition specifies AllowMultiple=false
+                // see https://learn.microsoft.com/en-us/dotnet/api/system.componentmodel.dataannotations.metadatatypeattribute?view=net-9.0#definition 
+                var metaDataType = type.GetCustomAttributes<MetadataTypeAttribute>(true).ToList().FirstOrDefault();
+                if (metaDataType != null)
+                {
+                    var metaClass = metaDataType.MetadataClassType;
+                    // find all properties with Custom Attributes which are in referenced class
+                    metaProp = metaClass.GetProperties().Where(mp => mp.CustomAttributes.Count() > 0 && unseenProperties.Any(up => up.Name == mp.Name)).ToList();
+                    // replace all found properties in unseenProperties with those from Metadataclass
+                    var removedAttr = unseenProperties.Where(up => metaProp.Any(mp => mp.Name != up.Name)).ToList();
+                    removedAttr.AddRange(metaProp);
+                    unseenProperties = removedAttr;
+                }
+            }
+#endif
             foreach (var propertyInfo in unseenProperties)
             {
                 seenNames.Add(propertyInfo.Name);
