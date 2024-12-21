@@ -77,11 +77,6 @@ internal class AttributedDestructuringPolicy : IDestructuringPolicy
 #endif
             foreach (var propertyInfo in unseenProperties)
             {
-#if NETSTANDARD2_1_OR_GREATER
-                if (metaProp.Any(p => p.Name == propertyInfo.Name))
-                {
-                }
-#endif
                 seenNames.Add(propertyInfo.Name);
                 yield return propertyInfo;
             }
