@@ -20,7 +20,7 @@ public class AttributedDestructuringPolicyOptions
     /// </summary>
     public bool RespectLogPropertyIgnoreAttribute { get; set; }
     /// <summary>
-    /// By setting this property to <see langword="true"/> the attributes declared in Metadatatype class will be used associated with data class
+    /// Respect MetadataTypeAttribute pointing to another class with annotated properties.
     /// </summary>
     public bool RespectMetadataTypeAttribute { get; set; }
 }
