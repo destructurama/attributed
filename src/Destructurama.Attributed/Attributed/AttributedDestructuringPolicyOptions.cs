@@ -22,5 +22,5 @@ public class AttributedDestructuringPolicyOptions
     /// <summary>
     /// By setting this property to <see langword="true"/> the attributes declared in Metadatatype class will be used associated with data class
     /// </summary>
-    public bool UseMetadataTypeAttribute { get; set; }
+    public bool RespectMetadataTypeAttribute { get; set; }
 }
