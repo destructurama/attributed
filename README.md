@@ -374,9 +374,7 @@ public class WithRegex
 
 ## 8. Working with MetadataTypeAttribute
 
-Apply the attribute `NotLogged` to the property in your MetadataClass. 
-
-This requires to set configuration option UseMetadataTypeAttribute to true.
+You can apply [`MetadataTypeAttribute`](https://learn.microsoft.com/en-us/dotnet/api/system.componentmodel.dataannotations.metadatatypeattribute) to your class providing another type with annotated properties. It may help you in the case when source type with its properties is defined in a code generated file so you don't want to put the attributes in there as they would get overwritten by the generator. Note that you have to set `AttributedDestructuringPolicyOptions.RespectMetadataTypeAttribute` to `true`.
 
 ```csharp
 var log = new LoggerConfiguration()
