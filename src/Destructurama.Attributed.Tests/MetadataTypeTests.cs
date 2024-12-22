@@ -49,7 +49,7 @@ public class MetadataTypeTests
             Public = "not_Secret"
         };
 
-        var evt = DelegatingSink.Execute(customized, configure: opt => opt.UseMetadataTypeAttribute = true);
+        var evt = DelegatingSink.Execute(customized, configure: opt => opt.RespectMetadataTypeAttribute = true);
 
         var sv = (StructureValue)evt.Properties["Customized"];
         var props = sv.Properties.ToDictionary(p => p.Name, p => p.Value);
@@ -67,7 +67,7 @@ public class MetadataTypeTests
             Public = "not_Secret"
         };
 
-        var evt = DelegatingSink.Execute(customized, configure: opt => opt.UseMetadataTypeAttribute = true);
+        var evt = DelegatingSink.Execute(customized, configure: opt => opt.RespectMetadataTypeAttribute = true);
 
         var sv = (StructureValue)evt.Properties["Customized"];
         var props = sv.Properties.ToDictionary(p => p.Name, p => p.Value);

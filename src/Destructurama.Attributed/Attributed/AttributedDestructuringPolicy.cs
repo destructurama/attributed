@@ -61,7 +61,7 @@ internal class AttributedDestructuringPolicy : IDestructuringPolicy
 
 #if NETSTANDARD2_1_OR_GREATER
 
-            if (_options.UseMetadataTypeAttribute)
+            if (_options.RespectMetadataTypeAttribute)
             {
                 var metaProp = new List<PropertyInfo>();
                 // find Metadata Class

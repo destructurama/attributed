@@ -5,6 +5,7 @@ namespace Destructurama.Attributed
         public AttributedDestructuringPolicyOptions() { }
         public bool IgnoreNullProperties { get; set; }
         public bool RespectLogPropertyIgnoreAttribute { get; set; }
+        public bool RespectMetadataTypeAttribute { get; set; }
     }
     public interface IPropertyDestructuringAttribute
     {
