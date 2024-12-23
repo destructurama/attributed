@@ -9,7 +9,7 @@ namespace Destructurama.Attributed.Tests;
 [TestFixture]
 public class MetadataTypeTests
 {
-#if NET5_0_OR_GREATER
+
     [SetUp]
     public void SetUp()
     {
@@ -75,7 +75,6 @@ public class MetadataTypeTests
         props.Count.ShouldBe(1);
         props["Public"].LiteralValue().ShouldBe("not_Secret");
     }
-#endif
     /// <summary>
     /// Simple Metadata Sample
     /// </summary>

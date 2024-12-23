@@ -21,9 +21,6 @@ using Destructurama.Util;
 using Serilog.Core;
 using Serilog.Debugging;
 using Serilog.Events;
-#if NETSTANDARD2_1_OR_GREATER
-using System.ComponentModel.DataAnnotations;
-#endif
 
 namespace Destructurama.Attributed;
 
@@ -59,7 +56,6 @@ internal class AttributedDestructuringPolicy : IDestructuringPolicy
             var unseenProperties = type.GetProperties(BindingFlags.Public | BindingFlags.Instance | BindingFlags.DeclaredOnly)
                 .Where(p => p.CanRead && p.GetMethod.IsPublic && p.GetIndexParameters().Length == 0 && !seenNames.Contains(p.Name));
 
-#if NETSTANDARD2_1_OR_GREATER
 
             if (_options.RespectMetadataTypeAttribute)
             {
@@ -67,10 +63,10 @@ internal class AttributedDestructuringPolicy : IDestructuringPolicy
                 // find Metadata Class
                 // Take only first Entry, metadatatypeAttribute definition specifies AllowMultiple=false
                 // see https://learn.microsoft.com/en-us/dotnet/api/system.componentmodel.dataannotations.metadatatypeattribute?view=net-9.0#definition 
-                var metaDataType = type.GetCustomAttributes<MetadataTypeAttribute>(true).ToList().FirstOrDefault();
+                var metaDataType = type.GetCustomAttributes(true).Where(t => t.GetType().FullName == "System.ComponentModel.DataAnnotations.MetadataTypeAttribute").FirstOrDefault();
                 if (metaDataType != null)
                 {
-                    var metaClass = metaDataType.MetadataClassType;
+                    var metaClass = (Type)metaDataType.GetType().GetProperty("MetadataClassType").GetValue(metaDataType, null);
                     // find all properties with Custom Attributes which are in referenced class
                     metaProp = metaClass.GetProperties().Where(mp => mp.CustomAttributes.Count() > 0 && unseenProperties.Any(up => up.Name == mp.Name)).ToList();
                     // replace all found properties in unseenProperties with those from Metadataclass
@@ -79,7 +75,6 @@ internal class AttributedDestructuringPolicy : IDestructuringPolicy
                     unseenProperties = removedAttr;
                 }
             }
-#endif
             foreach (var propertyInfo in unseenProperties)
             {
                 seenNames.Add(propertyInfo.Name);
