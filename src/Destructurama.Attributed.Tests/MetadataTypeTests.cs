@@ -9,7 +9,6 @@ namespace Destructurama.Attributed.Tests;
 [TestFixture]
 public class MetadataTypeTests
 {
-
     [SetUp]
     public void SetUp()
     {
