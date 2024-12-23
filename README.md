@@ -389,9 +389,6 @@ var log = new LoggerConfiguration()
   ...
 ```
 
-### Examples
-
-```cs
 # Benchmarks
 
 The results are available [here](https://destructurama.github.io/attributed/dev/bench/).
