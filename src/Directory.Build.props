@@ -35,7 +35,7 @@
   </ItemGroup>
 
   <ItemGroup Condition="'$(IsPackable)' == 'true'">
-    <PackageReference Include="DotNetProjectFile.Analyzers" Version="1.5.2" PrivateAssets="all" />
+    <PackageReference Include="DotNetProjectFile.Analyzers" Version="1.5.3" PrivateAssets="all" />
     <PackageReference Include="Microsoft.SourceLink.GitHub" Version="8.0.0" PrivateAssets="All" />
     <PackageReference Include="MinVer" Version="6.0.0" PrivateAssets="All" />
   </ItemGroup>
