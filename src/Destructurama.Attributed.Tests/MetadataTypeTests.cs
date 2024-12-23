@@ -113,5 +113,4 @@ public class MetadataTypeTests
         [NotLogged]
         public object Private { get; set; }
     }
-
 }
