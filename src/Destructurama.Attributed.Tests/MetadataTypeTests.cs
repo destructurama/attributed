@@ -39,6 +39,7 @@ public class MetadataTypeTests
         props["Public"].LiteralValue().ShouldBe("not_Secret");
         props["Private"].LiteralValue().ShouldBe("secret");
     }
+
     [Test]
     public void MetadataType_Should_Be_Respected()
     {
@@ -74,6 +75,7 @@ public class MetadataTypeTests
         props.Count.ShouldBe(1);
         props["Public"].LiteralValue().ShouldBe("not_Secret");
     }
+
     /// <summary>
     /// Simple Metadata Sample
     /// </summary>
