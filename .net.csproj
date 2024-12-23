@@ -1,0 +1,21 @@
+<Project Sdk="Microsoft.NET.Sdk">
+
+  <PropertyGroup>
+    <TargetFramework>net9.0</TargetFramework>
+    <SignAssembly>false</SignAssembly>
+    <NoWarn>$(NoWarn);NU1504</NoWarn>
+  </PropertyGroup>
+
+  <ItemGroup>
+    <None Include="assets/**" />
+  </ItemGroup>
+  
+  <ItemGroup>
+    <AdditionalFiles Include="LICENSE" />
+  </ItemGroup>
+  
+  <ItemGroup>
+    <PackageReference Include="DotNetProjectFile.Analyzers.Sdk" Version="1.5.3" PrivateAssets="all" />
+  </ItemGroup>
+
+</Project>

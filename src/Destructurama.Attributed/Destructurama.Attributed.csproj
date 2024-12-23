@@ -4,12 +4,22 @@
     <TargetFramework>netstandard2.0</TargetFramework>
     <Description>Use attributes to control how complex types are logged to Serilog.</Description>
     <RootNamespace>Destructurama</RootNamespace>
+    <IsPackable>true</IsPackable>
     <PolySharpIncludeRuntimeSupportedAttributes>true</PolySharpIncludeRuntimeSupportedAttributes>
+    <PackageId>Destructurama.Attributed</PackageId>
+    <PackageReleaseNotes>
+      <![CDATA[
+# To Be released.
+]]>
+    </PackageReleaseNotes>
   </PropertyGroup>
 
   <ItemGroup>
-    <PackageReference Include="Serilog" Version="4.2.0" />
     <PackageReference Include="PolySharp" Version="1.15.0" PrivateAssets="All" />
+    <PackageReference Include="Serilog" Version="4.2.0" />
+  </ItemGroup>
+
+  <ItemGroup>
     <InternalsVisibleTo Include="Destructurama.Attributed.Tests, PublicKey=0024000004800000940000000602000000240000525341310004000001000100638a43140e8a1271c1453df1379e64b40b67a1f333864c1aef5ac318a0fa2008545c3d35a82ef005edf0de1ad1e1ea155722fe289df0e462f78c40a668cbc96d7be1d487faef5714a54bb4e57909c86b3924c2db6d55ccf59939b99eb0cab6e8a91429ba0ce630c08a319b323bddcbbd509f1afe4ae77a6cbb8b447f588febc3" />
     <InternalsVisibleTo Include="Benchmarks, PublicKey=0024000004800000940000000602000000240000525341310004000001000100638a43140e8a1271c1453df1379e64b40b67a1f333864c1aef5ac318a0fa2008545c3d35a82ef005edf0de1ad1e1ea155722fe289df0e462f78c40a668cbc96d7be1d487faef5714a54bb4e57909c86b3924c2db6d55ccf59939b99eb0cab6e8a91429ba0ce630c08a319b323bddcbbd509f1afe4ae77a6cbb8b447f588febc3" />
   </ItemGroup>
