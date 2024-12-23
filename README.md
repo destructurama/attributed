@@ -385,7 +385,7 @@ You can apply [`MetadataTypeAttribute`](https://learn.microsoft.com/en-us/dotnet
 
 ```csharp
 var log = new LoggerConfiguration()
-  .Destructure.UsingAttributes(x => x.UseMetadataTypeAttribute = true)
+  .Destructure.UsingAttributes(x => x.RespectMetadataTypeAttribute = true)
   ...
 ```
 
