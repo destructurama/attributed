@@ -24,15 +24,24 @@
     <ImplicitUsings>enable</ImplicitUsings>
     <SignAssembly>true</SignAssembly>
     <AssemblyOriginatorKeyFile>../../assets/Destructurama.snk</AssemblyOriginatorKeyFile>
+    <NoWarn>$(NoWarn);Proj0003;Proj0010;Proj0028;Proj0200;Proj0201;Proj0205;Proj0206;Proj0208;Proj0213;Proj0214;Proj0215;Proj0216;Proj0240;Proj0243;Proj0400;Proj0800;Proj1001;Proj1003;</NoWarn>
     <!--https://github.com/dotnet/BenchmarkDotNet/issues/836-->
     <AssemblyOriginatorKeyFile Condition="EXISTS('../../../../../../assets/Destructurama.snk')">../../../../../../assets/Destructurama.snk</AssemblyOriginatorKeyFile>
   </PropertyGroup>
 
   <ItemGroup Condition="'$(IsPackable)' == 'true'">
-    <None Include="..\..\assets\icon.png" Pack="true" PackagePath="\" Visible="false" />
-    <None Include="..\..\README.md" Pack="true" PackagePath="\" Visible="false" />
+    <None Include="../../assets/icon.png" Pack="true" PackagePath="\" Visible="false" />
+    <None Include="../../README.md" Pack="true" PackagePath="\" Visible="false" />
+  </ItemGroup>
+
+  <ItemGroup Condition="'$(IsPackable)' == 'true'">
+    <PackageReference Include="DotNetProjectFile.Analyzers" Version="1.5.2" PrivateAssets="all" />
     <PackageReference Include="Microsoft.SourceLink.GitHub" Version="8.0.0" PrivateAssets="All" />
     <PackageReference Include="MinVer" Version="6.0.0" PrivateAssets="All" />
+  </ItemGroup>
+
+  <ItemGroup>
+    <AdditionalFiles Include="*.csproj" Visible="false" />
   </ItemGroup>
 
 </Project>
