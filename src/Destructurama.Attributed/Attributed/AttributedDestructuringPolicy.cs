@@ -56,7 +56,6 @@ internal class AttributedDestructuringPolicy : IDestructuringPolicy
             var unseenProperties = type.GetProperties(BindingFlags.Public | BindingFlags.Instance | BindingFlags.DeclaredOnly)
                 .Where(p => p.CanRead && p.GetMethod.IsPublic && p.GetIndexParameters().Length == 0 && !seenNames.Contains(p.Name));
 
-
             if (_options.RespectMetadataTypeAttribute)
             {
                 var metaProp = new List<PropertyInfo>();
@@ -75,6 +74,7 @@ internal class AttributedDestructuringPolicy : IDestructuringPolicy
                     unseenProperties = removedAttr;
                 }
             }
+            
             foreach (var propertyInfo in unseenProperties)
             {
                 seenNames.Add(propertyInfo.Name);
