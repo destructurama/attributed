@@ -12,7 +12,7 @@
   </ItemGroup>
 
   <ItemGroup>
-    <ProjectReference Include="..\Destructurama.Attributed\Destructurama.Attributed.csproj" />
+    <ProjectReference Include="../Destructurama.Attributed/Destructurama.Attributed.csproj" />
   </ItemGroup>
 
 </Project>
