@@ -19,4 +19,9 @@ public class AttributedDestructuringPolicyOptions
     /// This works the same as when applying <see cref="NotLoggedAttribute"/> to the property but may help if you have no access to it's source code.
     /// </summary>
     public bool RespectLogPropertyIgnoreAttribute { get; set; }
+
+    /// <summary>
+    /// Respect MetadataTypeAttribute pointing to another class with annotated properties.
+    /// </summary>
+    public bool RespectMetadataTypeAttribute { get; set; }
 }
