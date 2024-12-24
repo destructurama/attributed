@@ -56,25 +56,25 @@ internal class AttributedDestructuringPolicy : IDestructuringPolicy
             var unseenProperties = type.GetProperties(BindingFlags.Public | BindingFlags.Instance | BindingFlags.DeclaredOnly)
                 .Where(p => p.CanRead && p.GetMethod.IsPublic && p.GetIndexParameters().Length == 0 && !seenNames.Contains(p.Name));
 
-            if (_options.RespectMetadataTypeAttribute)
-            {
-                var metaProp = new List<PropertyInfo>();
-                // find Metadata Class
-                // Take only first Entry, metadatatypeAttribute definition specifies AllowMultiple=false
-                // see https://learn.microsoft.com/en-us/dotnet/api/system.componentmodel.dataannotations.metadatatypeattribute?view=net-9.0#definition 
-                var metaDataType = type.GetCustomAttributes(true).Where(t => t.GetType().FullName == "System.ComponentModel.DataAnnotations.MetadataTypeAttribute").FirstOrDefault();
-                if (metaDataType != null)
-                {
-                    var metaClass = (Type)metaDataType.GetType().GetProperty("MetadataClassType").GetValue(metaDataType, null);
-                    // find all properties with Custom Attributes which are in referenced class
-                    metaProp = metaClass.GetProperties().Where(mp => mp.CustomAttributes.Count() > 0 && unseenProperties.Any(up => up.Name == mp.Name)).ToList();
-                    // replace all found properties in unseenProperties with those from Metadataclass
-                    var removedAttr = unseenProperties.Where(up => metaProp.Any(mp => mp.Name != up.Name)).ToList();
-                    removedAttr.AddRange(metaProp);
-                    unseenProperties = removedAttr;
-                }
-            }
-            
+            //if (_options.RespectMetadataTypeAttribute)
+            //{
+            //    var metaProp = new List<PropertyInfo>();
+            //    // find Metadata Class
+            //    // Take only first Entry, metadatatypeAttribute definition specifies AllowMultiple=false
+            //    // see https://learn.microsoft.com/en-us/dotnet/api/system.componentmodel.dataannotations.metadatatypeattribute?view=net-9.0#definition 
+            //    var metaDataType = type.GetCustomAttributes(true).Where(t => t.GetType().FullName == "System.ComponentModel.DataAnnotations.MetadataTypeAttribute").FirstOrDefault();
+            //    if (metaDataType != null)
+            //    {
+            //        var metaClass = (Type)metaDataType.GetType().GetProperty("MetadataClassType").GetValue(metaDataType, null);
+            //        // find all properties with Custom Attributes which are in referenced class
+            //        metaProp = metaClass.GetProperties().Where(mp => mp.CustomAttributes.Count() > 0 && unseenProperties.Any(up => up.Name == mp.Name)).ToList();
+            //        // replace all found properties in unseenProperties with those from Metadataclass
+            //        var removedAttr = unseenProperties.Where(up => metaProp.Any(mp => mp.Name != up.Name)).ToList();
+            //        removedAttr.AddRange(metaProp);
+            //        unseenProperties = removedAttr;
+            //    }
+            //}
+
             foreach (var propertyInfo in unseenProperties)
             {
                 seenNames.Add(propertyInfo.Name);
@@ -89,31 +89,31 @@ internal class AttributedDestructuringPolicy : IDestructuringPolicy
     {
         IPropertyDestructuringAttribute? GetPropertyDestructuringAttribute(PropertyInfo propertyInfo)
         {
-            var attr = propertyInfo.GetCustomAttributes().OfType<IPropertyDestructuringAttribute>().FirstOrDefault();
+            var attr = propertyInfo.GetCustomAttributesFromMetadataClass(_options.RespectMetadataTypeAttribute).OfType<IPropertyDestructuringAttribute>().FirstOrDefault();
             if (attr != null)
                 return attr;
 
             // Do not check attribute explicitly to not take dependency from Microsoft.Extensions.Telemetry.Abstractions package.
             // https://github.com/serilog/serilog/issues/1984
-            return _options.RespectLogPropertyIgnoreAttribute && propertyInfo.GetCustomAttributes().Any(a => a.GetType().FullName == "Microsoft.Extensions.Logging.LogPropertyIgnoreAttribute")
+            return _options.RespectLogPropertyIgnoreAttribute && propertyInfo.GetCustomAttributesFromMetadataClass(_options.RespectMetadataTypeAttribute).Any(a => a.GetType().FullName == "Microsoft.Extensions.Logging.LogPropertyIgnoreAttribute")
                 ? NotLoggedAttribute.Instance
                 : null;
         }
 
-        var classDestructurer = type.GetCustomAttributes().OfType<ITypeDestructuringAttribute>().FirstOrDefault();
+        var classDestructurer = type.GetCustomAttributesFromMetadataClass(_options.RespectMetadataTypeAttribute).OfType<ITypeDestructuringAttribute>().FirstOrDefault();
         if (classDestructurer != null)
             return new(classDestructurer.CreateLogEventPropertyValue);
 
         var properties = GetPropertiesRecursive(type).ToList();
         if (!_options.IgnoreNullProperties && properties.All(pi =>
             GetPropertyDestructuringAttribute(pi) == null
-            && pi.GetCustomAttributes().OfType<IPropertyOptionalIgnoreAttribute>().FirstOrDefault() == null))
+            && pi.GetCustomAttributesFromMetadataClass(_options.RespectMetadataTypeAttribute).OfType<IPropertyOptionalIgnoreAttribute>().FirstOrDefault() == null))
         {
             return CacheEntry.Ignore;
         }
 
         var optionalIgnoreAttributes = properties
-            .Select(pi => new { pi, Attribute = pi.GetCustomAttributes().OfType<IPropertyOptionalIgnoreAttribute>().FirstOrDefault() })
+            .Select(pi => new { pi, Attribute = pi.GetCustomAttributesFromMetadataClass(_options.RespectMetadataTypeAttribute).OfType<IPropertyOptionalIgnoreAttribute>().FirstOrDefault() })
             .Where(o => o.Attribute != null)
             .ToDictionary(o => o.pi, o => o.Attribute);
 

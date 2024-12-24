@@ -76,18 +76,43 @@ public class MetadataTypeTests
         props["Public"].LiteralValue().ShouldBe("not_Secret");
     }
 
+    [Test]
+    public void WithMask_NotLoggedIfNull_Initialized()
+    {
+        var customized = new AttributedWithMask
+        {
+            String = "Foo[Masked]",
+            Object = "Bar[Masked]",
+        };
+
+        var evt = DelegatingSink.Execute(customized, configure: x =>
+        {
+            x.IgnoreNullProperties = true;
+            x.RespectMetadataTypeAttribute = true;
+        });
+
+        var sv = (StructureValue)evt!.Properties["Customized"];
+        var props = sv.Properties.ToDictionary(p => p.Name, p => p.Value);
+
+        props.ContainsKey("String").ShouldBeTrue();
+        props.ContainsKey("Object").ShouldBeTrue();
+
+        props["String"].LiteralValue().ShouldBe("Foo***");
+        props["Object"].LiteralValue().ShouldBe("Bar***");
+    }
+
     /// <summary>
     /// Simple Metadata Sample
     /// </summary>
     [MetadataType(typeof(DtoMetadata))]
-    public partial class Dto
+    private partial class Dto
     {
         public string Private { get; set; }
 
         public string Public { get; set; }
     }
 
-    internal class DtoMetadata
+    private class DtoMetadata
     {
         [NotLogged]
         public object Private { get; set; }
@@ -97,21 +122,38 @@ public class MetadataTypeTests
     /// Metadata Sample with derived subclass
     /// </summary>
     [MetadataType(typeof(DtoMetadataDerived))]
-    public partial class DtoWithDerived
+    private partial class DtoWithDerived
     {
         public string Private { get; set; }
 
         public string Public { get; set; }
     }
 
-    internal class DtoMetadataBase
+    private class DtoMetadataBase
     {
         public object Public { get; set; }
     }
 
-    internal class DtoMetadataDerived : DtoMetadataBase
+    private class DtoMetadataDerived : DtoMetadataBase
     {
         [NotLogged]
         public object Private { get; set; }
     }
+
+    [MetadataType(typeof(AttributedWithMaskMetaData))]
+    private class AttributedWithMask
+    {
+        public string? String { get; set; }
+
+        public object? Object { get; set; }
+    }
+    private class AttributedWithMaskMetaData
+    {
+        [LogMasked(ShowFirst = 3)]
+        public object String { get; set; }
+
+        [LogMasked(ShowFirst = 3)]
+        public object Object { get; set; }
+    }
+
 }
