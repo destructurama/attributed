@@ -56,25 +56,6 @@ internal class AttributedDestructuringPolicy : IDestructuringPolicy
             var unseenProperties = type.GetProperties(BindingFlags.Public | BindingFlags.Instance | BindingFlags.DeclaredOnly)
                 .Where(p => p.CanRead && p.GetMethod.IsPublic && p.GetIndexParameters().Length == 0 && !seenNames.Contains(p.Name));
 
-            //if (_options.RespectMetadataTypeAttribute)
-            //{
-            //    var metaProp = new List<PropertyInfo>();
-            //    // find Metadata Class
-            //    // Take only first Entry, metadatatypeAttribute definition specifies AllowMultiple=false
-            //    // see https://learn.microsoft.com/en-us/dotnet/api/system.componentmodel.dataannotations.metadatatypeattribute?view=net-9.0#definition 
-            //    var metaDataType = type.GetCustomAttributes(true).Where(t => t.GetType().FullName == "System.ComponentModel.DataAnnotations.MetadataTypeAttribute").FirstOrDefault();
-            //    if (metaDataType != null)
-            //    {
-            //        var metaClass = (Type)metaDataType.GetType().GetProperty("MetadataClassType").GetValue(metaDataType, null);
-            //        // find all properties with Custom Attributes which are in referenced class
-            //        metaProp = metaClass.GetProperties().Where(mp => mp.CustomAttributes.Count() > 0 && unseenProperties.Any(up => up.Name == mp.Name)).ToList();
-            //        // replace all found properties in unseenProperties with those from Metadataclass
-            //        var removedAttr = unseenProperties.Where(up => metaProp.Any(mp => mp.Name != up.Name)).ToList();
-            //        removedAttr.AddRange(metaProp);
-            //        unseenProperties = removedAttr;
-            //    }
-            //}
-
             foreach (var propertyInfo in unseenProperties)
             {
                 seenNames.Add(propertyInfo.Name);
