@@ -1,6 +1,7 @@
 using System.Reflection;
 
 namespace Destructurama.Attributed;
+
 internal static class CustomPropertyInfoExtension
 {
     /// <summary>
