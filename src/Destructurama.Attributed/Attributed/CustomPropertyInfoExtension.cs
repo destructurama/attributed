@@ -24,8 +24,7 @@ internal static class CustomPropertyInfoExtension
             {
                 var metaClass = (Type)metaDataType.GetType().GetProperty("MetadataClassType").GetValue(metaDataType, null);
                 var metaProp = metaClass.GetProperty(memberInfo.Name);
-                var attr = metaProp.GetCustomAttributes();
-                return attr;
+                return metaProp.GetCustomAttributes();
             }
 
         }
