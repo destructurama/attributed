@@ -147,6 +147,7 @@ public class MetadataTypeTests
 
         public object? Object { get; set; }
     }
+
     private class AttributedWithMaskMetaData
     {
         [LogMasked(ShowFirst = 3)]
@@ -155,5 +156,4 @@ public class MetadataTypeTests
         [LogMasked(ShowFirst = 3)]
         public object Object { get; set; }
     }
-
 }

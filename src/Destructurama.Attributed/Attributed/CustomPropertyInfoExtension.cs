@@ -5,29 +5,24 @@ namespace Destructurama.Attributed;
 internal static class CustomPropertyInfoExtension
 {
     /// <summary>
-    /// Returns a list of CustomAttributes from MemberdataClassType if exists, otherwise from memberinfo
+    /// Returns a list of custom attributes from the specified member or from corresponding member from another
+    /// class if System.ComponentModel.DataAnnotations.MetadataTypeAttribute is used.
     /// </summary>
-    /// <param name="memberInfo">MemberInfo</param>
-    /// <param name="respectMetadata">true: respect Custom Atrributes in MetadataClassType</param>
-    /// <returns>List of CustomAttributes either from MetadataClass or data class</returns>
-    public static IEnumerable<Attribute> GetCustomAttributesFromMetadataClass(this MemberInfo memberInfo, bool respectMetadata)
+    public static IEnumerable<Attribute> GetCustomAttributesEx(this MemberInfo memberInfo, bool respectMetadata)
     {
-        if (memberInfo.MemberType != MemberTypes.Property)
+        if (memberInfo.MemberType != MemberTypes.Property || !respectMetadata)
         {
             return memberInfo.GetCustomAttributes();
         }
-        if (respectMetadata)
-        {
-            var type = memberInfo.DeclaringType;
-            var metaDataType = type.GetCustomAttributes(true).Where(t => t.GetType().FullName == "System.ComponentModel.DataAnnotations.MetadataTypeAttribute").FirstOrDefault();
-            if (metaDataType != null)
-            {
-                var metaClass = (Type)metaDataType.GetType().GetProperty("MetadataClassType").GetValue(metaDataType, null);
-                var metaProp = metaClass.GetProperty(memberInfo.Name);
-                return metaProp.GetCustomAttributes();
-            }
 
+        var type = memberInfo.DeclaringType;
+        var metadataTypeAttribute = type.GetCustomAttributes(true).Where(t => t.GetType().FullName == "System.ComponentModel.DataAnnotations.MetadataTypeAttribute").FirstOrDefault();
+        if (metadataTypeAttribute != null)
+        {
+            var metadataType = (Type)metadataTypeAttribute.GetType().GetProperty("MetadataClassType").GetValue(metadataTypeAttribute, null);
+            return metadataType.GetProperty(memberInfo.Name).GetCustomAttributes();
         }
+        
         return memberInfo.GetCustomAttributes();
     }
 }
