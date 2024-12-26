@@ -27,7 +27,7 @@ internal static class CustomPropertyInfoExtension
             {
                 return metaDataProperty.GetCustomAttributes();
             }
-            // Property was not declared in MetadataType Class, fall through and return CustomAttributes of property in data class
+            // Property was not declared in MetadataClassType, fall through and return attributes from original property.
         }
         return memberInfo.GetCustomAttributes();
     }
