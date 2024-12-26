@@ -21,7 +21,13 @@ internal static class CustomPropertyInfoExtension
         if (metadataTypeAttribute != null)
         {
             var metadataType = (Type)metadataTypeAttribute.GetType().GetProperty("MetadataClassType").GetValue(metadataTypeAttribute, null);
-            return metadataType.GetProperty(memberInfo.Name).GetCustomAttributes();
+            var metaDataProperty = metadataType.GetProperty(memberInfo.Name);
+
+            if (metaDataProperty != null)
+            {
+                return metaDataProperty.GetCustomAttributes();
+            }
+            // Property was not declared in MetadataType Class, fall through and return CustomAttributes of property in data class
         }
         return memberInfo.GetCustomAttributes();
     }
