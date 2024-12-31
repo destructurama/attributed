@@ -1,5 +1,5 @@
 window.BENCHMARK_DATA = {
-  "lastUpdate": 1735580342109,
+  "lastUpdate": 1735670369682,
   "repoUrl": "https://github.com/destructurama/attributed",
   "entries": {
     "Benchmarks": [
@@ -3564,6 +3564,72 @@ window.BENCHMARK_DATA = {
             "value": 173.8011756738027,
             "unit": "ns",
             "range": "± 0.8307452632829725"
+          }
+        ]
+      },
+      {
+        "commit": {
+          "author": {
+            "email": "49699333+dependabot[bot]@users.noreply.github.com",
+            "name": "dependabot[bot]",
+            "username": "dependabot[bot]"
+          },
+          "committer": {
+            "email": "noreply@github.com",
+            "name": "GitHub",
+            "username": "web-flow"
+          },
+          "distinct": true,
+          "id": "4de31e3e9dc4cd3e7c6bb692fcabb2198cca67e4",
+          "message": "Bump coverlet.msbuild from 6.0.2 to 6.0.3 in /src (#147)\n\nBumps [coverlet.msbuild](https://github.com/coverlet-coverage/coverlet) from 6.0.2 to 6.0.3.\r\n- [Release notes](https://github.com/coverlet-coverage/coverlet/releases)\r\n- [Commits](https://github.com/coverlet-coverage/coverlet/compare/v6.0.2...v6.0.3)\r\n\r\n---\r\nupdated-dependencies:\r\n- dependency-name: coverlet.msbuild\r\n  dependency-type: direct:production\r\n  update-type: version-update:semver-patch\r\n...\r\n\r\nSigned-off-by: dependabot[bot] <support@github.com>\r\nCo-authored-by: dependabot[bot] <49699333+dependabot[bot]@users.noreply.github.com>",
+          "timestamp": "2024-12-31T21:36:21+03:00",
+          "tree_id": "9f2f54e09cdb7a930ebdbd47398e454c3f2022ee",
+          "url": "https://github.com/destructurama/attributed/commit/4de31e3e9dc4cd3e7c6bb692fcabb2198cca67e4"
+        },
+        "date": 1735670369150,
+        "tool": "benchmarkdotnet",
+        "benches": [
+          {
+            "name": "Benchmarks.AttributedBenchmarks.LogAsScalar",
+            "value": 226.75487317357744,
+            "unit": "ns",
+            "range": "± 2.2453161425188024"
+          },
+          {
+            "name": "Benchmarks.AttributedBenchmarks.LogMasked",
+            "value": 403.6328159059797,
+            "unit": "ns",
+            "range": "± 2.2619906371874925"
+          },
+          {
+            "name": "Benchmarks.AttributedBenchmarks.LogReplaced",
+            "value": 525.6860191481454,
+            "unit": "ns",
+            "range": "± 1.5786971811498842"
+          },
+          {
+            "name": "Benchmarks.AttributedBenchmarks.LogWithName",
+            "value": 379.3977686337062,
+            "unit": "ns",
+            "range": "± 1.3115331383796083"
+          },
+          {
+            "name": "Benchmarks.AttributedBenchmarks.NotLogged",
+            "value": 100.78904188530785,
+            "unit": "ns",
+            "range": "± 0.3952935587078852"
+          },
+          {
+            "name": "Benchmarks.AttributedBenchmarks.NotLoggedIfDefault",
+            "value": 117.43576431274414,
+            "unit": "ns",
+            "range": "± 0.5211772587688249"
+          },
+          {
+            "name": "Benchmarks.AttributedBenchmarks.NotLoggedIfNull",
+            "value": 169.44769177436828,
+            "unit": "ns",
+            "range": "± 0.7140814161546596"
           }
         ]
       }
