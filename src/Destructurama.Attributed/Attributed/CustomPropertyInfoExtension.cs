@@ -28,25 +28,39 @@ internal static class CustomPropertyInfoExtension
 
             if (metaDataProperty != null)
             {
-                return metaDataProperty.GetCustomAttributes();
+                var metaProps = metaDataProperty.GetCustomAttributes().ToList();
+                // because there seem to be no definition to force metadata property to be of object,
+                // lookup Metadata specified at type of property
+                var metaPropType = metaDataProperty.PropertyType;
+                var metaPropTypeType = metaPropType.GetCustomAttributes(true).Where(t => t.GetType().FullName == "System.ComponentModel.DataAnnotations.MetadataTypeAttribute").FirstOrDefault();
+                if (metaPropTypeType != null)
+                {
+                    var metaPropTypeMetadataType = (Type)metaPropTypeType.GetType().GetProperty("MetadataClassType").GetValue(metaPropTypeType, null);
+                    var propertyAttr = metaPropTypeMetadataType.GetCustomAttributes();
+                    metaProps.AddRange(propertyAttr);
+                }
+                if (metaProps != null && metaProps.Any())
+                {
+                    return metaProps;
+                }
+                // Property specified in Metadata class does not have any attributes specified, look at original property
             }
 
-            // Property was not declared in MetadataClassType, fall through and return attributes from original property.
+            // Property was not declared in MetadataClassType, or does not have an attribute specified
+            // fall through and return attributes from original property.
         }
-        else
+        // if there is no MetadataType Attribute at declaringtype look whether the propertytype has a metadatatype attribute
+        var propertyType = type.GetProperty(memberInfo.Name).PropertyType;
+        var propertyTypeMeta = propertyType.GetCustomAttributes(true).Where(t => t.GetType().FullName == "System.ComponentModel.DataAnnotations.MetadataTypeAttribute").FirstOrDefault();
+        if (propertyTypeMeta != null)
         {
-            // if there is no MetadataType Attribute at declaringtype look whether the propertytype has a metadatatype attribute
-            var propertyType = type.GetProperty(memberInfo.Name).PropertyType;
-            var propertyTypeMeta = propertyType.GetCustomAttributes(true).Where(t => t.GetType().FullName == "System.ComponentModel.DataAnnotations.MetadataTypeAttribute").FirstOrDefault();
-            if (propertyTypeMeta != null)
-            {
-                var propertyMetadataType = (Type)propertyTypeMeta.GetType().GetProperty("MetadataClassType").GetValue(propertyTypeMeta, null);
-                var propertyAttr = propertyMetadataType.GetCustomAttributes();
-                return propertyAttr;
-            }
-            // PropertyType has no MetadataClassType, fall through and return attributes from original property.
+            var propertyMetadataType = (Type)propertyTypeMeta.GetType().GetProperty("MetadataClassType").GetValue(propertyTypeMeta, null);
+            var propertyAttr = propertyMetadataType.GetCustomAttributes();
+            return propertyAttr;
         }
+        // PropertyType has no MetadataClassType, fall through and return attributes from original property.
 
         return memberInfo.GetCustomAttributes();
     }
+
 }

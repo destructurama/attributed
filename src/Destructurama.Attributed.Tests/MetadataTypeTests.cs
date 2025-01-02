@@ -146,6 +146,51 @@ public class MetadataTypeTests
         str.Contains("This is a password").ShouldBeFalse();
     }
     [Test]
+    public void AttributesAreConsultedWhenDestructuringWithMeta()
+    {
+        var customized = new CustomizedWithMeta
+        {
+            ImmutableScalar = new(),
+            MutableScalar = new(),
+            NotAScalar = new(),
+            Ignored = "Hello, there",
+            Ignored2 = "Hello, there again",
+            ScalarAnyway = new(),
+            AuthData = new()
+            {
+                Username = "This is a username",
+                Password = "This is a password"
+            }
+        };
+
+        var evt = DelegatingSink.Execute(customized, configure: opt =>
+        {
+            opt.RespectLogPropertyIgnoreAttribute = true;
+            opt.RespectMetadataTypeAttribute = true;
+        });
+
+        var sv = (StructureValue)evt.Properties["Customized"];
+        var props = sv.Properties.ToDictionary(p => p.Name, p => p.Value);
+
+        props.ShouldNotContainKey("Ignored");
+        props.ShouldNotContainKey("Ignored2");
+
+        props["ImmutableScalar"].LiteralValue().ShouldBeOfType<ImmutableScalar>();
+        props["MutableScalar"].LiteralValue().ShouldBe(new MutableScalar().ToString());
+        props["NotAScalar"].ShouldBeOfType<StructureValue>();
+        props.ContainsKey("Ignored").ShouldBeFalse();
+        props["ScalarAnyway"].LiteralValue().ShouldBeOfType<NotAScalar>();
+        props["Struct1"].LiteralValue().ShouldBeOfType<Struct1>();
+        props["Struct2"].LiteralValue().ShouldBeOfType<Struct2>();
+        props["StructReturningNull"].LiteralValue().ShouldBeNull();
+        props["StructNull"].LiteralValue().ShouldBeNull();
+
+        var str = sv.ToString();
+        str.Contains("This is a username").ShouldBeTrue();
+        str.Contains("This is a password").ShouldBeFalse();
+    }
+
+    [Test]
     public void Private_Property_Should_Be_Handled()
     {
         var customized = new ClassWithPrivateProperty();
@@ -272,6 +317,49 @@ public class MetadataTypeTests
 
         [LogAsScalar(isMutable: true)]
         public StructReturningNull? StructNull { get; set; }
+    }
+    [MetadataType(typeof(CustomizedMeta))]
+    public class CustomizedWithMeta
+    {
+        public ImmutableScalar? ImmutableScalar { get; set; }
+        public MutableScalar? MutableScalar { get; set; }
+        public NotAScalar? NotAScalar { get; set; }
+        public string? Ignored { get; set; }
+        public string? Ignored2 { get; set; }
+        public NotAScalar? ScalarAnyway { get; set; }
+        public UserAuthData? AuthData { get; set; }
+        public Struct1 Struct1 { get; set; }
+        public Struct2 Struct2 { get; set; }
+        public StructReturningNull StructReturningNull { get; set; }
+        public StructReturningNull? StructNull { get; set; }
+    }
+
+    public class CustomizedMeta
+    {
+        public ImmutableScalar? ImmutableScalar { get; set; }
+        public MutableScalar? MutableScalar { get; set; }
+        public NotAScalar? NotAScalar { get; set; }
+
+        [NotLogged]
+        public object Ignored { get; set; }
+
+        [LogPropertyIgnore]
+        public object Ignored2 { get; set; }
+
+        [LogAsScalar]
+        public object ScalarAnyway { get; set; }
+        public UserAuthData? AuthData { get; set; }
+
+        [LogAsScalar]
+        public object Struct1 { get; set; }
+
+        public object Struct2 { get; set; }
+
+        [LogAsScalar(isMutable: true)]
+        public object StructReturningNull { get; set; }
+
+        [LogAsScalar(isMutable: true)]
+        public object StructNull { get; set; }
     }
 
     public class UserAuthDataMeta
