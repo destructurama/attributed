@@ -101,6 +101,7 @@ public class MetadataTypeTests
         props["String"].LiteralValue().ShouldBe("Foo***");
         props["Object"].LiteralValue().ShouldBe("Bar***");
     }
+
     [Test]
     public void AttributesAreConsultedWhenDestructuring()
     {
@@ -145,6 +146,7 @@ public class MetadataTypeTests
         str.Contains("This is a username").ShouldBeTrue();
         str.Contains("This is a password").ShouldBeFalse();
     }
+
     [Test]
     public void AttributesAreConsultedWhenDestructuringWithMeta()
     {
@@ -200,6 +202,7 @@ public class MetadataTypeTests
         var sv = (StructureValue)evt.Properties["Customized"];
         sv.Properties.Count.ShouldBe(0);
     }
+
     #region Simple Metadata
     /// <summary>
     /// Simple Metadata Sample
@@ -273,10 +276,12 @@ public class MetadataTypeTests
         {
         }
     }
+
     [MetadataType(typeof(ImmutableScalarMeta))]
     public class ImmutableScalar
     {
     }
+
     [LogAsScalar(isMutable: true)]
     public class MutableScalarMeta
     {
@@ -290,6 +295,7 @@ public class MetadataTypeTests
     public class NotAScalar
     {
     }
+
     public class Customized
     {
         public ImmutableScalar? ImmutableScalar { get; set; }
@@ -318,6 +324,7 @@ public class MetadataTypeTests
         [LogAsScalar(isMutable: true)]
         public StructReturningNull? StructNull { get; set; }
     }
+
     [MetadataType(typeof(CustomizedMeta))]
     public class CustomizedWithMeta
     {
@@ -369,6 +376,7 @@ public class MetadataTypeTests
         [NotLogged]
         public object Password { get; set; }
     }
+
     [MetadataType(typeof(UserAuthDataMeta))]
     public class UserAuthData
     {
@@ -402,6 +410,7 @@ public class MetadataTypeTests
         [LogMasked]
         private object Name { get; set; }
     }
+
     [MetadataType(typeof(ClassWithPrivatePropertyMeta))]
     public class ClassWithPrivateProperty
     {
