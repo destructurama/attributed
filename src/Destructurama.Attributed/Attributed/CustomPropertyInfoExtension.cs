@@ -10,7 +10,6 @@ internal static class CustomPropertyInfoExtension
     /// </summary>
     public static IEnumerable<Attribute> GetCustomAttributesEx(this MemberInfo memberInfo, bool respectMetadata)
     {
-
         if (!respectMetadata || memberInfo.MemberType != MemberTypes.Property)
         {
             return memberInfo.GetCustomAttributes();
