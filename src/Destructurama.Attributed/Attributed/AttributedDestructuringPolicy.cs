@@ -81,7 +81,7 @@ internal class AttributedDestructuringPolicy : IDestructuringPolicy
                 : null;
         }
 
-        var classDestructurer = type.GetCustomAttributesEx(_options.RespectMetadataTypeAttribute).OfType<ITypeDestructuringAttribute>().FirstOrDefault();
+        var classDestructurer = type.GetCustomAttributes().OfType<ITypeDestructuringAttribute>().FirstOrDefault();
         if (classDestructurer != null)
             return new(classDestructurer.CreateLogEventPropertyValue);
 
