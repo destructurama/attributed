@@ -29,8 +29,6 @@ internal static class CustomPropertyInfoExtension
             if (metaDataProperty != null)
             {
                 return metaDataProperty.GetCustomAttributes().ToList();
-
-                // Property specified in Metadata class does not have any attributes specified, look at original property
             }
 
             // Property was not declared in MetadataClassType, or does not have an attribute specified
