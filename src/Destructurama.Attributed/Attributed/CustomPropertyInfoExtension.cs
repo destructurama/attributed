@@ -36,5 +36,4 @@ internal static class CustomPropertyInfoExtension
 
         return memberInfo.GetCustomAttributes();
     }
-
 }
