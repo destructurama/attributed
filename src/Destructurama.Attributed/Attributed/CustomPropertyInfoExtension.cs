@@ -12,12 +12,12 @@ internal static class CustomPropertyInfoExtension
     {
         if (!respectMetadata)
         {
-            return memberInfo.GetCustomAttributes();
+            return propertyInfo.GetCustomAttributes();
         }
 
         // Get the type in which property is declared to look whether MetadataTypeAttribute is specified.
         // If so, get the class, find the property with same name and if exists, return its custom attributes.
-        var type = memberInfo.DeclaringType;
+        var type = propertyInfo.DeclaringType;
 
         // Do not check attribute explicitly to not take dependency from System.ComponentModel.Annotations package.
         var metadataTypeAttribute = type.GetCustomAttributes(true).Where(t => t.GetType().FullName == "System.ComponentModel.DataAnnotations.MetadataTypeAttribute").FirstOrDefault();
@@ -34,6 +34,6 @@ internal static class CustomPropertyInfoExtension
             // Property was not declared in MetadataClassType, fall through and return attributes from original property.
         }
 
-        return memberInfo.GetCustomAttributes();
+        return propertyInfo.GetCustomAttributes();
     }
 }
