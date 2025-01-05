@@ -5,7 +5,7 @@ namespace Destructurama.Attributed;
 internal static class CustomPropertyInfoExtension
 {
     /// <summary>
-    /// Returns a list of custom attributes from the specified member or from corresponding member from another
+    /// Returns a list of custom attributes from the specified property or from corresponding property from another
     /// class if System.ComponentModel.DataAnnotations.MetadataTypeAttribute is used.
     /// </summary>
     public static IEnumerable<Attribute> GetCustomAttributesEx(this MemberInfo memberInfo, bool respectMetadata)
