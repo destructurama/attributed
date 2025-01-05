@@ -8,7 +8,7 @@ internal static class CustomPropertyInfoExtension
     /// Returns a list of custom attributes from the specified property or from corresponding property from another
     /// class if System.ComponentModel.DataAnnotations.MetadataTypeAttribute is used.
     /// </summary>
-    public static IEnumerable<Attribute> GetCustomAttributesEx(this MemberInfo memberInfo, bool respectMetadata)
+    public static IEnumerable<Attribute> GetCustomAttributesEx(this PropertyInfo propertyInfo, bool respectMetadata)
     {
         if (!respectMetadata)
         {
