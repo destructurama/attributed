@@ -15,7 +15,7 @@ internal static class CustomPropertyInfoExtension
             return memberInfo.GetCustomAttributes();
         }
 
-        // get the type in which property is declared to look whether metadatatype attribute is specified
+        // Get the type in which property is declared to look whether MetadataTypeAttribute is specified.
         // if so, get the class, find the property with same name and if exists, return its custom attributes
         var type = memberInfo.DeclaringType;
 
