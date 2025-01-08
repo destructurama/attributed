@@ -47,7 +47,7 @@ internal class AttributedDestructuringPolicy : IDestructuringPolicy
         return cached.CanDestructure;
     }
 
-    private static IEnumerable<PropertyInfo> GetPropertiesRecursive(Type type)
+    private IEnumerable<PropertyInfo> GetPropertiesRecursive(Type type)
     {
         var seenNames = new HashSet<string>();
 
@@ -70,13 +70,13 @@ internal class AttributedDestructuringPolicy : IDestructuringPolicy
     {
         IPropertyDestructuringAttribute? GetPropertyDestructuringAttribute(PropertyInfo propertyInfo)
         {
-            var attr = propertyInfo.GetCustomAttributes().OfType<IPropertyDestructuringAttribute>().FirstOrDefault();
+            var attr = propertyInfo.GetCustomAttributesEx(_options.RespectMetadataTypeAttribute).OfType<IPropertyDestructuringAttribute>().FirstOrDefault();
             if (attr != null)
                 return attr;
 
             // Do not check attribute explicitly to not take dependency from Microsoft.Extensions.Telemetry.Abstractions package.
             // https://github.com/serilog/serilog/issues/1984
-            return _options.RespectLogPropertyIgnoreAttribute && propertyInfo.GetCustomAttributes().Any(a => a.GetType().FullName == "Microsoft.Extensions.Logging.LogPropertyIgnoreAttribute")
+            return _options.RespectLogPropertyIgnoreAttribute && propertyInfo.GetCustomAttributesEx(_options.RespectMetadataTypeAttribute).Any(a => a.GetType().FullName == "Microsoft.Extensions.Logging.LogPropertyIgnoreAttribute")
                 ? NotLoggedAttribute.Instance
                 : null;
         }
@@ -88,13 +88,13 @@ internal class AttributedDestructuringPolicy : IDestructuringPolicy
         var properties = GetPropertiesRecursive(type).ToList();
         if (!_options.IgnoreNullProperties && properties.All(pi =>
             GetPropertyDestructuringAttribute(pi) == null
-            && pi.GetCustomAttributes().OfType<IPropertyOptionalIgnoreAttribute>().FirstOrDefault() == null))
+            && pi.GetCustomAttributesEx(_options.RespectMetadataTypeAttribute).OfType<IPropertyOptionalIgnoreAttribute>().FirstOrDefault() == null))
         {
             return CacheEntry.Ignore;
         }
 
         var optionalIgnoreAttributes = properties
-            .Select(pi => new { pi, Attribute = pi.GetCustomAttributes().OfType<IPropertyOptionalIgnoreAttribute>().FirstOrDefault() })
+            .Select(pi => new { pi, Attribute = pi.GetCustomAttributesEx(_options.RespectMetadataTypeAttribute).OfType<IPropertyOptionalIgnoreAttribute>().FirstOrDefault() })
             .Where(o => o.Attribute != null)
             .ToDictionary(o => o.pi, o => o.Attribute);
 
