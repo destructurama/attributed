@@ -160,49 +160,54 @@ public class MetadataTypeTests
     }
 
     #region Simple Metadata
+
     /// <summary>
     /// Simple Metadata Sample
     /// </summary>
     [MetadataType(typeof(DtoMetadata))]
     private partial class Dto
     {
-        public string Private { get; set; }
+        public string? Private { get; set; }
 
-        public string Public { get; set; }
+        public string? Public { get; set; }
     }
 
     private class DtoMetadata
     {
         [NotLogged]
-        public object Private { get; set; }
+        public object? Private { get; set; }
     }
+
     #endregion
 
     #region Metadata with derived subclass
+
     /// <summary>
     /// Metadata Sample with derived subclass
     /// </summary>
     [MetadataType(typeof(DtoMetadataDerived))]
     private partial class DtoWithDerived
     {
-        public string Private { get; set; }
+        public string? Private { get; set; }
 
-        public string Public { get; set; }
+        public string? Public { get; set; }
     }
 
     private class DtoMetadataBase
     {
-        public object Public { get; set; }
+        public object? Public { get; set; }
     }
 
     private class DtoMetadataDerived : DtoMetadataBase
     {
         [NotLogged]
-        public object Private { get; set; }
+        public object? Private { get; set; }
     }
+
     #endregion
 
     #region Attributed With Mask in MetadataType
+
     [MetadataType(typeof(AttributedWithMaskMetaData))]
     private class AttributedWithMask
     {
@@ -214,14 +219,16 @@ public class MetadataTypeTests
     private class AttributedWithMaskMetaData
     {
         [LogMasked(ShowFirst = 3)]
-        public object String { get; set; }
+        public object? String { get; set; }
 
         [LogMasked(ShowFirst = 3)]
-        public object Object { get; set; }
+        public object? Object { get; set; }
     }
+
     #endregion
 
-    #region All Attributes visited 
+    #region All Attributes visited
+
     /// <summary>
     /// Attribute on class in Metadatatype
     /// </summary>
@@ -265,33 +272,33 @@ public class MetadataTypeTests
         public NotAScalar? NotAScalar { get; set; }
 
         [NotLogged]
-        public object Ignored { get; set; }
+        public object? Ignored { get; set; }
 
         [LogPropertyIgnore]
-        public object Ignored2 { get; set; }
+        public object? Ignored2 { get; set; }
 
         [LogAsScalar]
-        public object ScalarAnyway { get; set; }
+        public object? ScalarAnyway { get; set; }
         public UserAuthData? AuthData { get; set; }
 
         [LogAsScalar]
-        public object Struct1 { get; set; }
+        public object? Struct1 { get; set; }
 
-        public object Struct2 { get; set; }
-
-        [LogAsScalar(isMutable: true)]
-        public object StructReturningNull { get; set; }
+        public object? Struct2 { get; set; }
 
         [LogAsScalar(isMutable: true)]
-        public object StructNull { get; set; }
+        public object? StructReturningNull { get; set; }
+
+        [LogAsScalar(isMutable: true)]
+        public object? StructNull { get; set; }
     }
 
     public class UserAuthDataMeta
     {
-        public object Username { get; set; }
+        public object? Username { get; set; }
 
         [NotLogged]
-        public object Password { get; set; }
+        public object? Password { get; set; }
     }
 
     [MetadataType(typeof(UserAuthDataMeta))]
@@ -319,13 +326,15 @@ public class MetadataTypeTests
         public int SomeProperty { get; set; }
         public override string ToString() => null!;
     }
+
     #endregion
 
     #region Private
+
     public class ClassWithPrivatePropertyMeta
     {
         [LogMasked]
-        private object Name { get; set; }
+        private object? Name { get; set; }
     }
 
     [MetadataType(typeof(ClassWithPrivatePropertyMeta))]
@@ -333,5 +342,6 @@ public class MetadataTypeTests
     {
         private string? Name { get; set; } = "Tom";
     }
+
     #endregion
 }
