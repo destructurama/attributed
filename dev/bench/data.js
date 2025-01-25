@@ -1,5 +1,5 @@
 window.BENCHMARK_DATA = {
-  "lastUpdate": 1737403597113,
+  "lastUpdate": 1737791301696,
   "repoUrl": "https://github.com/destructurama/attributed",
   "entries": {
     "Benchmarks": [
@@ -4026,6 +4026,72 @@ window.BENCHMARK_DATA = {
             "value": 180.01514504506036,
             "unit": "ns",
             "range": "± 1.0539931831243743"
+          }
+        ]
+      },
+      {
+        "commit": {
+          "author": {
+            "email": "49699333+dependabot[bot]@users.noreply.github.com",
+            "name": "dependabot[bot]",
+            "username": "dependabot[bot]"
+          },
+          "committer": {
+            "email": "noreply@github.com",
+            "name": "GitHub",
+            "username": "web-flow"
+          },
+          "distinct": true,
+          "id": "e6c62d7561324d6a7d22b6b6274583dfdcfa2f31",
+          "message": "Bump Shouldly from 4.2.1 to 4.3.0 in /src (#152)\n\nBumps [Shouldly](https://github.com/shouldly/shouldly) from 4.2.1 to 4.3.0.\r\n- [Release notes](https://github.com/shouldly/shouldly/releases)\r\n- [Changelog](https://github.com/shouldly/shouldly/blob/master/BREAKING%20CHANGES.txt)\r\n- [Commits](https://github.com/shouldly/shouldly/compare/4.2.1...4.3.0)\r\n\r\n---\r\nupdated-dependencies:\r\n- dependency-name: Shouldly\r\n  dependency-type: direct:production\r\n  update-type: version-update:semver-minor\r\n...\r\n\r\nSigned-off-by: dependabot[bot] <support@github.com>\r\nCo-authored-by: dependabot[bot] <49699333+dependabot[bot]@users.noreply.github.com>",
+          "timestamp": "2025-01-25T10:45:10+03:00",
+          "tree_id": "a08b0122707c687e607d8bf9df2ef9d0894acae2",
+          "url": "https://github.com/destructurama/attributed/commit/e6c62d7561324d6a7d22b6b6274583dfdcfa2f31"
+        },
+        "date": 1737791300739,
+        "tool": "benchmarkdotnet",
+        "benches": [
+          {
+            "name": "Benchmarks.AttributedBenchmarks.LogAsScalar",
+            "value": 229.0757263990549,
+            "unit": "ns",
+            "range": "± 1.3045454856726109"
+          },
+          {
+            "name": "Benchmarks.AttributedBenchmarks.LogMasked",
+            "value": 415.8251777795645,
+            "unit": "ns",
+            "range": "± 2.4542090042627818"
+          },
+          {
+            "name": "Benchmarks.AttributedBenchmarks.LogReplaced",
+            "value": 552.9696501413981,
+            "unit": "ns",
+            "range": "± 3.1316772630945975"
+          },
+          {
+            "name": "Benchmarks.AttributedBenchmarks.LogWithName",
+            "value": 382.1457191194807,
+            "unit": "ns",
+            "range": "± 2.3105260232742584"
+          },
+          {
+            "name": "Benchmarks.AttributedBenchmarks.NotLogged",
+            "value": 107.21530084099088,
+            "unit": "ns",
+            "range": "± 0.49106079586720025"
+          },
+          {
+            "name": "Benchmarks.AttributedBenchmarks.NotLoggedIfDefault",
+            "value": 120.48212893192584,
+            "unit": "ns",
+            "range": "± 0.25303321282966174"
+          },
+          {
+            "name": "Benchmarks.AttributedBenchmarks.NotLoggedIfNull",
+            "value": 184.10458105405172,
+            "unit": "ns",
+            "range": "± 0.8234897094694991"
           }
         ]
       }
