@@ -3,7 +3,6 @@
   <PropertyGroup>
     <TargetFramework>net9.0</TargetFramework>
     <SignAssembly>false</SignAssembly>
-    <NoWarn>$(NoWarn);NU1504</NoWarn>
   </PropertyGroup>
 
   <ItemGroup>
@@ -15,7 +14,7 @@
   </ItemGroup>
   
   <ItemGroup>
-    <PackageReference Include="DotNetProjectFile.Analyzers.Sdk" Version="1.5.3" PrivateAssets="all" />
+    <PackageReference Include="DotNetProjectFile.Analyzers.Sdk" PrivateAssets="all" />
   </ItemGroup>
 
 </Project>

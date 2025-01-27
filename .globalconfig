@@ -1,1 +1,5 @@
+is_global = true
+
+dotnet_diagnostic.CS1591.severity = none # Missing XML comment for public visible member
+
 dotnet_diagnostic.Proj0003.severity = none # Define usings explicit

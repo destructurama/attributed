@@ -26,6 +26,7 @@
     <PackageRequireLicenseAcceptance>false</PackageRequireLicenseAcceptance>
     <PackageProjectUrl>https://github.com/destructurama/attributed</PackageProjectUrl>
     <PackageIcon>icon.png</PackageIcon>
+    <PackageIconUrl>https://github.com/destructurama/attributed/tree/master/assets/icon.png</PackageIconUrl>
     <PackageTags>serilog;attributed</PackageTags>
     <PackageReadmeFile>README.md</PackageReadmeFile>
     <RepositoryUrl>https://github.com/destructurama/attributed</RepositoryUrl>
@@ -43,7 +44,8 @@
   </PropertyGroup>
 
   <ItemGroup Label="Analyzers">
-    <PackageReference Include="DotNetProjectFile.Analyzers" Version="1.5.3" PrivateAssets="all" />
+    <PackageReference Include="DotNetProjectFile.Analyzers" PrivateAssets="all" />
+    <PackageReference Include="SerilogAnalyzer" PrivateAssets="all" />
   </ItemGroup>
 
   <ItemGroup>
@@ -58,8 +60,8 @@
       </ItemGroup>
 
       <ItemGroup>
-        <PackageReference Include="Microsoft.SourceLink.GitHub" Version="8.0.0" PrivateAssets="All" />
-        <PackageReference Include="MinVer" Version="6.0.0" PrivateAssets="All" />
+        <PackageReference Include="Microsoft.SourceLink.GitHub" PrivateAssets="All" />
+        <PackageReference Include="MinVer" PrivateAssets="All" />
       </ItemGroup>
     </When>
   </Choose>
