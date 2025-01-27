@@ -9,14 +9,15 @@
     <PackageId>Destructurama.Attributed</PackageId>
     <PackageReleaseNotes>
       <![CDATA[
-# To Be released.
+v1.0
+- Migrated from Serilog.Extras.Attributed at serilog/serilog.
 ]]>
     </PackageReleaseNotes>
   </PropertyGroup>
 
   <ItemGroup>
-    <PackageReference Include="PolySharp" Version="1.15.0" PrivateAssets="All" />
-    <PackageReference Include="Serilog" Version="4.2.0" />
+    <PackageReference Include="PolySharp" PrivateAssets="All" />
+    <PackageReference Include="Serilog" />
   </ItemGroup>
 
   <ItemGroup>
