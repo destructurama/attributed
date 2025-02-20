@@ -15,7 +15,7 @@
     <PackageReference Include="NUnit3TestAdapter" Version="4.6.0" />
     <PackageReference Include="Serilog" Version="4.2.0" />
     <PackageReference Include="Shouldly" Version="4.3.0" />
-    <PackageReference Include="PublicApiGenerator" Version="11.4.1" />
+    <PackageReference Include="PublicApiGenerator" Version="11.4.2" />
     <PackageReference Include="coverlet.msbuild" Version="6.0.4">
       <PrivateAssets>all</PrivateAssets>
       <IncludeAssets>runtime; build; native; contentfiles; analyzers; buildtransitive</IncludeAssets>
