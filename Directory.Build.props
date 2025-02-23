@@ -46,6 +46,7 @@
   <ItemGroup Label="Analyzers">
     <PackageReference Include="DotNetProjectFile.Analyzers" PrivateAssets="all" />
     <PackageReference Include="SerilogAnalyzer" PrivateAssets="all" />
+    <PackageReference Include="SonarAnalyzer.CSharp" PrivateAssets="all" />
   </ItemGroup>
 
   <ItemGroup>
