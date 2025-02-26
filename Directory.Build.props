@@ -49,10 +49,6 @@
     <PackageReference Include="SonarAnalyzer.CSharp" PrivateAssets="all" />
   </ItemGroup>
 
-  <ItemGroup>
-    <AdditionalFiles Include="*.csproj" Visible="false" />
-  </ItemGroup>
-
   <Choose>
     <When Condition="'$(IsPackable)' == 'true'">
 

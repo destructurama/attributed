@@ -8,8 +8,8 @@
   <ItemGroup>
     <PackageVersion Include="BenchmarkDotNet" Version="0.14.0" />
     <PackageVersion Include="coverlet.msbuild" Version="6.0.4" />
-    <PackageVersion Include="DotNetProjectFile.Analyzers" Version="1.5.9" />
-    <PackageVersion Include="DotNetProjectFile.Analyzers.Sdk" Version="1.5.9" />
+    <PackageVersion Include="DotNetProjectFile.Analyzers" Version="1.5.10" />
+    <PackageVersion Include="DotNetProjectFile.Analyzers.Sdk" Version="1.5.10.1" />
     <PackageVersion Include="MarkdownSnippets.MsBuild" Version="27.0.2" />
     <PackageVersion Include="Microsoft.CodeAnalysis.Analyzers" Version="3.11.0" />
     <PackageVersion Include="Microsoft.Extensions.Telemetry.Abstractions" Version="[9.0.0]" />
