@@ -4,15 +4,18 @@
     <OutputType>Exe</OutputType>
     <TargetFramework>net9.0</TargetFramework>
     <NoWarn>$(NoWarn);1591</NoWarn>
-    <IsPackable>false</IsPackable>
   </PropertyGroup>
 
   <ItemGroup>
-    <PackageReference Include="BenchmarkDotNet" Version="0.14.0" />
+    <PackageReference Include="BenchmarkDotNet" />
+  </ItemGroup>
+
+  <ItemGroup Label="Analyzers">
+    <PackageReference Include="Microsoft.CodeAnalysis.Analyzers" PrivateAssets="all" />
   </ItemGroup>
 
   <ItemGroup>
-    <ProjectReference Include="..\Destructurama.Attributed\Destructurama.Attributed.csproj" />
+    <ProjectReference Include="../Destructurama.Attributed/Destructurama.Attributed.csproj" />
   </ItemGroup>
 
 </Project>
