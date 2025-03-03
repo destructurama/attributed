@@ -1,5 +1,5 @@
 window.BENCHMARK_DATA = {
-  "lastUpdate": 1740988687292,
+  "lastUpdate": 1741026103186,
   "repoUrl": "https://github.com/destructurama/attributed",
   "entries": {
     "Benchmarks": [
@@ -4488,6 +4488,72 @@ window.BENCHMARK_DATA = {
             "value": 168.2927212204252,
             "unit": "ns",
             "range": "± 0.2991033644014718"
+          }
+        ]
+      },
+      {
+        "commit": {
+          "author": {
+            "email": "49699333+dependabot[bot]@users.noreply.github.com",
+            "name": "dependabot[bot]",
+            "username": "dependabot[bot]"
+          },
+          "committer": {
+            "email": "noreply@github.com",
+            "name": "GitHub",
+            "username": "web-flow"
+          },
+          "distinct": true,
+          "id": "c76d262e3b811eaab043532e840768c7cbfe87c4",
+          "message": "Bump PublicApiGenerator from 11.4.2 to 11.4.5 in /src (#160)\n\nBumps [PublicApiGenerator](https://github.com/PublicApiGenerator/PublicApiGenerator) from 11.4.2 to 11.4.5.\r\n- [Release notes](https://github.com/PublicApiGenerator/PublicApiGenerator/releases)\r\n- [Commits](https://github.com/PublicApiGenerator/PublicApiGenerator/compare/11.4.2...11.4.5)\r\n\r\n---\r\nupdated-dependencies:\r\n- dependency-name: PublicApiGenerator\r\n  dependency-type: direct:production\r\n  update-type: version-update:semver-patch\r\n...\r\n\r\nSigned-off-by: dependabot[bot] <support@github.com>\r\nCo-authored-by: dependabot[bot] <49699333+dependabot[bot]@users.noreply.github.com>",
+          "timestamp": "2025-03-03T21:18:08+03:00",
+          "tree_id": "a7c1a97b9f6dafef7833a5edef41b8635a378023",
+          "url": "https://github.com/destructurama/attributed/commit/c76d262e3b811eaab043532e840768c7cbfe87c4"
+        },
+        "date": 1741026102688,
+        "tool": "benchmarkdotnet",
+        "benches": [
+          {
+            "name": "Benchmarks.AttributedBenchmarks.LogAsScalar",
+            "value": 219.9866371835981,
+            "unit": "ns",
+            "range": "± 2.3274462593660923"
+          },
+          {
+            "name": "Benchmarks.AttributedBenchmarks.LogMasked",
+            "value": 392.5678720841041,
+            "unit": "ns",
+            "range": "± 2.4927728156721756"
+          },
+          {
+            "name": "Benchmarks.AttributedBenchmarks.LogReplaced",
+            "value": 539.5018241588886,
+            "unit": "ns",
+            "range": "± 2.546204181597621"
+          },
+          {
+            "name": "Benchmarks.AttributedBenchmarks.LogWithName",
+            "value": 378.5452947934469,
+            "unit": "ns",
+            "range": "± 2.376987296648465"
+          },
+          {
+            "name": "Benchmarks.AttributedBenchmarks.NotLogged",
+            "value": 105.10907466136493,
+            "unit": "ns",
+            "range": "± 0.574180465464196"
+          },
+          {
+            "name": "Benchmarks.AttributedBenchmarks.NotLoggedIfDefault",
+            "value": 116.80561663309733,
+            "unit": "ns",
+            "range": "± 2.210371576838473"
+          },
+          {
+            "name": "Benchmarks.AttributedBenchmarks.NotLoggedIfNull",
+            "value": 177.25694472449166,
+            "unit": "ns",
+            "range": "± 5.1328781026538195"
           }
         ]
       }
