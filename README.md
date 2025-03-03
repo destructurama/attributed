@@ -39,7 +39,7 @@ using Destructurama;
 ...
 var log = new LoggerConfiguration()
   .Destructure.UsingAttributes()
-  ...
+...
 ```
 
 ## 1. Changing a property name
@@ -378,6 +378,16 @@ public class WithRegex
 ```
 <sup><a href='/src/Destructurama.Attributed.Tests/Snippets.cs#L6-L25' title='Snippet source file'>snippet source</a> | <a href='#snippet-WithRegex' title='Start of snippet'>anchor</a></sup>
 <!-- endSnippet -->
+
+## 8. Working with MetadataTypeAttribute
+
+You can apply [`MetadataTypeAttribute`](https://learn.microsoft.com/en-us/dotnet/api/system.componentmodel.dataannotations.metadatatypeattribute) to your class providing another type with annotated properties. It may help you in the case when source type with its properties is defined in a code generated file so you don't want to put the attributes in there as they would get overwritten by the generator. Note that you have to set `AttributedDestructuringPolicyOptions.RespectMetadataTypeAttribute` to `true`.
+
+```csharp
+var log = new LoggerConfiguration()
+  .Destructure.UsingAttributes(x => x.RespectMetadataTypeAttribute = true)
+  ...
+```
 
 # Benchmarks
 

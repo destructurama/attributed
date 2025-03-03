@@ -6,7 +6,6 @@ on:
   push:
     branches:
       - master
-      - dev
     paths:
       - src/**
       - .github/workflows/**

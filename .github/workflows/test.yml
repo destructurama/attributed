@@ -4,7 +4,6 @@ on:
   pull_request:
     branches:
       - master
-      - dev
     paths:
       - src/**
       - .github/workflows/**
@@ -12,7 +11,6 @@ on:
   push:
     branches:
       - master
-      - dev
     paths:
       - src/**
       - .github/workflows/**
