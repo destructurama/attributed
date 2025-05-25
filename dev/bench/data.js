@@ -1,5 +1,5 @@
 window.BENCHMARK_DATA = {
-  "lastUpdate": 1746513997153,
+  "lastUpdate": 1748155709808,
   "repoUrl": "https://github.com/destructurama/attributed",
   "entries": {
     "Benchmarks": [
@@ -4752,6 +4752,72 @@ window.BENCHMARK_DATA = {
             "value": 167.24555150667825,
             "unit": "ns",
             "range": "± 1.840767816131298"
+          }
+        ]
+      },
+      {
+        "commit": {
+          "author": {
+            "email": "49699333+dependabot[bot]@users.noreply.github.com",
+            "name": "dependabot[bot]",
+            "username": "dependabot[bot]"
+          },
+          "committer": {
+            "email": "noreply@github.com",
+            "name": "GitHub",
+            "username": "web-flow"
+          },
+          "distinct": true,
+          "id": "53a8fe03ce15f9d484251e2228a1bb0998215350",
+          "message": "Update Microsoft.Extensions.Telemetry.Abstractions to 9.5.0 (#165)\n\n---\nupdated-dependencies:\n- dependency-name: Microsoft.Extensions.Telemetry.Abstractions\n  dependency-version: 9.5.0\n  dependency-type: direct:production\n  update-type: version-update:semver-minor\n...\n\nSigned-off-by: dependabot[bot] <support@github.com>\nCo-authored-by: dependabot[bot] <49699333+dependabot[bot]@users.noreply.github.com>",
+          "timestamp": "2025-05-25T09:45:23+03:00",
+          "tree_id": "d58ca9454db4d23bb20d48cd981edcb191749a05",
+          "url": "https://github.com/destructurama/attributed/commit/53a8fe03ce15f9d484251e2228a1bb0998215350"
+        },
+        "date": 1748155709410,
+        "tool": "benchmarkdotnet",
+        "benches": [
+          {
+            "name": "Benchmarks.AttributedBenchmarks.LogAsScalar",
+            "value": 211.09270330575796,
+            "unit": "ns",
+            "range": "± 1.074415028451087"
+          },
+          {
+            "name": "Benchmarks.AttributedBenchmarks.LogMasked",
+            "value": 381.7523132470938,
+            "unit": "ns",
+            "range": "± 0.7324574450483897"
+          },
+          {
+            "name": "Benchmarks.AttributedBenchmarks.LogReplaced",
+            "value": 558.1640300750732,
+            "unit": "ns",
+            "range": "± 3.5816472735399274"
+          },
+          {
+            "name": "Benchmarks.AttributedBenchmarks.LogWithName",
+            "value": 379.7758695398058,
+            "unit": "ns",
+            "range": "± 1.0095019737432573"
+          },
+          {
+            "name": "Benchmarks.AttributedBenchmarks.NotLogged",
+            "value": 105.07183512449265,
+            "unit": "ns",
+            "range": "± 0.4498938569530419"
+          },
+          {
+            "name": "Benchmarks.AttributedBenchmarks.NotLoggedIfDefault",
+            "value": 112.24889258146285,
+            "unit": "ns",
+            "range": "± 0.3529169734194703"
+          },
+          {
+            "name": "Benchmarks.AttributedBenchmarks.NotLoggedIfNull",
+            "value": 171.0784935780934,
+            "unit": "ns",
+            "range": "± 0.6638502734606861"
           }
         ]
       }
