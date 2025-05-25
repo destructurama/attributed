@@ -1,5 +1,5 @@
 window.BENCHMARK_DATA = {
-  "lastUpdate": 1748155709808,
+  "lastUpdate": 1748155876303,
   "repoUrl": "https://github.com/destructurama/attributed",
   "entries": {
     "Benchmarks": [
@@ -4818,6 +4818,72 @@ window.BENCHMARK_DATA = {
             "value": 171.0784935780934,
             "unit": "ns",
             "range": "± 0.6638502734606861"
+          }
+        ]
+      },
+      {
+        "commit": {
+          "author": {
+            "email": "49699333+dependabot[bot]@users.noreply.github.com",
+            "name": "dependabot[bot]",
+            "username": "dependabot[bot]"
+          },
+          "committer": {
+            "email": "noreply@github.com",
+            "name": "GitHub",
+            "username": "web-flow"
+          },
+          "distinct": true,
+          "id": "987ee3122d209828e776c7b99989b9008e3d7d97",
+          "message": "Update Serilog to 4.3.0 (#166)\n\n---\nupdated-dependencies:\n- dependency-name: Serilog\n  dependency-version: 4.3.0\n  dependency-type: direct:production\n  update-type: version-update:semver-minor\n- dependency-name: Serilog\n  dependency-version: 4.3.0\n  dependency-type: direct:production\n  update-type: version-update:semver-minor\n...\n\nSigned-off-by: dependabot[bot] <support@github.com>\nCo-authored-by: dependabot[bot] <49699333+dependabot[bot]@users.noreply.github.com>",
+          "timestamp": "2025-05-25T09:47:58+03:00",
+          "tree_id": "98145666f43d867cab52240411b709bfcc518e00",
+          "url": "https://github.com/destructurama/attributed/commit/987ee3122d209828e776c7b99989b9008e3d7d97"
+        },
+        "date": 1748155875876,
+        "tool": "benchmarkdotnet",
+        "benches": [
+          {
+            "name": "Benchmarks.AttributedBenchmarks.LogAsScalar",
+            "value": 216.0909274986812,
+            "unit": "ns",
+            "range": "± 2.3447129527625616"
+          },
+          {
+            "name": "Benchmarks.AttributedBenchmarks.LogMasked",
+            "value": 395.28566217422485,
+            "unit": "ns",
+            "range": "± 3.573339836727231"
+          },
+          {
+            "name": "Benchmarks.AttributedBenchmarks.LogReplaced",
+            "value": 542.80785668691,
+            "unit": "ns",
+            "range": "± 3.2583247259320562"
+          },
+          {
+            "name": "Benchmarks.AttributedBenchmarks.LogWithName",
+            "value": 372.6112537724631,
+            "unit": "ns",
+            "range": "± 3.324234848938459"
+          },
+          {
+            "name": "Benchmarks.AttributedBenchmarks.NotLogged",
+            "value": 100.31118892706357,
+            "unit": "ns",
+            "range": "± 0.26235806177248516"
+          },
+          {
+            "name": "Benchmarks.AttributedBenchmarks.NotLoggedIfDefault",
+            "value": 118.41580595572789,
+            "unit": "ns",
+            "range": "± 1.0615292371994678"
+          },
+          {
+            "name": "Benchmarks.AttributedBenchmarks.NotLoggedIfNull",
+            "value": 170.84301902697638,
+            "unit": "ns",
+            "range": "± 0.5158796158964318"
           }
         ]
       }
