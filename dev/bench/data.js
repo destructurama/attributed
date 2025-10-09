@@ -1,5 +1,5 @@
 window.BENCHMARK_DATA = {
-  "lastUpdate": 1760032736788,
+  "lastUpdate": 1760033051180,
   "repoUrl": "https://github.com/destructurama/attributed",
   "entries": {
     "Benchmarks": [
@@ -5016,6 +5016,72 @@ window.BENCHMARK_DATA = {
             "value": 173.05658187185014,
             "unit": "ns",
             "range": "± 0.6994455486733253"
+          }
+        ]
+      },
+      {
+        "commit": {
+          "author": {
+            "email": "49699333+dependabot[bot]@users.noreply.github.com",
+            "name": "dependabot[bot]",
+            "username": "dependabot[bot]"
+          },
+          "committer": {
+            "email": "noreply@github.com",
+            "name": "GitHub",
+            "username": "web-flow"
+          },
+          "distinct": true,
+          "id": "27bfbc711c126f9d9b69a90a2d87c4f924763202",
+          "message": "Bump actions/stale from 9 to 10 (#180)\n\nBumps [actions/stale](https://github.com/actions/stale) from 9 to 10.\n- [Release notes](https://github.com/actions/stale/releases)\n- [Changelog](https://github.com/actions/stale/blob/main/CHANGELOG.md)\n- [Commits](https://github.com/actions/stale/compare/v9...v10)\n\n---\nupdated-dependencies:\n- dependency-name: actions/stale\n  dependency-version: '10'\n  dependency-type: direct:production\n  update-type: version-update:semver-major\n...\n\nSigned-off-by: dependabot[bot] <support@github.com>\nCo-authored-by: dependabot[bot] <49699333+dependabot[bot]@users.noreply.github.com>\nCo-authored-by: Ivan Maximov <sungam3r@yandex.ru>",
+          "timestamp": "2025-10-09T21:01:02+03:00",
+          "tree_id": "fe6fe387da0dbfb162e0c3347e487a076200df9d",
+          "url": "https://github.com/destructurama/attributed/commit/27bfbc711c126f9d9b69a90a2d87c4f924763202"
+        },
+        "date": 1760033050750,
+        "tool": "benchmarkdotnet",
+        "benches": [
+          {
+            "name": "Benchmarks.AttributedBenchmarks.LogAsScalar",
+            "value": 223.8948361022132,
+            "unit": "ns",
+            "range": "± 1.5120509382023182"
+          },
+          {
+            "name": "Benchmarks.AttributedBenchmarks.LogMasked",
+            "value": 396.20971771876015,
+            "unit": "ns",
+            "range": "± 2.408454570920378"
+          },
+          {
+            "name": "Benchmarks.AttributedBenchmarks.LogReplaced",
+            "value": 584.4998893056597,
+            "unit": "ns",
+            "range": "± 1.096798507069421"
+          },
+          {
+            "name": "Benchmarks.AttributedBenchmarks.LogWithName",
+            "value": 374.8324953397115,
+            "unit": "ns",
+            "range": "± 2.5785940478932594"
+          },
+          {
+            "name": "Benchmarks.AttributedBenchmarks.NotLogged",
+            "value": 121.00209007944379,
+            "unit": "ns",
+            "range": "± 0.357011472330853"
+          },
+          {
+            "name": "Benchmarks.AttributedBenchmarks.NotLoggedIfDefault",
+            "value": 122.45969501563481,
+            "unit": "ns",
+            "range": "± 0.7421506295246977"
+          },
+          {
+            "name": "Benchmarks.AttributedBenchmarks.NotLoggedIfNull",
+            "value": 180.4360543148858,
+            "unit": "ns",
+            "range": "± 1.0350753689599779"
           }
         ]
       }
