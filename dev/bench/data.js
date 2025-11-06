@@ -1,5 +1,5 @@
 window.BENCHMARK_DATA = {
-  "lastUpdate": 1761923210056,
+  "lastUpdate": 1762458123232,
   "repoUrl": "https://github.com/destructurama/attributed",
   "entries": {
     "Benchmarks": [
@@ -5874,6 +5874,72 @@ window.BENCHMARK_DATA = {
             "value": 177.8384713956288,
             "unit": "ns",
             "range": "± 0.8149084270425043"
+          }
+        ]
+      },
+      {
+        "commit": {
+          "author": {
+            "email": "49699333+dependabot[bot]@users.noreply.github.com",
+            "name": "dependabot[bot]",
+            "username": "dependabot[bot]"
+          },
+          "committer": {
+            "email": "noreply@github.com",
+            "name": "GitHub",
+            "username": "web-flow"
+          },
+          "distinct": true,
+          "id": "02e196319e74e6fcfc8022cae8c6d1a25b18b7d5",
+          "message": "Bump BenchmarkDotNet from 0.15.5 to 0.15.6 (#194)\n\n---\nupdated-dependencies:\n- dependency-name: BenchmarkDotNet\n  dependency-version: 0.15.6\n  dependency-type: direct:production\n  update-type: version-update:semver-patch\n...\n\nSigned-off-by: dependabot[bot] <support@github.com>\nCo-authored-by: dependabot[bot] <49699333+dependabot[bot]@users.noreply.github.com>",
+          "timestamp": "2025-11-06T22:38:47+03:00",
+          "tree_id": "4ac1f821ba2a26eeedcabb26227c762fb8425a42",
+          "url": "https://github.com/destructurama/attributed/commit/02e196319e74e6fcfc8022cae8c6d1a25b18b7d5"
+        },
+        "date": 1762458122267,
+        "tool": "benchmarkdotnet",
+        "benches": [
+          {
+            "name": "Benchmarks.AttributedBenchmarks.LogAsScalar",
+            "value": 213.03134628931682,
+            "unit": "ns",
+            "range": "± 1.335608267036082"
+          },
+          {
+            "name": "Benchmarks.AttributedBenchmarks.LogMasked",
+            "value": 399.0290496716133,
+            "unit": "ns",
+            "range": "± 0.40717859431075126"
+          },
+          {
+            "name": "Benchmarks.AttributedBenchmarks.LogReplaced",
+            "value": 533.455794095993,
+            "unit": "ns",
+            "range": "± 0.7053785393848873"
+          },
+          {
+            "name": "Benchmarks.AttributedBenchmarks.LogWithName",
+            "value": 364.3619397027152,
+            "unit": "ns",
+            "range": "± 0.9039004071348388"
+          },
+          {
+            "name": "Benchmarks.AttributedBenchmarks.NotLogged",
+            "value": 101.47796728213628,
+            "unit": "ns",
+            "range": "± 0.10416981857608791"
+          },
+          {
+            "name": "Benchmarks.AttributedBenchmarks.NotLoggedIfDefault",
+            "value": 110.99999547799429,
+            "unit": "ns",
+            "range": "± 0.15756156970636365"
+          },
+          {
+            "name": "Benchmarks.AttributedBenchmarks.NotLoggedIfNull",
+            "value": 164.47114832060677,
+            "unit": "ns",
+            "range": "± 0.7077924860433179"
           }
         ]
       }
