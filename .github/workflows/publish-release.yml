@@ -33,7 +33,7 @@ jobs:
         working-directory: src
         run: dotnet pack --no-build -c Release -o out
       - name: Upload artifacts
-        uses: actions/upload-artifact@v5
+        uses: actions/upload-artifact@v6
         with:
           name: Nuget packages
           path: |
