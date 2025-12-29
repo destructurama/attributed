@@ -15,6 +15,7 @@ internal sealed class DelegatingSink : ILogEventSink
 
     public void Emit(LogEvent logEvent) => _write(logEvent);
 
+    [System.Diagnostics.CodeAnalysis.SuppressMessage("CodeQuality", "Serilog004:Constant MessageTemplate verifier", Justification = "tests")]
     public static LogEvent Execute(object obj, string messageTemplate = "Here is {@Customized}", Action<AttributedDestructuringPolicyOptions>? configure = null)
     {
         LogEvent evt = null!;

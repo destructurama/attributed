@@ -21,6 +21,7 @@
     <File Path="../.editorconfig" />
     <File Path="../.gitattributes" />
     <File Path="../.gitignore" />
+    <File Path="../.globalconfig" />
     <File Path="../assets/Destructurama.snk" />
     <File Path="../assets/icon.png" />
     <File Path="../CHANGES.md" />

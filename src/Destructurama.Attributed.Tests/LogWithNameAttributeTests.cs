@@ -9,7 +9,7 @@ namespace Destructurama.Attributed.Tests;
 public class LogWithNameAttributeTests
 {
     [TestCase("John Doe")]
-    [TestCase(null)]
+    [TestCase(null!)]
     public void AttributesAreConsultedWhenDestructuring(string name)
     {
         var customized = new PersonalData

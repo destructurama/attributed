@@ -47,7 +47,7 @@ internal class AttributedDestructuringPolicy : IDestructuringPolicy
         return cached.CanDestructure;
     }
 
-    private IEnumerable<PropertyInfo> GetPropertiesRecursive(Type type)
+    private static IEnumerable<PropertyInfo> GetPropertiesRecursive(Type type)
     {
         var seenNames = new HashSet<string>();
 
