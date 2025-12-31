@@ -20,7 +20,7 @@ internal static class CustomPropertyInfoExtension
         var type = propertyInfo.DeclaringType;
 
         // Do not check attribute explicitly to not take dependency from System.ComponentModel.Annotations package.
-        var metadataTypeAttribute = type.GetCustomAttributes(true).Where(t => t.GetType().FullName == "System.ComponentModel.DataAnnotations.MetadataTypeAttribute").FirstOrDefault();
+        var metadataTypeAttribute = type.GetCustomAttributes(true).FirstOrDefault(t => t.GetType().FullName == "System.ComponentModel.DataAnnotations.MetadataTypeAttribute");
         if (metadataTypeAttribute != null)
         {
             var metadataType = (Type)metadataTypeAttribute.GetType().GetProperty("MetadataClassType").GetValue(metadataTypeAttribute, null);

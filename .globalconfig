@@ -1,0 +1,50 @@
+is_global = true
+
+# https://github.com/dotnet-project-file-analyzers/dotnet-project-file-analyzers/blob/main/docs/rules/Proj0003.md
+dotnet_diagnostic.Proj0003.severity = suggestion
+# https://github.com/dotnet-project-file-analyzers/dotnet-project-file-analyzers/blob/main/docs/rules/Proj0010.md
+dotnet_diagnostic.Proj0010.severity = suggestion
+# https://github.com/dotnet-project-file-analyzers/dotnet-project-file-analyzers/blob/main/docs/rules/Proj0020.md
+dotnet_diagnostic.Proj0020.severity = suggestion
+# https://github.com/dotnet-project-file-analyzers/dotnet-project-file-analyzers/blob/main/docs/rules/Proj0039.md
+dotnet_diagnostic.Proj0039.severity = suggestion
+# https://github.com/dotnet-project-file-analyzers/dotnet-project-file-analyzers/blob/main/docs/rules/Proj0040.md
+dotnet_diagnostic.Proj0040.severity = suggestion
+# https://github.com/dotnet-project-file-analyzers/dotnet-project-file-analyzers/blob/main/docs/rules/Proj0043.md
+dotnet_diagnostic.Proj0043.severity = suggestion
+# https://github.com/dotnet-project-file-analyzers/dotnet-project-file-analyzers/blob/main/docs/rules/Proj0048.md
+dotnet_diagnostic.Proj0048.severity = suggestion
+# https://github.com/dotnet-project-file-analyzers/dotnet-project-file-analyzers/blob/main/docs/rules/Proj0200.md
+dotnet_diagnostic.Proj0200.severity = suggestion
+# https://github.com/dotnet-project-file-analyzers/dotnet-project-file-analyzers/blob/main/docs/rules/Proj0201.md
+dotnet_diagnostic.Proj0201.severity = suggestion
+# https://github.com/dotnet-project-file-analyzers/dotnet-project-file-analyzers/blob/main/docs/rules/Proj0202.md
+dotnet_diagnostic.Proj0202.severity = suggestion
+# https://github.com/dotnet-project-file-analyzers/dotnet-project-file-analyzers/blob/main/docs/rules/Proj0205.md
+dotnet_diagnostic.Proj0205.severity = suggestion
+# https://github.com/dotnet-project-file-analyzers/dotnet-project-file-analyzers/blob/main/docs/rules/Proj0206.md
+dotnet_diagnostic.Proj0206.severity = suggestion
+# https://github.com/dotnet-project-file-analyzers/dotnet-project-file-analyzers/blob/main/docs/rules/Proj0208.md
+dotnet_diagnostic.Proj0208.severity = suggestion
+# https://github.com/dotnet-project-file-analyzers/dotnet-project-file-analyzers/blob/main/docs/rules/Proj0216.md
+dotnet_diagnostic.Proj0216.severity = suggestion
+# https://github.com/dotnet-project-file-analyzers/dotnet-project-file-analyzers/blob/main/docs/rules/Proj0240.md
+dotnet_diagnostic.Proj0240.severity = suggestion
+# https://github.com/dotnet-project-file-analyzers/dotnet-project-file-analyzers/blob/main/docs/rules/Proj0243.md
+dotnet_diagnostic.Proj0243.severity = suggestion
+# https://github.com/dotnet-project-file-analyzers/dotnet-project-file-analyzers/blob/main/docs/rules/Proj0400.md
+dotnet_diagnostic.Proj0400.severity = suggestion
+# https://github.com/dotnet-project-file-analyzers/dotnet-project-file-analyzers/blob/main/docs/rules/Proj0453.md
+dotnet_diagnostic.Proj0453.severity = suggestion
+# https://github.com/dotnet-project-file-analyzers/dotnet-project-file-analyzers/blob/main/docs/rules/Proj0501.md
+# TODO: https://github.com/Suchiman/SerilogAnalyzer/issues/64
+dotnet_diagnostic.Proj0501.severity = suggestion
+# https://github.com/dotnet-project-file-analyzers/dotnet-project-file-analyzers/blob/main/docs/rules/Proj0800.md
+dotnet_diagnostic.Proj0800.severity = suggestion
+# https://github.com/dotnet-project-file-analyzers/dotnet-project-file-analyzers/blob/main/docs/rules/Proj1003.md
+dotnet_diagnostic.Proj1003.severity = suggestion
+# https://github.com/dotnet-project-file-analyzers/dotnet-project-file-analyzers/blob/main/docs/rules/Proj3000.md
+dotnet_diagnostic.Proj3000.severity = suggestion
+
+# TODO: https://github.com/dotnet-project-file-analyzers/dotnet-project-file-analyzers/issues/611
+dotnet_diagnostic.Proj1001.severity = suggestion
