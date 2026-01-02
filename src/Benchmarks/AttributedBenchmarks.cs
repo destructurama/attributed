@@ -20,6 +20,9 @@ using Serilog.Core;
 
 namespace Benchmarks;
 
+/// <summary>
+/// Simple benchmarks for destructurama attributes.
+/// </summary>
 public class AttributedBenchmarks
 {
     private class LogAsScalarClass
@@ -139,6 +142,9 @@ public class AttributedBenchmarks
     private ILogEventPropertyValueFactory _factory = null!;
     private IDestructuringPolicy _policy = null!;
 
+    /// <summary>
+    /// Initialize benchmarks data.
+    /// </summary>
     [GlobalSetup]
     public void Setup()
     {
@@ -158,42 +164,63 @@ public class AttributedBenchmarks
         return (policy, factory);
     }
 
+    /// <summary>
+    /// Benchmark for <see cref="LogAsScalarAttribute"/>.
+    /// </summary>
     [Benchmark]
     public void LogAsScalar()
     {
         _policy.TryDestructure(_logAsScalar, _factory, out _);
     }
 
+    /// <summary>
+    /// Benchmark for <see cref="LogMaskedAttribute"/>.
+    /// </summary>
     [Benchmark]
     public void LogMasked()
     {
         _policy.TryDestructure(_logMasked, _factory, out _);
     }
 
+    /// <summary>
+    /// Benchmark for <see cref="LogReplacedAttribute"/>.
+    /// </summary>
     [Benchmark]
     public void LogReplaced()
     {
         _policy.TryDestructure(_logReplaced, _factory, out _);
     }
 
+    /// <summary>
+    /// Benchmark for <see cref="LogWithNameAttribute"/>.
+    /// </summary>
     [Benchmark]
     public void LogWithName()
     {
         _policy.TryDestructure(_logWithName, _factory, out _);
     }
 
+    /// <summary>
+    /// Benchmark for <see cref="NotLoggedAttribute"/>.
+    /// </summary>
     [Benchmark]
     public void NotLogged()
     {
         _policy.TryDestructure(_notLogged, _factory, out _);
     }
 
+    /// <summary>
+    /// Benchmark for <see cref="NotLoggedIfDefaultAttribute"/>.
+    /// </summary>
     [Benchmark]
     public void NotLoggedIfDefault()
     {
         _policy.TryDestructure(_notLoggedIfDefault, _factory, out _);
     }
 
+    /// <summary>
+    /// Benchmark for <see cref="NotLoggedIfNullAttribute"/>.
+    /// </summary>
     [Benchmark]
     public void NotLoggedIfNull()
     {

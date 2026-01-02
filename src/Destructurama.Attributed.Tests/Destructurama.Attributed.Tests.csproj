@@ -3,7 +3,8 @@
   <PropertyGroup>
     <TargetFrameworks Condition="'$(OS)' == 'Windows_NT'">net10.0;net462</TargetFrameworks>
     <TargetFramework Condition="'$(OS)' != 'Windows_NT'">net10.0</TargetFramework>
-    <TreatWarningsAsErrors>false</TreatWarningsAsErrors>
+    <!--Microsoft.Extensions.Telemetry.Abstractions 10.1.0 doesn't support net462 and has not been tested with it. Consider upgrading your TargetFramework to net8.0 or later.-->
+    <SuppressTfmSupportBuildWarnings>true</SuppressTfmSupportBuildWarnings>
     <NoWarn>$(NoWarn);CS1591</NoWarn>
     <DefineConstants>$(DefineConstants);CODE_GENERATION_ATTRIBUTES</DefineConstants> <!--Test with LogPropertyIgnoreAttribute requires it.-->
   </PropertyGroup>
@@ -22,7 +23,7 @@
   </ItemGroup>
 
   <ItemGroup>
-    <ProjectReference Include="../../src/Destructurama.Attributed\Destructurama.Attributed.csproj" />
+    <ProjectReference Include="../../src/Destructurama.Attributed/Destructurama.Attributed.csproj" />
   </ItemGroup>
 
 </Project>
