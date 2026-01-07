@@ -14,6 +14,8 @@ dotnet_diagnostic.Proj0040.severity = suggestion
 dotnet_diagnostic.Proj0043.severity = suggestion
 # https://github.com/dotnet-project-file-analyzers/dotnet-project-file-analyzers/blob/main/docs/rules/Proj0048.md
 dotnet_diagnostic.Proj0048.severity = suggestion
+# https://github.com/dotnet-project-file-analyzers/dotnet-project-file-analyzers/blob/main/docs/rules/Proj0049.md
+dotnet_diagnostic.Proj0049.severity = suggestion
 # https://github.com/dotnet-project-file-analyzers/dotnet-project-file-analyzers/blob/main/docs/rules/Proj0200.md
 dotnet_diagnostic.Proj0200.severity = suggestion
 # https://github.com/dotnet-project-file-analyzers/dotnet-project-file-analyzers/blob/main/docs/rules/Proj0201.md
@@ -24,10 +26,6 @@ dotnet_diagnostic.Proj0202.severity = suggestion
 dotnet_diagnostic.Proj0205.severity = suggestion
 # https://github.com/dotnet-project-file-analyzers/dotnet-project-file-analyzers/blob/main/docs/rules/Proj0206.md
 dotnet_diagnostic.Proj0206.severity = suggestion
-# https://github.com/dotnet-project-file-analyzers/dotnet-project-file-analyzers/blob/main/docs/rules/Proj0208.md
-dotnet_diagnostic.Proj0208.severity = suggestion
-# https://github.com/dotnet-project-file-analyzers/dotnet-project-file-analyzers/blob/main/docs/rules/Proj0216.md
-dotnet_diagnostic.Proj0216.severity = suggestion
 # https://github.com/dotnet-project-file-analyzers/dotnet-project-file-analyzers/blob/main/docs/rules/Proj0240.md
 dotnet_diagnostic.Proj0240.severity = suggestion
 # https://github.com/dotnet-project-file-analyzers/dotnet-project-file-analyzers/blob/main/docs/rules/Proj0243.md
@@ -44,6 +42,7 @@ dotnet_diagnostic.Proj0800.severity = suggestion
 # https://github.com/dotnet-project-file-analyzers/dotnet-project-file-analyzers/blob/main/docs/rules/Proj1003.md
 dotnet_diagnostic.Proj1003.severity = suggestion
 # https://github.com/dotnet-project-file-analyzers/dotnet-project-file-analyzers/blob/main/docs/rules/Proj3000.md
+# TODO: https://github.com/dotnet-project-file-analyzers/dotnet-project-file-analyzers/issues/614
 dotnet_diagnostic.Proj3000.severity = suggestion
 
 # .NET code style settings - "This." and "Me." qualifiers
