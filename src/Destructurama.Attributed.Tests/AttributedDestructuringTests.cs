@@ -1,4 +1,5 @@
 using Destructurama.Attributed.Tests.Support;
+using Destructurama.Filters;
 using Microsoft.Extensions.Logging;
 using NUnit.Framework;
 using Serilog.Events;
@@ -96,6 +97,39 @@ public class AttributedDestructuringTests
         str.Contains("This is a password").ShouldBeFalse();
     }
 
+    [Test]
+    public void AttributesAreConsultedWithFiltersWhenDestructuring()
+    {
+        var customized = new Customized2
+        {
+            ImmutableScalar = new(),
+            MutableScalar = new(),
+            NotAScalar = new(),
+            Ignored = "Hello, there",
+            Ignored2 = "Hello, there again",
+            ScalarAnyway = new(),
+            AuthData = new()
+            {
+                Username = "This is a username",
+                Password = "This is a password"
+            }
+        };
+
+        var evt = DelegatingSink.Execute(customized, configure: opt => opt.RespectLogPropertyIgnoreAttribute = true);
+
+        var sv = (StructureValue)evt.Properties["Customized"];
+        var props = sv.Properties.ToDictionary(p => p.Name, p => p.Value);
+
+        props.ShouldNotContainKey("Ignored");
+        props.ShouldNotContainKey("Ignored2");
+        props.Count.ShouldBe(4);
+
+        props["ScalarAnyway"].LiteralValue().ShouldBeOfType<NotAScalar>();
+        props["Struct1"].LiteralValue().ShouldBeOfType<Struct1>();
+        props["StructReturningNull"].LiteralValue().ShouldBeNull();
+        props["StructNull"].LiteralValue().ShouldBeNull();
+    }
+
     public class ClassWithThrowingAccessor
     {
         [LogMasked]
@@ -142,6 +176,36 @@ public class AttributedDestructuringTests
     }
 
     public class Customized
+    {
+        public ImmutableScalar? ImmutableScalar { get; set; }
+        public MutableScalar? MutableScalar { get; set; }
+        public NotAScalar? NotAScalar { get; set; }
+
+        [NotLogged]
+        public string? Ignored { get; set; }
+
+        [LogPropertyIgnore]
+        public string? Ignored2 { get; set; }
+
+        [LogAsScalar]
+        public NotAScalar? ScalarAnyway { get; set; }
+
+        public UserAuthData? AuthData { get; set; }
+
+        [LogAsScalar]
+        public Struct1 Struct1 { get; set; }
+
+        public Struct2 Struct2 { get; set; }
+
+        [LogAsScalar(isMutable: true)]
+        public StructReturningNull StructReturningNull { get; set; }
+
+        [LogAsScalar(isMutable: true)]
+        public StructReturningNull? StructNull { get; set; }
+    }
+
+    [OptIn]
+    public class Customized2
     {
         public ImmutableScalar? ImmutableScalar { get; set; }
         public MutableScalar? MutableScalar { get; set; }

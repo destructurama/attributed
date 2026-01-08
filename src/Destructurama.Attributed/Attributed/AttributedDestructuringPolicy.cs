@@ -17,6 +17,7 @@ using System.Collections.Concurrent;
 using System.Diagnostics.CodeAnalysis;
 using System.Linq.Expressions;
 using System.Reflection;
+using Destructurama.Filters;
 using Destructurama.Util;
 using Serilog.Core;
 using Serilog.Debugging;
@@ -47,8 +48,10 @@ internal class AttributedDestructuringPolicy : IDestructuringPolicy
         return cached.CanDestructure;
     }
 
-    private static IEnumerable<PropertyInfo> GetPropertiesRecursive(Type type)
+    private IEnumerable<PropertyInfo> GetPropertiesRecursive(Type type)
     {
+        var filters = type.GetCustomAttributes(inherit: true).OfType<IPropertyFilterAttribute>().ToArray();
+
         var seenNames = new HashSet<string>();
 
         while (type != typeof(object))
@@ -59,7 +62,8 @@ internal class AttributedDestructuringPolicy : IDestructuringPolicy
             foreach (var propertyInfo in unseenProperties)
             {
                 seenNames.Add(propertyInfo.Name);
-                yield return propertyInfo;
+                if (filters.Length == 0 || filters.Any(f => f.ShouldBeLogged(propertyInfo, _options)))
+                    yield return propertyInfo;
             }
 
             type = type.BaseType;
