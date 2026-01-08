@@ -6,6 +6,8 @@
     <TreatWarningsAsErrors>true</TreatWarningsAsErrors>
     <GenerateDocumentationFile>true</GenerateDocumentationFile>
     <Authors>Destructurama Contributors, Serilog Contributors</Authors>
+    <ProductName>Destructurama - advanced destructuring for Serilog</ProductName>
+    <PackageReleaseNotes>See https://github.com/destructurama/attributed/releases</PackageReleaseNotes>
     <CurrentYear>$([System.DateTime]::Now.ToString(yyyy))</CurrentYear>
     <Copyright>Copyright © Serilog Contributors 2017-$(CurrentYear)</Copyright>
     <PackageLicenseExpression>Apache-2.0</PackageLicenseExpression>
