@@ -1,5 +1,5 @@
 window.BENCHMARK_DATA = {
-  "lastUpdate": 1767861186352,
+  "lastUpdate": 1767971809853,
   "repoUrl": "https://github.com/destructurama/attributed",
   "entries": {
     "Benchmarks": [
@@ -7260,6 +7260,72 @@ window.BENCHMARK_DATA = {
             "value": 141.1707697098072,
             "unit": "ns",
             "range": "± 0.530323614072479"
+          }
+        ]
+      },
+      {
+        "commit": {
+          "author": {
+            "email": "49699333+dependabot[bot]@users.noreply.github.com",
+            "name": "dependabot[bot]",
+            "username": "dependabot[bot]"
+          },
+          "committer": {
+            "email": "noreply@github.com",
+            "name": "GitHub",
+            "username": "web-flow"
+          },
+          "distinct": true,
+          "id": "99454c025e43f370f2adad13cc19ca2e884df1da",
+          "message": "Bump DotNetProjectFile.Analyzers from 1.8.1 to 1.8.2 (#216)\n\n---\nupdated-dependencies:\n- dependency-name: DotNetProjectFile.Analyzers\n  dependency-version: 1.8.2\n  dependency-type: direct:production\n  update-type: version-update:semver-patch\n...\n\nSigned-off-by: dependabot[bot] <support@github.com>\nCo-authored-by: dependabot[bot] <49699333+dependabot[bot]@users.noreply.github.com>",
+          "timestamp": "2026-01-09T18:13:58+03:00",
+          "tree_id": "a9ef11fbcc2ec25dcf1a169ab5a69e391ce4a743",
+          "url": "https://github.com/destructurama/attributed/commit/99454c025e43f370f2adad13cc19ca2e884df1da"
+        },
+        "date": 1767971808890,
+        "tool": "benchmarkdotnet",
+        "benches": [
+          {
+            "name": "Benchmarks.AttributedBenchmarks.LogAsScalar",
+            "value": 187.32014056614466,
+            "unit": "ns",
+            "range": "± 1.4531886670964063"
+          },
+          {
+            "name": "Benchmarks.AttributedBenchmarks.LogMasked",
+            "value": 302.3106804915837,
+            "unit": "ns",
+            "range": "± 4.168499615042188"
+          },
+          {
+            "name": "Benchmarks.AttributedBenchmarks.LogReplaced",
+            "value": 492.94639213268573,
+            "unit": "ns",
+            "range": "± 0.6054074130710566"
+          },
+          {
+            "name": "Benchmarks.AttributedBenchmarks.LogWithName",
+            "value": 304.55172858919417,
+            "unit": "ns",
+            "range": "± 2.370074045350174"
+          },
+          {
+            "name": "Benchmarks.AttributedBenchmarks.NotLogged",
+            "value": 67.020809003285,
+            "unit": "ns",
+            "range": "± 0.08636566131253634"
+          },
+          {
+            "name": "Benchmarks.AttributedBenchmarks.NotLoggedIfDefault",
+            "value": 79.16188568335313,
+            "unit": "ns",
+            "range": "± 0.14122930263944175"
+          },
+          {
+            "name": "Benchmarks.AttributedBenchmarks.NotLoggedIfNull",
+            "value": 136.17822586695354,
+            "unit": "ns",
+            "range": "± 1.106290718812416"
           }
         ]
       }
