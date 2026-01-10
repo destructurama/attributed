@@ -69,15 +69,15 @@ namespace Destructurama.Attributed
 }
 namespace Destructurama.Filters
 {
+    [System.AttributeUsage(System.AttributeTargets.Class | System.AttributeTargets.Struct)]
+    public sealed class AllowDestructuringOnlyExplicitlyMarkedPropertiesAttribute : System.Attribute, Destructurama.Filters.IPropertyFilterAttribute
+    {
+        public AllowDestructuringOnlyExplicitlyMarkedPropertiesAttribute() { }
+        public bool AllowDestructuring(System.Reflection.PropertyInfo property, Destructurama.Attributed.AttributedDestructuringPolicyOptions options) { }
+    }
     public interface IPropertyFilterAttribute
     {
-        bool ShouldBeLogged(System.Reflection.PropertyInfo property, Destructurama.Attributed.AttributedDestructuringPolicyOptions options);
-    }
-    [System.AttributeUsage(System.AttributeTargets.Class | System.AttributeTargets.Struct)]
-    public class OptInAttribute : System.Attribute, Destructurama.Filters.IPropertyFilterAttribute
-    {
-        public OptInAttribute() { }
-        public bool ShouldBeLogged(System.Reflection.PropertyInfo property, Destructurama.Attributed.AttributedDestructuringPolicyOptions options) { }
+        bool AllowDestructuring(System.Reflection.PropertyInfo property, Destructurama.Attributed.AttributedDestructuringPolicyOptions options);
     }
 }
 namespace Destructurama

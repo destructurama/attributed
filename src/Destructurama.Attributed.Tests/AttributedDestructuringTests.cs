@@ -204,7 +204,7 @@ public class AttributedDestructuringTests
         public StructReturningNull? StructNull { get; set; }
     }
 
-    [OptIn]
+    [AllowDestructuringOnlyExplicitlyMarkedProperties]
     public class Customized2
     {
         public ImmutableScalar? ImmutableScalar { get; set; }

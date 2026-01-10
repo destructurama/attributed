@@ -62,7 +62,7 @@ internal class AttributedDestructuringPolicy : IDestructuringPolicy
             foreach (var propertyInfo in unseenProperties)
             {
                 seenNames.Add(propertyInfo.Name);
-                if (filters.Length == 0 || filters.Any(f => f.ShouldBeLogged(propertyInfo, _options)))
+                if (filters.Length == 0 || filters.Any(f => f.AllowDestructuring(propertyInfo, _options)))
                     yield return propertyInfo;
             }
 
