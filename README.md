@@ -333,7 +333,7 @@ An example of this could be a string such as "__Sensitive|NonSensitive__". Then 
 
 ```csharp
 [LogReplaced(@"([a-zA-Z0-9]+)\|([a-zA-Z0-9]+)", "***|$2")]
-public property Information { get; set; }
+public string Information { get; set; }
 
 // Will log: "***|NonSensitive"
 ``` 
@@ -387,6 +387,45 @@ You can apply [`MetadataTypeAttribute`](https://learn.microsoft.com/en-us/dotnet
 var log = new LoggerConfiguration()
   .Destructure.UsingAttributes(x => x.RespectMetadataTypeAttribute = true)
   ...
+```
+
+## 9. Filter properties
+
+You can define attribute derived from `IPropertyFilterAttribute` to filter out those
+properties that you do not want to be considered for destructuring. By default all
+properties that do not have any Destructurama attributes are just passed as is to
+the underlying serilog pipeline. In other words, they are "logged" somehow.
+
+Destructurama provides `AllowDestructuringOnlyExplicitlyMarkedPropertiesAttribute`
+that allows a property to be considered for destructuring only if it is marked
+with one of Destructurama attributes. In the following example `Age` and `Birthday`
+properties will never be logged because they have no any attributes. All other
+properties will be destructured/logged according to their attributes.
+
+This can be a convenient alternative for classes with dozens of properties where
+only a few need to be logged. In this case, there is no need to mark all other
+properties with `[NotLogged]`.
+
+```cs
+[AllowDestructuringOnlyExplicitlyMarkedProperties]
+public class Person
+{
+    [LogWithName("FullName")]
+    public string? Name { get; set; }
+
+    public int Age { get; set; }
+
+    [NotLoggedIfNull]
+    public string Username { get; set; }
+
+    public DateTime Birthday { get; set; }
+
+    [LogMasked(ShowFirst = 3)]
+    public string? ShowFirstAndLastInvalidValues { get; set; }
+
+    [LogReplaced(@"([a-zA-Z0-9]+)\|([a-zA-Z0-9]+)", "***|$2")]
+    public string Information { get; set; }
+}
 ```
 
 # Benchmarks
