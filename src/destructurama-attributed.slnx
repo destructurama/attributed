@@ -19,7 +19,6 @@
   </Folder>
   <Folder Name="/Solution Items/">
     <File Path="../.editorconfig" />
-    <File Path="../.gitattributes" />
     <File Path="../.gitignore" />
     <File Path="../.globalconfig" />
     <File Path="../assets/Destructurama.snk" />

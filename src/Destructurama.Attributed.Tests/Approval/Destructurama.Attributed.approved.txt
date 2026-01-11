@@ -67,6 +67,19 @@ namespace Destructurama.Attributed
         public NotLoggedIfNullAttribute() { }
     }
 }
+namespace Destructurama.Filters
+{
+    [System.AttributeUsage(System.AttributeTargets.Class | System.AttributeTargets.Struct)]
+    public sealed class AllowDestructuringOnlyExplicitlyMarkedPropertiesAttribute : System.Attribute, Destructurama.Filters.IPropertyFilterAttribute
+    {
+        public AllowDestructuringOnlyExplicitlyMarkedPropertiesAttribute() { }
+        public bool AllowDestructuring(System.Reflection.PropertyInfo property, Destructurama.Attributed.AttributedDestructuringPolicyOptions options) { }
+    }
+    public interface IPropertyFilterAttribute
+    {
+        bool AllowDestructuring(System.Reflection.PropertyInfo property, Destructurama.Attributed.AttributedDestructuringPolicyOptions options);
+    }
+}
 namespace Destructurama
 {
     public static class LoggerConfigurationAttributedExtensions
