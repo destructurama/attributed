@@ -11,7 +11,7 @@
 
   <ItemGroup>
     <PackageReference Include="coverlet.msbuild" Version="6.0.4" PrivateAssets="all" />
-    <PackageReference Include="MarkdownSnippets.MsBuild" Version="27.0.2" PrivateAssets="all" />
+    <PackageReference Include="MarkdownSnippets.MsBuild" Version="28.0.0" PrivateAssets="all" />
     <PackageReference Include="Microsoft.Extensions.Telemetry.Abstractions" Version="10.2.0" />
     <PackageReference Include="Microsoft.NET.Test.Sdk" Version="18.0.1" />
     <PackageReference Include="NUnit" Version="4.4.0" />
