@@ -18,7 +18,7 @@
     <PackageReference Include="NUnit.Analyzers" Version="*" PrivateAssets="All" />
     <PackageReference Include="NUnit3TestAdapter" Version="6.1.0" />
     <PackageReference Include="PublicApiGenerator" Version="11.5.4" />
-    <PackageReference Include="Serilog" Version="4.3.0" />
+    <PackageReference Include="Serilog" Version="4.3.1" />
     <PackageReference Include="Shouldly" Version="4.3.0" />
   </ItemGroup>
 
