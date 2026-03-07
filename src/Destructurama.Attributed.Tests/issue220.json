@@ -1,0 +1,21 @@
+{
+  "Serilog": {
+    "Using": [ "Destructurama.Attributed" ],
+    "MinimumLevel": {
+      "Default": "Information",
+      "Override": {
+        "Microsoft": "Warning",
+        "System": "Warning"
+      }
+    },
+    "Destructure": [
+      {
+        "Name": "UsingAttributes",
+        "Args": {
+          "IgnoreNullProperties": true
+        }
+      }
+    ],
+    "Enrich": [ "FromLogContext" ]
+  }
+}
