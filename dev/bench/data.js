@@ -1,5 +1,5 @@
 window.BENCHMARK_DATA = {
-  "lastUpdate": 1772877488502,
+  "lastUpdate": 1772877548804,
   "repoUrl": "https://github.com/destructurama/attributed",
   "entries": {
     "Benchmarks": [
@@ -7986,6 +7986,72 @@ window.BENCHMARK_DATA = {
             "value": 140.9741557598114,
             "unit": "ns",
             "range": "± 0.3177876349495191"
+          }
+        ]
+      },
+      {
+        "commit": {
+          "author": {
+            "email": "49699333+dependabot[bot]@users.noreply.github.com",
+            "name": "dependabot[bot]",
+            "username": "dependabot[bot]"
+          },
+          "committer": {
+            "email": "noreply@github.com",
+            "name": "GitHub",
+            "username": "web-flow"
+          },
+          "distinct": true,
+          "id": "bbfb8fa7f2b242186e6a05b714d938c5aed76229",
+          "message": "Bump MarkdownSnippets.MsBuild from 27.0.2 to 28.0.0 (#222)\n\n---\nupdated-dependencies:\n- dependency-name: MarkdownSnippets.MsBuild\n  dependency-version: 28.0.0\n  dependency-type: direct:production\n  update-type: version-update:semver-major\n...\n\nSigned-off-by: dependabot[bot] <support@github.com>\nCo-authored-by: dependabot[bot] <49699333+dependabot[bot]@users.noreply.github.com>\nCo-authored-by: Ivan Maximov <sungam3r@yandex.ru>",
+          "timestamp": "2026-03-07T12:56:11+03:00",
+          "tree_id": "249a13a01452529742a5614d940d4873fb1e1d98",
+          "url": "https://github.com/destructurama/attributed/commit/bbfb8fa7f2b242186e6a05b714d938c5aed76229"
+        },
+        "date": 1772877548459,
+        "tool": "benchmarkdotnet",
+        "benches": [
+          {
+            "name": "Benchmarks.AttributedBenchmarks.LogAsScalar",
+            "value": 189.3599853515625,
+            "unit": "ns",
+            "range": "± 1.5062310839753401"
+          },
+          {
+            "name": "Benchmarks.AttributedBenchmarks.LogMasked",
+            "value": 357.47588068644205,
+            "unit": "ns",
+            "range": "± 2.046181486428293"
+          },
+          {
+            "name": "Benchmarks.AttributedBenchmarks.LogReplaced",
+            "value": 525.9490395863851,
+            "unit": "ns",
+            "range": "± 1.0781713112602662"
+          },
+          {
+            "name": "Benchmarks.AttributedBenchmarks.LogWithName",
+            "value": 328.4129830042521,
+            "unit": "ns",
+            "range": "± 1.3340190828408807"
+          },
+          {
+            "name": "Benchmarks.AttributedBenchmarks.NotLogged",
+            "value": 71.75805234909058,
+            "unit": "ns",
+            "range": "± 0.20852056725668833"
+          },
+          {
+            "name": "Benchmarks.AttributedBenchmarks.NotLoggedIfDefault",
+            "value": 98.12855391899744,
+            "unit": "ns",
+            "range": "± 0.37879449123046244"
+          },
+          {
+            "name": "Benchmarks.AttributedBenchmarks.NotLoggedIfNull",
+            "value": 162.14574281374612,
+            "unit": "ns",
+            "range": "± 1.8755849022758726"
           }
         ]
       }
