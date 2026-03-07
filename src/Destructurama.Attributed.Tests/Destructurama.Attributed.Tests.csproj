@@ -1,4 +1,4 @@
-<Project Sdk="Microsoft.NET.Sdk">
+﻿<Project Sdk="Microsoft.NET.Sdk">
 
   <PropertyGroup>
     <TargetFrameworks Condition="'$(OS)' == 'Windows_NT'">net10.0;net462</TargetFrameworks>
@@ -12,6 +12,7 @@
   <ItemGroup>
     <PackageReference Include="coverlet.msbuild" Version="6.0.4" PrivateAssets="all" />
     <PackageReference Include="MarkdownSnippets.MsBuild" Version="28.0.0" PrivateAssets="all" />
+    <PackageReference Include="Microsoft.Extensions.Configuration.Json" Version="10.0.3" />
     <PackageReference Include="Microsoft.Extensions.Telemetry.Abstractions" Version="10.2.0" />
     <PackageReference Include="Microsoft.NET.Test.Sdk" Version="18.0.1" />
     <PackageReference Include="NUnit" Version="4.4.0" />
@@ -19,11 +20,18 @@
     <PackageReference Include="NUnit3TestAdapter" Version="6.1.0" />
     <PackageReference Include="PublicApiGenerator" Version="11.5.4" />
     <PackageReference Include="Serilog" Version="4.3.0" />
+    <PackageReference Include="Serilog.Settings.Configuration" Version="10.0.0" />
     <PackageReference Include="Shouldly" Version="4.3.0" />
   </ItemGroup>
 
   <ItemGroup>
     <ProjectReference Include="../../src/Destructurama.Attributed/Destructurama.Attributed.csproj" />
+  </ItemGroup>
+
+  <ItemGroup>
+    <None Update="issue220.json">
+      <CopyToOutputDirectory>PreserveNewest</CopyToOutputDirectory>
+    </None>
   </ItemGroup>
 
 </Project>

@@ -28,6 +28,8 @@ dotnet_diagnostic.Proj0206.severity = suggestion
 dotnet_diagnostic.Proj0240.severity = suggestion
 # https://github.com/dotnet-project-file-analyzers/dotnet-project-file-analyzers/blob/main/docs/rules/Proj0243.md
 dotnet_diagnostic.Proj0243.severity = suggestion
+# https://github.com/dotnet-project-file-analyzers/dotnet-project-file-analyzers/blob/main/docs/rules/Proj0300.md
+dotnet_diagnostic.Proj0300.severity = suggestion
 # https://github.com/dotnet-project-file-analyzers/dotnet-project-file-analyzers/blob/main/docs/rules/Proj0400.md
 dotnet_diagnostic.Proj0400.severity = suggestion
 # https://github.com/dotnet-project-file-analyzers/dotnet-project-file-analyzers/blob/main/docs/rules/Proj0453.md
