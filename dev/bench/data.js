@@ -1,5 +1,5 @@
 window.BENCHMARK_DATA = {
-  "lastUpdate": 1772877165022,
+  "lastUpdate": 1772877470038,
   "repoUrl": "https://github.com/destructurama/attributed",
   "entries": {
     "Benchmarks": [
@@ -7854,6 +7854,72 @@ window.BENCHMARK_DATA = {
             "value": 144.79671750068664,
             "unit": "ns",
             "range": "± 1.3561296212206129"
+          }
+        ]
+      },
+      {
+        "commit": {
+          "author": {
+            "email": "49699333+dependabot[bot]@users.noreply.github.com",
+            "name": "dependabot[bot]",
+            "username": "dependabot[bot]"
+          },
+          "committer": {
+            "email": "noreply@github.com",
+            "name": "GitHub",
+            "username": "web-flow"
+          },
+          "distinct": true,
+          "id": "c7a7b0e92cb8f7e2b19ade189b4612800b6b00d3",
+          "message": "Bump actions/upload-artifact from 6 to 7 (#228)\n\nBumps [actions/upload-artifact](https://github.com/actions/upload-artifact) from 6 to 7.\n- [Release notes](https://github.com/actions/upload-artifact/releases)\n- [Commits](https://github.com/actions/upload-artifact/compare/v6...v7)\n\n---\nupdated-dependencies:\n- dependency-name: actions/upload-artifact\n  dependency-version: '7'\n  dependency-type: direct:production\n  update-type: version-update:semver-major\n...\n\nSigned-off-by: dependabot[bot] <support@github.com>\nCo-authored-by: dependabot[bot] <49699333+dependabot[bot]@users.noreply.github.com>\nCo-authored-by: Ivan Maximov <sungam3r@yandex.ru>",
+          "timestamp": "2026-03-07T12:54:54+03:00",
+          "tree_id": "e386bd66f7a6a22cedf64870cd86a3d92327786a",
+          "url": "https://github.com/destructurama/attributed/commit/c7a7b0e92cb8f7e2b19ade189b4612800b6b00d3"
+        },
+        "date": 1772877469508,
+        "tool": "benchmarkdotnet",
+        "benches": [
+          {
+            "name": "Benchmarks.AttributedBenchmarks.LogAsScalar",
+            "value": 187.21311292648315,
+            "unit": "ns",
+            "range": "± 2.558178421898691"
+          },
+          {
+            "name": "Benchmarks.AttributedBenchmarks.LogMasked",
+            "value": 344.25490220387775,
+            "unit": "ns",
+            "range": "± 5.246874664931639"
+          },
+          {
+            "name": "Benchmarks.AttributedBenchmarks.LogReplaced",
+            "value": 522.3230460973887,
+            "unit": "ns",
+            "range": "± 1.80299344563605"
+          },
+          {
+            "name": "Benchmarks.AttributedBenchmarks.LogWithName",
+            "value": 329.060045560201,
+            "unit": "ns",
+            "range": "± 2.517159338401567"
+          },
+          {
+            "name": "Benchmarks.AttributedBenchmarks.NotLogged",
+            "value": 71.33285043239593,
+            "unit": "ns",
+            "range": "± 0.42557142658134695"
+          },
+          {
+            "name": "Benchmarks.AttributedBenchmarks.NotLoggedIfDefault",
+            "value": 96.15289370616277,
+            "unit": "ns",
+            "range": "± 0.5599802615997035"
+          },
+          {
+            "name": "Benchmarks.AttributedBenchmarks.NotLoggedIfNull",
+            "value": 144.1339018980662,
+            "unit": "ns",
+            "range": "± 1.0995600384904187"
           }
         ]
       }
