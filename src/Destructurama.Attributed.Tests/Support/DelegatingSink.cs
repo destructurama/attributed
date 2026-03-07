@@ -10,7 +10,7 @@ internal sealed class DelegatingSink : ILogEventSink
 
     public DelegatingSink(Action<LogEvent> write)
     {
-        _write = write ?? throw new ArgumentNullException("write");
+        _write = write ?? throw new ArgumentNullException(nameof(write));
     }
 
     public void Emit(LogEvent logEvent) => _write(logEvent);

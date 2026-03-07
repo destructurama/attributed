@@ -86,5 +86,6 @@ namespace Destructurama
     {
         public static Serilog.LoggerConfiguration UsingAttributes(this Serilog.Configuration.LoggerDestructuringConfiguration configuration) { }
         public static Serilog.LoggerConfiguration UsingAttributes(this Serilog.Configuration.LoggerDestructuringConfiguration configuration, System.Action<Destructurama.Attributed.AttributedDestructuringPolicyOptions> configure) { }
+        public static Serilog.LoggerConfiguration UsingAttributes(this Serilog.Configuration.LoggerDestructuringConfiguration configuration, bool ignoreNullProperties = false, bool respectLogPropertyIgnoreAttribute = false, bool respectMetadataTypeAttribute = false) { }
     }
 }

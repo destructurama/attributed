@@ -45,4 +45,25 @@ public static class LoggerConfigurationAttributedExtensions
         var policy = new AttributedDestructuringPolicy(configure);
         return configuration.With(policy);
     }
+
+    /// <summary>
+    /// Adds a custom <see cref="IDestructuringPolicy"/> to enable manipulation of how objects
+    /// are logged to Serilog using attributes. This overload can be utilized when configuring
+    /// destructuring via configuration file.
+    /// </summary>
+    /// <param name="configuration">The logger configuration to apply configuration to.</param>
+    /// <param name="ignoreNullProperties"><see cref="AttributedDestructuringPolicyOptions.IgnoreNullProperties"/></param>
+    /// <param name="respectLogPropertyIgnoreAttribute"><see cref="AttributedDestructuringPolicyOptions.RespectLogPropertyIgnoreAttribute"/></param>
+    /// <param name="respectMetadataTypeAttribute"><see cref="AttributedDestructuringPolicyOptions.RespectMetadataTypeAttribute"/></param>
+    /// <returns>An object allowing configuration to continue.</returns>
+    public static LoggerConfiguration UsingAttributes(this LoggerDestructuringConfiguration configuration, bool ignoreNullProperties = false, bool respectLogPropertyIgnoreAttribute = false, bool respectMetadataTypeAttribute = false)
+    {
+        var policy = new AttributedDestructuringPolicy(configure: options =>
+        {
+            options.IgnoreNullProperties = ignoreNullProperties;
+            options.RespectLogPropertyIgnoreAttribute = respectLogPropertyIgnoreAttribute;
+            options.RespectMetadataTypeAttribute = respectMetadataTypeAttribute;
+        });
+        return configuration.With(policy);
+    }
 }
