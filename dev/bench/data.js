@@ -1,5 +1,5 @@
 window.BENCHMARK_DATA = {
-  "lastUpdate": 1773299320026,
+  "lastUpdate": 1773471443583,
   "repoUrl": "https://github.com/destructurama/attributed",
   "entries": {
     "Benchmarks": [
@@ -8316,6 +8316,72 @@ window.BENCHMARK_DATA = {
             "value": 142.0829474415098,
             "unit": "ns",
             "range": "± 0.5850500457835377"
+          }
+        ]
+      },
+      {
+        "commit": {
+          "author": {
+            "email": "49699333+dependabot[bot]@users.noreply.github.com",
+            "name": "dependabot[bot]",
+            "username": "dependabot[bot]"
+          },
+          "committer": {
+            "email": "noreply@github.com",
+            "name": "GitHub",
+            "username": "web-flow"
+          },
+          "distinct": true,
+          "id": "41ac9e7323bf497df01e99ebd3baeeac9893b3a7",
+          "message": "Bump Microsoft.Extensions.Configuration.Json from 10.0.4 to 10.0.5 (#236)\n\n---\nupdated-dependencies:\n- dependency-name: Microsoft.Extensions.Configuration.Json\n  dependency-version: 10.0.5\n  dependency-type: direct:production\n  update-type: version-update:semver-patch\n...\n\nSigned-off-by: dependabot[bot] <support@github.com>\nCo-authored-by: dependabot[bot] <49699333+dependabot[bot]@users.noreply.github.com>",
+          "timestamp": "2026-03-14T09:54:16+03:00",
+          "tree_id": "55169b455992a7e7b1a103a71c9b83680360e83e",
+          "url": "https://github.com/destructurama/attributed/commit/41ac9e7323bf497df01e99ebd3baeeac9893b3a7"
+        },
+        "date": 1773471443047,
+        "tool": "benchmarkdotnet",
+        "benches": [
+          {
+            "name": "Benchmarks.AttributedBenchmarks.LogAsScalar",
+            "value": 192.45889398256938,
+            "unit": "ns",
+            "range": "± 3.397414837094158"
+          },
+          {
+            "name": "Benchmarks.AttributedBenchmarks.LogMasked",
+            "value": 346.48273106182324,
+            "unit": "ns",
+            "range": "± 6.790555195508503"
+          },
+          {
+            "name": "Benchmarks.AttributedBenchmarks.LogReplaced",
+            "value": 493.57441031138103,
+            "unit": "ns",
+            "range": "± 2.4961551983739136"
+          },
+          {
+            "name": "Benchmarks.AttributedBenchmarks.LogWithName",
+            "value": 412.58615872065224,
+            "unit": "ns",
+            "range": "± 6.303604062401614"
+          },
+          {
+            "name": "Benchmarks.AttributedBenchmarks.NotLogged",
+            "value": 72.68419938362561,
+            "unit": "ns",
+            "range": "± 0.19322461957308723"
+          },
+          {
+            "name": "Benchmarks.AttributedBenchmarks.NotLoggedIfDefault",
+            "value": 99.41622273921966,
+            "unit": "ns",
+            "range": "± 0.27645447376504756"
+          },
+          {
+            "name": "Benchmarks.AttributedBenchmarks.NotLoggedIfNull",
+            "value": 140.39260543187459,
+            "unit": "ns",
+            "range": "± 1.8776824070003175"
           }
         ]
       }
