@@ -10,7 +10,7 @@
   </PropertyGroup>
 
   <ItemGroup>
-    <PackageReference Include="coverlet.msbuild" Version="6.0.4" PrivateAssets="all" />
+    <PackageReference Include="coverlet.msbuild" Version="8.0.1" PrivateAssets="all" />
     <PackageReference Include="MarkdownSnippets.MsBuild" Version="28.0.2" PrivateAssets="all" />
     <PackageReference Include="Microsoft.Extensions.Configuration.Json" Version="10.0.5" />
     <PackageReference Include="Microsoft.Extensions.Telemetry.Abstractions" Version="10.5.0" />
