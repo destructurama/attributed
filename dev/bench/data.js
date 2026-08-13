@@ -1,5 +1,5 @@
 window.BENCHMARK_DATA = {
-  "lastUpdate": 1786636085008,
+  "lastUpdate": 1786636439818,
   "repoUrl": "https://github.com/destructurama/attributed",
   "entries": {
     "Benchmarks": [
@@ -10098,6 +10098,72 @@ window.BENCHMARK_DATA = {
             "value": 131.63771996498107,
             "unit": "ns",
             "range": "± 0.5467025470686991"
+          }
+        ]
+      },
+      {
+        "commit": {
+          "author": {
+            "email": "49699333+dependabot[bot]@users.noreply.github.com",
+            "name": "dependabot[bot]",
+            "username": "dependabot[bot]"
+          },
+          "committer": {
+            "email": "noreply@github.com",
+            "name": "GitHub",
+            "username": "web-flow"
+          },
+          "distinct": true,
+          "id": "f3cd909c71e5383021eddb6cdba987cf754704a0",
+          "message": "Bump Roslynator.Analyzers from 4.15.0 to 4.16.0 (#272)\n\n---\nupdated-dependencies:\n- dependency-name: Roslynator.Analyzers\n  dependency-version: 4.16.0\n  dependency-type: direct:production\n  update-type: version-update:semver-minor\n...\n\nSigned-off-by: dependabot[bot] <support@github.com>\nCo-authored-by: dependabot[bot] <49699333+dependabot[bot]@users.noreply.github.com>\nCo-authored-by: Ivan Maximov <sungam3r@yandex.ru>",
+          "timestamp": "2026-08-13T18:51:04+03:00",
+          "tree_id": "135a0039dcb67032ce793f47332d18c087cfbcdb",
+          "url": "https://github.com/destructurama/attributed/commit/f3cd909c71e5383021eddb6cdba987cf754704a0"
+        },
+        "date": 1786636438616,
+        "tool": "benchmarkdotnet",
+        "benches": [
+          {
+            "name": "Benchmarks.AttributedBenchmarks.LogAsScalar",
+            "value": 184.69986893733343,
+            "unit": "ns",
+            "range": "± 0.6824166630494322"
+          },
+          {
+            "name": "Benchmarks.AttributedBenchmarks.LogMasked",
+            "value": 344.9715128580729,
+            "unit": "ns",
+            "range": "± 5.50037323414424"
+          },
+          {
+            "name": "Benchmarks.AttributedBenchmarks.LogReplaced",
+            "value": 512.6711619922092,
+            "unit": "ns",
+            "range": "± 3.0046641962559972"
+          },
+          {
+            "name": "Benchmarks.AttributedBenchmarks.LogWithName",
+            "value": 312.7702801068624,
+            "unit": "ns",
+            "range": "± 4.563845897611583"
+          },
+          {
+            "name": "Benchmarks.AttributedBenchmarks.NotLogged",
+            "value": 71.10735067129136,
+            "unit": "ns",
+            "range": "± 0.8848655197902813"
+          },
+          {
+            "name": "Benchmarks.AttributedBenchmarks.NotLoggedIfDefault",
+            "value": 98.78391268423626,
+            "unit": "ns",
+            "range": "± 0.18789338292246485"
+          },
+          {
+            "name": "Benchmarks.AttributedBenchmarks.NotLoggedIfNull",
+            "value": 138.83661501748222,
+            "unit": "ns",
+            "range": "± 0.2475017586901976"
           }
         ]
       }
