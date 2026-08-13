@@ -1,5 +1,5 @@
 window.BENCHMARK_DATA = {
-  "lastUpdate": 1786605970756,
+  "lastUpdate": 1786635995137,
   "repoUrl": "https://github.com/destructurama/attributed",
   "entries": {
     "Benchmarks": [
@@ -9966,6 +9966,72 @@ window.BENCHMARK_DATA = {
             "value": 142.8850644270579,
             "unit": "ns",
             "range": "± 0.9230247464396603"
+          }
+        ]
+      },
+      {
+        "commit": {
+          "author": {
+            "email": "49699333+dependabot[bot]@users.noreply.github.com",
+            "name": "dependabot[bot]",
+            "username": "dependabot[bot]"
+          },
+          "committer": {
+            "email": "noreply@github.com",
+            "name": "GitHub",
+            "username": "web-flow"
+          },
+          "distinct": true,
+          "id": "a07184d9683881c56743aa2d773a5e87aa0de946",
+          "message": "Bump Serilog from 4.3.0 to 4.4.0 (#274)\n\n---\nupdated-dependencies:\n- dependency-name: Serilog\n  dependency-version: 4.4.0\n  dependency-type: direct:production\n  update-type: version-update:semver-minor\n...\n\nSigned-off-by: dependabot[bot] <support@github.com>\nCo-authored-by: dependabot[bot] <49699333+dependabot[bot]@users.noreply.github.com>",
+          "timestamp": "2026-08-13T18:43:35+03:00",
+          "tree_id": "07e10fee316aaded2384739ed3aafc241f33ce92",
+          "url": "https://github.com/destructurama/attributed/commit/a07184d9683881c56743aa2d773a5e87aa0de946"
+        },
+        "date": 1786635993901,
+        "tool": "benchmarkdotnet",
+        "benches": [
+          {
+            "name": "Benchmarks.AttributedBenchmarks.LogAsScalar",
+            "value": 200.10465518633524,
+            "unit": "ns",
+            "range": "± 1.3455720451666018"
+          },
+          {
+            "name": "Benchmarks.AttributedBenchmarks.LogMasked",
+            "value": 357.91520698253925,
+            "unit": "ns",
+            "range": "± 2.1077488305046184"
+          },
+          {
+            "name": "Benchmarks.AttributedBenchmarks.LogReplaced",
+            "value": 524.7742446019099,
+            "unit": "ns",
+            "range": "± 1.3024790742919417"
+          },
+          {
+            "name": "Benchmarks.AttributedBenchmarks.LogWithName",
+            "value": 332.05569276809695,
+            "unit": "ns",
+            "range": "± 4.845747062422478"
+          },
+          {
+            "name": "Benchmarks.AttributedBenchmarks.NotLogged",
+            "value": 80.79447671345302,
+            "unit": "ns",
+            "range": "± 0.3054800331083563"
+          },
+          {
+            "name": "Benchmarks.AttributedBenchmarks.NotLoggedIfDefault",
+            "value": 97.22733467358809,
+            "unit": "ns",
+            "range": "± 0.26013435688396297"
+          },
+          {
+            "name": "Benchmarks.AttributedBenchmarks.NotLoggedIfNull",
+            "value": 139.4849408183779,
+            "unit": "ns",
+            "range": "± 0.5339437721856443"
           }
         ]
       }
