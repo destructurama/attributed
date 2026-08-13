@@ -27,11 +27,11 @@ jobs:
     name: ${{ matrix.os }}
     runs-on: ${{ matrix.os }}
     steps:
-      - uses: actions/checkout@v6
+      - uses: actions/checkout@v7
         with:
           fetch-depth: 0
       - name: Setup .NET SDKs
-        uses: actions/setup-dotnet@v5
+        uses: actions/setup-dotnet@v6
         with:
           dotnet-version: 10.0.x
           source-url: https://nuget.pkg.github.com/destructurama/index.json
@@ -55,7 +55,7 @@ jobs:
         run: dotnet test --no-build -p:CollectCoverage=true -p:CoverletOutputFormat=opencover -p:CoverletOutput=../.coverage/
       - name: Upload coverage to codecov
         if: ${{ startsWith(matrix.os, 'ubuntu') }}
-        uses: codecov/codecov-action@v6
+        uses: codecov/codecov-action@v7
         with:
           token: ${{ secrets.CODECOV_TOKEN }}
           files: src/.coverage/*.opencover.xml
