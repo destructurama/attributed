@@ -1,5 +1,5 @@
 window.BENCHMARK_DATA = {
-  "lastUpdate": 1786599370085,
+  "lastUpdate": 1786599596347,
   "repoUrl": "https://github.com/destructurama/attributed",
   "entries": {
     "Benchmarks": [
@@ -9504,6 +9504,72 @@ window.BENCHMARK_DATA = {
             "value": 125.27494594256083,
             "unit": "ns",
             "range": "± 0.5099125038057282"
+          }
+        ]
+      },
+      {
+        "commit": {
+          "author": {
+            "email": "49699333+dependabot[bot]@users.noreply.github.com",
+            "name": "dependabot[bot]",
+            "username": "dependabot[bot]"
+          },
+          "committer": {
+            "email": "noreply@github.com",
+            "name": "GitHub",
+            "username": "web-flow"
+          },
+          "distinct": true,
+          "id": "7669750042305a9e977e9ac5109ee74f15633d21",
+          "message": "Bump actions/labeler from 6 to 7 (#267)\n\nBumps [actions/labeler](https://github.com/actions/labeler) from 6 to 7.\n- [Release notes](https://github.com/actions/labeler/releases)\n- [Commits](https://github.com/actions/labeler/compare/v6...v7)\n\n---\nupdated-dependencies:\n- dependency-name: actions/labeler\n  dependency-version: '7'\n  dependency-type: direct:production\n  update-type: version-update:semver-major\n...\n\nSigned-off-by: dependabot[bot] <support@github.com>\nCo-authored-by: dependabot[bot] <49699333+dependabot[bot]@users.noreply.github.com>",
+          "timestamp": "2026-08-13T08:36:54+03:00",
+          "tree_id": "671307214c4d816ef1a859d5ecaff14697273303",
+          "url": "https://github.com/destructurama/attributed/commit/7669750042305a9e977e9ac5109ee74f15633d21"
+        },
+        "date": 1786599595547,
+        "tool": "benchmarkdotnet",
+        "benches": [
+          {
+            "name": "Benchmarks.AttributedBenchmarks.LogAsScalar",
+            "value": 200.9267556667328,
+            "unit": "ns",
+            "range": "± 1.9061931864088526"
+          },
+          {
+            "name": "Benchmarks.AttributedBenchmarks.LogMasked",
+            "value": 341.6293296813965,
+            "unit": "ns",
+            "range": "± 2.884543733180825"
+          },
+          {
+            "name": "Benchmarks.AttributedBenchmarks.LogReplaced",
+            "value": 507.4469047955104,
+            "unit": "ns",
+            "range": "± 1.356678435013014"
+          },
+          {
+            "name": "Benchmarks.AttributedBenchmarks.LogWithName",
+            "value": 323.494567155838,
+            "unit": "ns",
+            "range": "± 2.9011900796676557"
+          },
+          {
+            "name": "Benchmarks.AttributedBenchmarks.NotLogged",
+            "value": 70.84659653902054,
+            "unit": "ns",
+            "range": "± 0.6446554498861777"
+          },
+          {
+            "name": "Benchmarks.AttributedBenchmarks.NotLoggedIfDefault",
+            "value": 101.98481943607331,
+            "unit": "ns",
+            "range": "± 0.49957326672604757"
+          },
+          {
+            "name": "Benchmarks.AttributedBenchmarks.NotLoggedIfNull",
+            "value": 145.91460350354512,
+            "unit": "ns",
+            "range": "± 2.135707356927122"
           }
         ]
       }
