@@ -201,13 +201,13 @@ public class CustomizedMaskedLogs
     public string? DefaultMaskedNotPreservedOnEmptyString { get; set; }
 
     /// <summary>
-    /// 123456789 results in "#"
+    /// 123456789 results in "_REMOVED_"
     /// </summary>
     [LogMasked(Text = "_REMOVED_")]
     public string? CustomMasked { get; set; }
 
     /// <summary>
-    /// 123456789 results in "#"
+    /// 123456789 results in ""
     /// </summary>
     [LogMasked(Text = "")]
     public string? CustomMaskedWithEmptyString { get; set; }
