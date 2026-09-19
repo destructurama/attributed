@@ -47,13 +47,13 @@ public class CustomizedMaskedLogs
     public string? DefaultMaskedNotPreservedOnEmptyString { get; set; }
 
     /// <summary>
-    /// 123456789 results in "#"
+    /// 123456789 results in "_REMOVED_"
     /// </summary>
     [LogMasked(Text = "_REMOVED_")]
     public string? CustomMasked { get; set; }
 
     /// <summary>
-    /// 123456789 results in "#"
+    /// 123456789 results in ""
     /// </summary>
     [LogMasked(Text = "")]
     public string? CustomMaskedWithEmptyString { get; set; }
@@ -253,7 +253,7 @@ public class MaskedAttributeTests
     [Test]
     public void LogMaskedAttribute_Replaces_Value_With_Provided_Mask()
     {
-        //  [LogMasked(Text = "#")]
+        //  [LogMasked(Text = "_REMOVED_")]
         //   123456789 -> "_REMOVED_"
         var customized = new CustomizedMaskedLogs
         {
@@ -272,8 +272,8 @@ public class MaskedAttributeTests
     [Test]
     public void LogMaskedAttribute_Replaces_Value_With_Provided_Empty_Mask()
     {
-        //  [LogMasked(Text = "#")]
-        //   123456789 -> "_REMOVED_"
+        //  [LogMasked(Text = "")]
+        //   123456789 -> ""
         var customized = new CustomizedMaskedLogs
         {
             CustomMaskedWithEmptyString = "123456789"
@@ -310,7 +310,7 @@ public class MaskedAttributeTests
     [Test]
     public void LogMaskedAttribute_Shows_First_NChars_Then_Replaces_All_With_Custom_Mask()
     {
-        // [LogMasked(Text = "REMOVED", ShowFirst = 3)]
+        // [LogMasked(Text = "_REMOVED_", ShowFirst = 3)]
         // -> "123_REMOVED_"
         var customized = new CustomizedMaskedLogs
         {
@@ -367,7 +367,7 @@ public class MaskedAttributeTests
     [Test]
     public void LogMaskedAttribute_Shows_First_NChars_Then_Replaces_All_With_Custom_Mask_PreservedLength_Ignored()
     {
-        // [LogMasked(Text = "REMOVED", ShowFirst = 3,PreserveLength = true)]
+        // [LogMasked(Text = "_REMOVED_", ShowFirst = 3,PreserveLength = true)]
         // -> "123_REMOVED_"
         var customized = new CustomizedMaskedLogs
         {
@@ -462,7 +462,7 @@ public class MaskedAttributeTests
     [Test]
     public void LogMaskedAttribute_Shows_First_NChars_And_Last_NChars_Then_Replaces_All_Other_Chars_With_Custom_Mask()
     {
-        // [LogMasked(Text = "REMOVED", ShowFirst = 3, ShowLast = 3)]
+        // [LogMasked(Text = "_REMOVED_", ShowFirst = 3, ShowLast = 3)]
         // 12345678987654321 -> 123_REMOVED_321
         var customized = new CustomizedMaskedLogs
         {
@@ -481,7 +481,7 @@ public class MaskedAttributeTests
     [Test]
     public void LogMaskedAttribute_Shows_First_NChars_And_Last_NChars_Then_Replaces_All_Other_Chars_With_Custom_Mask_And_PreservedLength()
     {
-        // [LogMasked(Text = "#", ShowFirst = 3, ShowLast = 3)]
+        // [LogMasked(Text = "_REMOVED_", ShowFirst = 3, ShowLast = 3)]
         // 12345678987654321 -> "123_REMOVED_321"
         var customized = new CustomizedMaskedLogs
         {
@@ -750,7 +750,7 @@ public class MaskedAttributeTests
     [Test]
     public void LogMaskedAttribute_Shows_First_NChars_And_Last_NChars_Then_Replaces_All_Other_Chars_With_Custom_Mask_And_PreservedLength_That_Gives_Warning()
     {
-        // [LogMasked(Text = "REMOVED", ShowFirst = 3, ShowLast = 3, PreserveLength = true)]
+        // [LogMasked(Text = "_REMOVED_", ShowFirst = 3, ShowLast = 3, PreserveLength = true)]
         // 12345678987654321 -> 123_REMOVED_321
         var customized = new CustomizedMaskedLogs
         {
